@@ -1,0 +1,6 @@
+/logs
+/.idea/
+/frontend/__sapper__
+/frontend/node_modules
+/frontend/src/node_modules
+.DS_Store

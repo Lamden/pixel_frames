@@ -1,0 +1,27 @@
+<script context="module">
+	export async function preload(parms) {
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				contractName: 'con_pf_test',
+				variableName: 'S'
+			})
+		}
+		const res = await this.fetch(`http://localhost:1337/things/forsale`, options)
+		let data = await res.json()
+		if (!data) data = []
+	    return {forsale: data}
+	}
+</script>
+
+<script>
+    import ForSale from '../../components/ForSale.svelte'
+
+    export let forsale;
+
+</script>
+
+<ForSale {forsale}/>
