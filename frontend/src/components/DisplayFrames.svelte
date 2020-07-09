@@ -1,8 +1,10 @@
 <script>
     import { onMount } from 'svelte'
     import {goto} from '@sapper/app';
+    import { userAccount } from '../js/stores.js'
     import Frame from './Frame.svelte'
     import FrameCanvas from './FrameCanvas.svelte'
+    import Price from './Price.svelte'
 
     //Pictures
     import like_filled from '../../static/img/like-filled.svg'
@@ -77,16 +79,9 @@
             </div>
             {thingInfo.likes}
         </div>
-
-        {#if thingInfo.price > 0}
-            <div class="flex-row price">
-                <div class="icon">
-                    {@html lamden_logo}
-                </div>
-                {thingInfo.price}
-                <a class="button_text" href={"buy/" + thingInfo.uid} >buy</a>
-            </div>
-        {/if}
+        <div>
+            <Price {thingInfo}/>
+        </div>
     </div>
     <div class="flex-row description">
         <p>{thingInfo.description}</p>

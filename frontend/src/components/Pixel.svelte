@@ -20,8 +20,6 @@
         if ($currentColor[button] == pixel) return
         dispatch('colorChange', {index, button})
     }
-
-
 </script>
 
 <style>

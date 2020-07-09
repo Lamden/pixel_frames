@@ -41,7 +41,7 @@
 
 <style>
 	nav {
-		position: fixed;
+		position: relative;
     	top: 0;
 		left: 0;
 		height: 92px;

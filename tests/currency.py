@@ -1,8 +1,10 @@
 balances = Hash(default_value=0)
 
 @construct
-def seed(vk: str):
-    balances[vk] = 1000000
+def seed():
+    balances['jeff'] = 1000000
+    balances['stu'] = 1000000
+    balances['alex'] = 1000000
 
 @export
 def transfer(amount: float, to: str):

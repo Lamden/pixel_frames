@@ -59,7 +59,6 @@
 			flex-grow: 1;
 		}
 		.shadowbox{
-		    height: 150px;
 			justify-content: space-evenly;
 			border: 1px solid #afafaf;
 		}

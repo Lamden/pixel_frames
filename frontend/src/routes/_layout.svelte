@@ -47,9 +47,8 @@
 	main {
 		position: relative;
 		max-width: 95em;
-		padding: 2rem 28px 0;
-		margin: 0 auto;
-		margin-top: 100px;
+		padding: 0 28px;
+		margin: 1rem auto 0;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;

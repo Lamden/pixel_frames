@@ -4,32 +4,37 @@ import currency
 S = Hash(default_value='')
 
 @construct
-def seed(name: str, description: str, icon_small: str, icon_large: str):
-    print(icon_small)
-    print(icon_large)
+def seed(name: str, description: str, icon_svg_base64: str):
+    # Enforce the Thing Requirements for submitting a thing contract
+    assert len(name) > 0, "A thing contracts needs a name value."
+    assert len(description) > 0, "A thing contracts needs a description value."
+
+    # Icons are svg files that have been encoded to a base64 string.
+    # See https://base64.guru/converter/encode/image/svg for details.
+    # NOTE: the value xmlns="http://www.w3.org/2000/svg" is a REQUIRED property in your <svg> tag.
+    assert len(icon_svg_base64) > 0, "A thing contracts needs a an icon value (base64 encoded svg)."
+
     S['name'] = name
     S['description'] = description
-    S['icon_small'] = icon_small
-    S['icon_large'] = icon_large
+    S['icon_svg'] = icon_svg_base64
 
 @export
-def create_thing(thing_string: str, description: str):
+def create_thing(thing_string: str, name: str, description: str, meta: dict = {}):
     sender = ctx.caller
-    assert not con_thing_info.thing_exists(thing_string),  thing_string + ' already exists'
-    thing_uid = con_thing_info.add_thing(thing_string, description, sender, sender)
+    thing_uid = con_pixel_frames.add_thing(thing_string, name, description, meta, sender)
     return thing_uid
 
 @export
 def buy_thing(uid: str):
-    owner = con_thing_info.get_owner(uid)
+    owner = con_pixel_frames.get_owner(uid)
     sender = ctx.caller
     assert_already_owned(uid, sender)
 
-    price_amount = con_thing_info.get_price_amount(uid)
+    price_amount = con_pixel_frames.get_price_amount(uid)
     assert price_amount, uid + ' is not for sale'
     assert price_amount > 0, uid + ' is not for sale'
 
-    price_hold = con_thing_info.get_price_hold(uid)
+    price_hold = con_pixel_frames.get_price_hold(uid)
     if price_hold != '':
         assert sender == price_hold, 'this item is being held for ' + price_hold
 
@@ -43,13 +48,13 @@ def buy_thing(uid: str):
 def sell_thing(uid: str, amount: int):
     # make sure the caller owns the item
     assert_ownership(uid, ctx.caller)
-    con_thing_info.set_price(uid, amount, '')
+    con_pixel_frames.set_price(uid, amount, '')
 
 @export
 def sell_thing_to(uid: str, amount: int, hold: str):
     # make sure the caller owns the item
     assert_ownership(uid, ctx.caller)
-    con_thing_info.set_price(uid, amount, hold)
+    con_pixel_frames.set_price(uid, amount, hold)
 
 @export
 def give_thing(uid: str, new_owner: str):
@@ -63,21 +68,27 @@ def give_thing(uid: str, new_owner: str):
 def like_thing(uid: str):
     sender = ctx.caller
     assert S['liked', uid, sender] == '', sender + " already liked " + uid
-    con_thing_info.like_thing(uid)
+    con_pixel_frames.like_thing(uid)
     S['liked', uid, sender] = True
 
+@export
+def prove_ownership(uid: str, code: str):
+    sender = ctx.caller
+    assert_ownership(uid, sender)
+    con_pixel_frames.set_proof(uid, code)
+
 def assert_ownership(uid: str, sender):
-    owner = con_thing_info.get_owner(uid)
+    owner = con_pixel_frames.get_owner(uid)
     assert owner == sender, uid + ' not owned by ' + sender
 
 def assert_already_owned(uid: str, sender):
-    owner = con_thing_info.get_owner(uid)
+    owner = con_pixel_frames.get_owner(uid)
     assert owner != sender, uid + ' already owned by ' + sender
 
 def transfer_ownership(uid:str, new_owner: str):
     #change ownership to new owner
-    con_thing_info.set_owner(uid, new_owner)
+    con_pixel_frames.set_owner(uid, new_owner)
 
     # if item was for sale make it no longer for sale
-    if con_thing_info.get_price_amount(uid) > 0:
-        con_thing_info.set_price(uid, 0, '')
+    if con_pixel_frames.get_price_amount(uid) > 0:
+        con_pixel_frames.set_price(uid, 0, '')
