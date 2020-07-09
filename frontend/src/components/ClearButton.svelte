@@ -1,16 +1,16 @@
 <script>
     import { frames, currentFrame, totalPixels } from '../js/stores'
+    import { emptyFrame } from '../js/utils.js'
 
     const clear = () => {
-        frames.update(f => {f[$currentFrame] = Array.from(Array($totalPixels).keys()); return f})
+        let wipe = confirm("Wipe current frame?")
+        if (wipe) {
+            frames.update(f => {
+                f[$currentFrame] = emptyFrame($totalPixels);
+                return f
+            })
+        }
     }
 </script>
 
-<style>
-    .button_text {
-        padding: 5px;
-        margin: 5px;
-    }
-</style>
-
-<button class="button_text" value="clear" on:click ={clear}> Clear </button>
+<button class="button_text" value="clear" on:click ={clear}> Clear Current Frame </button>

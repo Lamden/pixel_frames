@@ -1,37 +1,34 @@
 <script>
     import { onMount } from 'svelte'
-    import Frame from './Frame.svelte'
+    import FrameCanvas from './FrameCanvas.svelte'
 
     export let frames;
-    export let title;
-    export let pixelSize = 8;
 
     let switcher;
     $: show = 1
 
     onMount(() => {
-        switcher = setTimeout(switchFrames, 1000)
+        switcher = setInterval(switchFrames, 1000)
+        return(() => clearInterval((switcher)))
     })
 
     const switchFrames = () => {
         if (show > frames.length) show = 1
         else show = show === frames.length ? 1 : show + 1;
-        switcher = setTimeout(switchFrames, 1000)
     }
 
 </script>
 <style>
-    .flex-col{
-        align-items: center;
-        margin-bottom: 2rem;
+    .preview-frame{
+        border: 2px dashed #ff5bb0;
+        line-height: 0;
     }
 </style>
 
-<div class="flex-col">
-    {#if title}<h2>preview</h2>{/if}
-    <div>
-        {#if frames.length >= show}
-            <Frame {pixelSize} pixels={frames[show - 1]} preview={true}/>
-        {/if}
-    </div>
+<div class="preview-frame">
+    {#if frames.length >= show}
+        <FrameCanvas pixelSize={10} pixels={frames[show - 1]}/>
+    {:else}
+        <FrameCanvas pixelSize={10} pixels={frames[show - 1]}/>
+    {/if}
 </div>

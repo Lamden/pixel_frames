@@ -2,10 +2,9 @@
     import { frames, currentFrame } from '../js/stores'
 
     const addFrame = () => {
-        if ($frames.length < 4) {
+        if ($frames.length < 5) {
             frames.update(f => {
                 f.push(Array.from(f[f.length - 1]));
-                console.log(f);
                 return f
             })
             currentFrame.set($frames.length - 1)
@@ -15,8 +14,8 @@
 
 <style>
     .button{
-        width: 25px;
-        height: 25px;
+        width: 24px;
+        height: 24px;
         padding: 0;
     }
 </style>

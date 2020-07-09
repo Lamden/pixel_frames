@@ -91,6 +91,7 @@ flex-row{
 	text-decoration:none;
 	text-shadow:0px 1px 0px #c70067;
 	outline: none;
+	line-height: 1;
 }
 .button:hover {
 	background:linear-gradient(to bottom, #ef027d 5%, #ff5bb0 100%);
@@ -112,7 +113,6 @@ flex-row{
 	font-weight:200;
 	padding:6px 20px;
 	text-decoration:none;
-	text-shadow:0px 1px 0px #c70067;
 	outline: none;
 }
 .button_text:hover {

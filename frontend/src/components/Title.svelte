@@ -1,11 +1,12 @@
 <script>
     import { onMount } from 'svelte'
-	import {number_to_color, color_to_number, padNumber} from '../js/utils'
+	import { letter_to_color, color_to_letter } from '../js/utils'
 
     export let fontSize = 8;
 
-	$: framesColor = number_to_color['06'];
+	$: framesColor = undefined;
     onMount(() => {
+    	framesColor = letter_to_color['G'];
 		const colorTimer = setInterval(changeColor, 1000)
 		return () => {
 			clearInterval(colorTimer)
@@ -13,10 +14,11 @@
 	})
 
     const changeColor = () => {
-		let nextNumber = padNumber(parseInt(color_to_number[framesColor]) + 1)
-		if (!number_to_color[nextNumber]) framesColor = number_to_color['03']
-		else framesColor = number_to_color[nextNumber]
-
+    	let currIndex = Object.keys(color_to_letter).indexOf(framesColor)
+		let nextIndex = currIndex + 1
+		let nextColor = Object.keys(color_to_letter)[nextIndex]
+		if (!nextColor) framesColor = letter_to_color['G']
+		else framesColor = nextColor
 	}
 
 </script>

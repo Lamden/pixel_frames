@@ -3,9 +3,9 @@
     import Pixel from './Pixel.svelte'
 
     const changeColor = (e) => {
-        if ($frames[$currentFrame][e.detail] !== $currentColor){
-            frames.update(f => {f[$currentFrame][e.detail] = $currentColor; return f})
-        }
+        let index = e.detail.index
+        let button = e.detail.button
+        frames.update(f => {f[$currentFrame][index] = $currentColor[button]; return f})
     }
 </script>
 
@@ -17,7 +17,10 @@
 
 </style>
 
-<div class="board" on:drag|preventDefault>
+<div class="board"
+     on:drag|preventDefault
+     on:contextmenu|preventDefault
+>
     {#each $frames[$currentFrame] as pixel, index}
         <Pixel {pixel} {index} on:colorChange={changeColor}/>
     {/each}

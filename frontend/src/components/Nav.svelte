@@ -10,11 +10,11 @@
 	let tauAmount = 0;
 
 	beforeUpdate(() => {
-		console.log(segment)
 		if ($userAccount) refreshTAUBalance()
 	})
 
 	const refreshTAUBalance = async () => {
+		return
 		const res = await fetch("http://167.172.126.5:18080/contracts/currency/balances?key=" + $userAccount)
 		const data = await res.json();
 		if (!data.value) tauAmount = 0

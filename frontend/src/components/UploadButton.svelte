@@ -7,6 +7,9 @@
 
     const upload = () => {
     	const thing_string = serializeFrames($frames)
+		localStorage.setItem('frames', JSON.stringify($frames))
+		localStorage.setItem('thing_string', thing_string)
+
 		const transaction = {
 			methodName: 'create_thing',
 			networkType: 'testnet',
@@ -21,4 +24,4 @@
 
 </script>
 
-<button class="button" on:click={upload}>Upload</button>
+<button class="button" on:click={upload}>CREATE</button>

@@ -2,6 +2,7 @@
     import { onMount } from 'svelte'
     import {goto} from '@sapper/app';
     import Frame from './Frame.svelte'
+    import FrameCanvas from './FrameCanvas.svelte'
 
     //Pictures
     import like_filled from '../../static/img/like-filled.svg'
@@ -9,7 +10,6 @@
     import lamden_logo from '../../static/img/lamden_logo_new.svg'
 
     export let thingInfo;
-    export let title;
     export let pixelSize = 5;
 
     let frames = thingInfo.frames
@@ -53,13 +53,17 @@
     p{
         width: 100%;
         margin: 0;
+        overflow-y: auto;
+        height: 107px;
+        position: relative;
+        font-size: 0.7em;
     }
 </style>
 
 <div class="display flex-col">
     <div>
         {#if frames.length >= show}
-            <Frame {pixelSize} pixels={frames[show - 1]} preview={true}/>
+            <FrameCanvas {pixelSize} pixels={frames[show - 1]} id={thingInfo.uid}/>
         {/if}
     </div>
 

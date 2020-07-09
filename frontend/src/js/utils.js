@@ -1,44 +1,77 @@
-export const color_to_number = {
-    '#ffffff00': '00',
-    'black': '01',
-    'white': '02',
-    'gray': '03',
-    'red': '04',
-    'maroon': '05',
-    'pink': '06',
-    'greenyellow':'07',
-    'green':'08',
-    'forestgreen':'09',
-    'blue':'10',
-    'darkblue':'11',
-    'aqua':'12',
-    'purple':'13',
-    'orange':'14',
-    'yellow': '15'
+export const color_to_letter = {
+    //BTW
+    'black': 'A',
+    '#ffffff00': 'B',
+    'white': 'C',
+    //Greys
+    'lightgray': 'D',
+    'darkgray': 'E',
+    'dimgray': 'F',
+    //Reds
+    'lightcoral': 'G',
+    'red':'H',
+    'darkred':'I',
+    //Yellow
+    'khaki':'J',
+    'yellow':'K',
+    'darkkhaki':'L',
+    //Blue
+    'lightblue':'M',
+    'blue':'N',
+    'darkblue':'O',
+    //Green
+    'lightgreen': 'P',
+    'green': 'Q',
+    'darkgreen': 'R',
+    //Orange
+    'sandybrown': 'S',
+    'orange': 'T',
+    'darkorange': 'U',
+    //Purple
+    'violet': 'V',
+    'purple': 'W',
+    'indigo': 'X',
+    //Brown
+    'burlywood':'Y',
+    'saddlebrown':'Z'
 }
 
-export const number_to_color = {
-    '00': '#ffffff00',
-    '01': 'black',
-    '02': 'white',
-    '03':'gray',
-    '04':'red',
-    '05':'maroon',
-    '06':'pink',
-    '07':'greenyellow',
-    '08':'green',
-    '09':'forestgreen',
-    '10':'blue',
-    '11':'darkblue',
-    '12':'aqua',
-    '13':'purple',
-    '14':'orange',
-    '15':'yellow'
-}
-
-export const padNumber = (num) => {
-    var s = "000000000" + num;
-    return s.substr(s.length-2);
+export const letter_to_color = {
+    //BTW
+    'A' : 'black',
+    'B' : '#ffffff00',
+    'C' : 'white',
+    //Greys
+    'D' : 'lightgray',
+    'E' : 'darkgray',
+    'F' : 'dimgray',
+    //Reds
+    'G' : 'lightcoral',
+    'H' : 'red',
+    'I' : 'darkred',
+    //Yellow
+    'J' : 'khaki',
+    'K' : 'yellow',
+    'L' : 'darkkhaki',
+    //Blue
+    'M' : 'lightblue',
+    'N' : 'blue',
+    'O' : 'darkblue',
+    //Green
+    'P' : 'lightgreen',
+    'Q' : 'green',
+    'R' : 'darkgreen',
+    //Orange
+    'S' : 'sandybrown',
+    'T' : 'orange',
+    'U' : 'darkorange',
+    //Purple
+    'V' : 'violet',
+    'W' : 'purple',
+    'X' : 'indigo',
+    //Brown
+    'Y' : 'burlywood',
+    'Z' : 'saddlebrown',
 }
 
 
@@ -73,8 +106,10 @@ export const decodeFrames = (data) => {
    frames.forEach((c, i) => {
        frames[i] = stringToArrays(c, 2)
        frames[i].forEach((n, s) => {
-           frames[i][s] = number_to_color[n]
+           frames[i][s] = letter_to_color[n]
        })
    })
     return frames
 }
+
+export const emptyFrame = (totalPixels) => Array.from(Array(totalPixels)).map((v)=> v = "B")

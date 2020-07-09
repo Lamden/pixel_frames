@@ -1,12 +1,18 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, beforeUpdate } from 'svelte';
     import DisplayFrames from './DisplayFrames.svelte';
 
     import { decodeFrames  } from "../js/utils.js";
 
     export let owned;
 
+
     let formatted = [];
+
+    beforeUpdate(() => {
+        console.log(owned)
+        formatThings();
+    })
 
     const formatThings = () => {
         owned.forEach(thing => {

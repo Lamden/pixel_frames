@@ -1,17 +1,32 @@
 <script>
-    import { createEventDispatcher } from 'svelte'; 
+    import { createEventDispatcher } from 'svelte';
+    import { currentColor } from '../js/stores'
+    import { letter_to_color } from '../js/utils.js'
     const dispatch = createEventDispatcher();
     export let pixel
     export let index
 
-    const colorChange = () => {
-        dispatch('colorChange', index)
+    const colorChange = (e) => {
+        if (e.button == 0) dispatchColorChange(0)
+        if (e.button == 2) dispatchColorChange(1)
     }
+
+    const colorChangeOver = (e) => {
+        if (e.buttons == 1) dispatchColorChange(0)
+        if (e.buttons == 2) dispatchColorChange(1)
+    }
+
+    const dispatchColorChange = (button) => {
+        if ($currentColor[button] == pixel) return
+        dispatch('colorChange', {index, button})
+    }
+
 
 </script>
 
 <div class="pixel pixel__border" 
-     style={`background: ${pixel}`} 
-     on:click={colorChange}
-     on:mouseover={(e) => {e.buttons === 1 ? colorChange() : null}}
+     style={`background: ${letter_to_color[pixel]}`}
+     on:mousedown={colorChange}
+     on:mouseover={colorChangeOver}
      on:drag|preventDefault />
+
