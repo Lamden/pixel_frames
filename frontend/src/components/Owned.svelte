@@ -10,12 +10,12 @@
     let formatted = [];
 
     beforeUpdate(() => {
-        console.log(owned)
         formatThings();
     })
 
     const formatThings = () => {
         owned.forEach(thing => {
+            thing.speed = thing.thing.split(':')[1]
             thing.frames = decodeFrames(thing.thing)
         })
         formatted =  owned

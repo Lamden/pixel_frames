@@ -33,3 +33,4 @@
         width={pixelSize * 16}
         height={pixelSize * 16}
 />
+

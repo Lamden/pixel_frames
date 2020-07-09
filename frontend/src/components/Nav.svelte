@@ -53,6 +53,7 @@
 		align-items: center;
 		background: white;
 		border-bottom: 1px solid #ff5bb047;
+		z-index: 1;
 	}
 	.brand{
 		align-items: center;

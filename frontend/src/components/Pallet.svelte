@@ -10,11 +10,9 @@
     }
 
     const changePrimary = (e, letter) => {
-        console.log(e)
         changeCurrentColor(0, letter)
     }
     const changeSecondary = (e, letter) => {
-        console.log(e)
         changeCurrentColor(1, letter)
     }
 </script>
@@ -34,6 +32,12 @@
         align-items: center;
         border: 1px solid #afafaf;
         border-radius: 5px;
+    }
+    .color:hover{
+        position: relative;
+        top: -2px;
+        z-index: 1;
+        box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
     }
     .selected{
         border: 2px solid #ff5bb0;

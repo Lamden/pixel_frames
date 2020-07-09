@@ -18,13 +18,14 @@
     $: show = 1
 
     onMount(() => {
-        switcher = setTimeout(switchFrames, 1000)
+        console.log(thingInfo)
+        switcher = setInterval(switchFrames, thingInfo.speed)
+        return(() => clearInterval((switcher)))
     })
 
     const switchFrames = () => {
         if (show > frames.length) show = 1
         else show = show === frames.length ? 1 : show + 1;
-        switcher = setTimeout(switchFrames, 1000)
     }
 
 </script>

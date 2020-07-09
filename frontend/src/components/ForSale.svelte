@@ -11,11 +11,9 @@
 
     const formatThings = () => {
         forsale.data.forEach(thing => {
-        	console.log(thing)
             thing.frames = decodeFrames(thing.thing)
         })
         formatted =  forsale.data
-		console.log(formatted)
     }
 
     formatThings();

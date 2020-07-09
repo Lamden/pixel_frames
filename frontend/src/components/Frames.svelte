@@ -65,19 +65,6 @@
     .not-selected{
         border: 2px solid #afafaf;
     }
-    button:focus{
-        outline: 0;
-    }
-    .close{
-        position: absolute;
-        top: -1px;
-        right: 3px;
-        width: 17px;
-        height: 17px;
-        background: none;
-        border: none;
-
-    }
     .add-button{
         border: 1px dashed #ff5bb0;
         display: flex;

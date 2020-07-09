@@ -32,7 +32,6 @@
 	})
 
 	const handleWalletInfo = (info) => {
-		console.log(info)
 		if (info.errors){
 			if (info.errors[0].includes('lamdenWalletConnect')) lwc.sendConnection(approvalRequest)
 			else alert(JSON.stringify(info.errors[0]))

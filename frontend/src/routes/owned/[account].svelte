@@ -36,7 +36,6 @@
 		let things = []
 		things[0] = {...thing, "thing": localStorage.getItem('thing_string')}
 		owned = things
-
 	})
 
 	beforeUpdate(() => {

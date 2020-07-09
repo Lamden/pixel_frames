@@ -24,6 +24,16 @@
 
 </script>
 
+<style>
+    .pixel{
+        transition: color, 0.5s;
+        transition: border, 0s;
+    }
+    .pixel:hover{
+        border: 1px dotted #ff5bb0;
+    }
+</style>
+
 <div class="pixel pixel__border" 
      style={`background: ${letter_to_color[pixel]}`}
      on:mousedown={colorChange}

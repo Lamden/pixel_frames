@@ -6,6 +6,7 @@
 	import ClearButton from './ClearButton.svelte'
 	import DeleteButton from './DeleteButton.svelte'
 	import UploadButton from './UploadButton.svelte'
+	import RangeSlider from './RangeSlider.svelte'
 	import NewFrame from './NewFrame.svelte'
 
 	import { frames } from '../js/stores'
@@ -60,6 +61,7 @@
 		.shadowbox{
 		    height: 150px;
 			justify-content: space-evenly;
+			border: 1px solid #afafaf;
 		}
 	}
 </style>
@@ -70,7 +72,10 @@
 
 <div class="designer">
 	<div class="info flex-col" on:drap|preventDefault>
-		<Preview frames={$frames}/>
+		<div class="flex-col">
+			<Preview frames={$frames}/>
+			<RangeSlider />
+		</div>
 		<div class="flex-col frames">
 			<Frames />
 		</div>

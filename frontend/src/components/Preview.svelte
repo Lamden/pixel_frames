@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte'
     import FrameCanvas from './FrameCanvas.svelte'
+    import { frameSpeed } from '../js/stores.js'
 
     export let frames;
 
@@ -8,7 +9,6 @@
     $: show = 1
 
     onMount(() => {
-        switcher = setInterval(switchFrames, 1000)
         return(() => clearInterval((switcher)))
     })
 
@@ -16,6 +16,11 @@
         if (show > frames.length) show = 1
         else show = show === frames.length ? 1 : show + 1;
     }
+
+    frameSpeed.subscribe(update => {
+        clearInterval((switcher))
+        switcher = setInterval(switchFrames, update)
+    })
 
 </script>
 <style>

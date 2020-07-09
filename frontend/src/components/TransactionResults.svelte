@@ -18,7 +18,6 @@
 	}
 
     txResults.subscribe(results => {
-    	console.log(results)
 		if (results.data) {
 			if (results.data.txBlockResult) processTxResults(results.data)
 		}

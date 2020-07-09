@@ -1,3 +1,5 @@
+import { config } from './config.js'
+
 export const color_to_letter = {
     //BTW
     'black': 'A',
@@ -75,41 +77,50 @@ export const letter_to_color = {
 }
 
 
-export const serializeFrame = (pixelData) => {
-    let data = ''
-    pixelData.forEach(pixel => {
-        if (Number.isInteger(pixel)) data += '00'
-        else data += color_to_number[pixel]
-    })
-    return data
+export const replaceAll = (string, char, replace) => {
+  return string.split(char).join(replace);
 }
 
-export const serializeFrames = (pixelArrays) => {
+export const loadEmptyFrames = (pixelArrays) => {
+    for (let i = 0; i < 4; i += 1){
+        if (!pixelArrays[i]) pixelArrays[i] = emptyFrame()
+    }
+}
+
+export const serializeFrame = (pixelArray) => {
+    return replaceAll(pixelArray.toString(), ",","");
+}
+
+export const serializeFrames = (pixelArrays, speed) => {
+    console.log(pixelArrays)
+    let arrayCopy = JSON.parse(JSON.stringify(pixelArrays))
+    console.log(arrayCopy)
     let data = ''
-    pixelArrays.forEach(pixelArray => {
-        data += serializeFrame(pixelArray)
+    arrayCopy.forEach(pixelArray => {
+        data += serializeFrame(pixelArray);
+        console.log(data.length)
     })
-    return data;
+    console.log(data.length)
+    return data + ':' + speed;
 }
 
 export const stringToArrays = (str, size) => {
-    var chunks = [];
+    let chunks = [];
     const arrayLen = str.length / size;
-    for (var i = 0; i <= arrayLen - 1; i += 1) {
+    for (let i = 0; i <= arrayLen - 1; i += 1) {
         chunks.push(str.slice(size * i, size * (i + 1)));
     }
     return chunks
 }
 
 export const decodeFrames = (data) => {
-   let frames = stringToArrays(data, 512)
-   frames.forEach((c, i) => {
-       frames[i] = stringToArrays(c, 2)
-       frames[i].forEach((n, s) => {
-           frames[i][s] = letter_to_color[n]
-       })
-   })
+    let frames = stringToArrays(data, config.totalPixels)
+    console.log(frames)
+    frames.forEach((c, i) => {
+        frames[i] = stringToArrays(c, 1)
+    })
+    console.log(frames)
     return frames
 }
 
-export const emptyFrame = (totalPixels) => Array.from(Array(totalPixels)).map((v)=> v = "B")
+export const emptyFrame = (totalPixels) => Array.from(Array(config.totalPixels)).map((v)=> v = "B")
