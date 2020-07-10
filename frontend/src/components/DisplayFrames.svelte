@@ -36,6 +36,9 @@
         align-items: center;
         justify-content: space-between;
     }
+    .display{
+        align-items: center;
+    }
     .icon {
         margin-right: 5px;
         width: 20px;
@@ -58,12 +61,12 @@
         color: #ff5bb0;
         font-weight: bold;
         font-size: 0.8em;
-        margin: 0;
+        margin: 0 0 0.5rem;
     }
 </style>
 
 <h4>{thingInfo.name}</h4>
-<div class="display flex-col">
+<div class="flex-col display">
     <div>
         {#if frames.length >= show}
             <FrameCanvas {pixelSize} pixels={frames[show - 1]} id={thingInfo.uid}/>
