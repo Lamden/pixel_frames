@@ -1,9 +1,10 @@
 /* /frontend/src/wallet_approval.js   */
+import { config } from './config.js'
 
 const approvalRequest = {
     appName: 'Pixel Frames',
     description: 'Approve this website to start creating and owning unique pixel animations!',
-    contractName: 'con_pf_master_test',
+    contractName: config.masterContract,
     networkType: 'testnet'
 }
 

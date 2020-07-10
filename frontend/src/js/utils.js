@@ -119,7 +119,13 @@ export const decodeFrames = (data) => {
     return frames
 }
 
-export const emptyFrame = (totalPixels) => Array.from(Array(config.totalPixels)).map((v)=> v = "B")
+export const emptyFrame = () => Array.from(Array(config.totalPixels)).map((v)=> v = "B")
+
+export const isEmptyFrame = (frame) => {return JSON.stringify(frame) === JSON.stringify(emptyFrame())}
+
+export const framesEmpty = (frames) => {
+    return frames.map(frame => isEmptyFrame(frame)).filter(f => !f).length == 0
+}
 
 export const createSnack = (title, body, type) => {
     snackbars.update(curr => {
@@ -147,4 +153,26 @@ export const refreshTAUBalance = async (account) => {
     const data = await res.json();
     if (!data.value) dTau.set(0)
     else dTau.set(data.value);
+}
+
+export const sha256 = async (message) => {
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder('utf-8').encode(message);
+
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    // convert bytes to hex string
+    const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+    return hashHex;
+}
+
+export const nameTaken = async (name) => {
+    let hash = await sha256(name.toLowerCase().replace(" ", ""))
+    const res = await fetch(`http://167.172.126.5:18080/contracts/${config.infoContract}/S?key=names:${hash}`)
+    const data = await res.json();
+    return !!data.value
 }

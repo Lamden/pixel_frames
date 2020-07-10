@@ -2,9 +2,9 @@
 
 <script>
 	import Nav from '../components/Nav.svelte';
-	import {onMount, setContext} from 'svelte'
+	import {onMount, afterUpdate, setContext} from 'svelte'
 	import WalletController from 'lamden_wallet_controller';
-	import {walletInstalled, walletInfo} from '../js/stores.js'
+	import {walletInstalled, walletInfo, showModal, userAccount} from '../js/stores.js'
 	import {processTxResults} from '../js/utils.js'
 	import {approvalRequest} from '../js/wallet_approval'
 	import Snackbar from "../components/Snackbar.svelte";
@@ -43,8 +43,10 @@
 			else alert(JSON.stringify(info.errors[0]))
 		} else {
 			walletInfo.set(info)
+			if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
 		}
 	}
+
 
 	const handleTxResults = (results) => processTxResults(results)
 </script>
@@ -61,7 +63,9 @@
 		justify-content: center;
 	}
 </style>
-
+{#if $showModal.show}
+	<Modal/>
+{/if}
 <Snackbar />
 <Nav {segment}/>
 <main>

@@ -18,9 +18,11 @@
 </script>
 
 <script>
+	import { afterUpdate } from 'svelte'
     import Recent from '../../components/Recent.svelte'
 
     export let recent;
+
 </script>
 
 <Recent {recent}/>

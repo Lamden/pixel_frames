@@ -5,11 +5,12 @@
 	import Preview from './Preview.svelte'
 	import ClearButton from './ClearButton.svelte'
 	import DeleteButton from './DeleteButton.svelte'
-	import UploadButton from './UploadButton.svelte'
+	import CreateButton from "./CreateButton.svelte";
 	import RangeSlider from './RangeSlider.svelte'
 	import NewFrame from './NewFrame.svelte'
 
 	import {frames} from '../js/stores'
+
 
 
 </script>
@@ -83,7 +84,7 @@
 			<ClearButton />
 			<DeleteButton />
 			<NewFrame />
-			<UploadButton />
+			<CreateButton />
 		</div>
 	</div>
 	<div class="flex-row pallet-board">

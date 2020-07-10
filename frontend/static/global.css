@@ -97,6 +97,10 @@ flex-row{
 	outline: none;
 	line-height: 1;
 }
+.button:disabled{
+	background: linear-gradient(to bottom, #ff5bb07d 5%, #ef027d7d 100%);
+    color: #e8e8e8;
+}
 .button:hover {
 	background:linear-gradient(to bottom, #ef027d 5%, #ff5bb0 100%);
 	background-color:#ef027d;
@@ -125,6 +129,40 @@ flex-row{
 .button_text:active {
 	position:relative;
 	top:1px;
+}
+
+.outlined {
+	border: 1px dotted #fff5fa;
+	border-radius: 5px;
+}
+
+.outlined:hover {
+	background: #ffc4e1;
+	border: 1px solid #fff5fa;
+}
+
+input[type="text"], textarea {
+	padding: 9px;
+	border: 2px dashed #afafaf;
+	background-color: whitesmoke;
+	border-radius: 5px;
+}
+
+input[type="text"]:focus, textarea:focus {
+	border: 2px dashed transparent;
+	outline: 1px solid #afafaf;
+}
+
+form{
+	padding: 1rem;
+	height: 100%;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 50%;
+}
+form > label{
+	color: #fff5fa;
+	margin: 1rem 0 0.5rem;
 }
 
 @media (min-width: 400px) {

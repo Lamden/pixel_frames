@@ -32,6 +32,8 @@
         align-items: center;
         border: 1px solid #afafaf;
         border-radius: 5px;
+        font-weight: bold;
+        color: darkgray;
     }
     .color:hover{
         position: relative;
@@ -57,6 +59,12 @@
         box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
         border: 1px solid #afafaf;
         border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: darkgray;
+        font-size: 1.2em;
     }
     .flex-col{
         align-items: center;
@@ -64,9 +72,9 @@
     }
     label{
         position: absolute;
-        top: -18px;
-        left: 20px;
-        font-size: 0.8em;
+        top: -19px;
+        left: 18px;
+        font-size: 0.7em;
         color: #ff5bb0;
         font-weight: bold;
     }
@@ -79,11 +87,13 @@
         <div
             style={`background: ${letter_to_color[$currentColor[0]]}`}
             on:contextmenu|preventDefault={e => changeSecondary(e, $currentColor[0])}>
+            {$currentColor[0] === "B" ? "X" : ""}
             <label>L</label>
         </div>
         <div
             style={`background: ${letter_to_color[$currentColor[1]]}`}
             on:click={e => changePrimary(e, $currentColor[1])}>
+            {$currentColor[1] === "B" ? "X" : ""}
             <label>R</label>
         </div>
     </div>

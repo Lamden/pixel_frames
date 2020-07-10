@@ -34,6 +34,7 @@
 <style>
     .snack-container{
         position: absolute;
+        pointer-events: none;
         top: 0;
         right: 0;
         width: 300px;

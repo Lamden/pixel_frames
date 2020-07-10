@@ -20,7 +20,6 @@
     $: show = 1
 
     onMount(() => {
-        console.log(thingInfo)
         switcher = setInterval(switchFrames, thingInfo.speed)
         return(() => clearInterval((switcher)))
     })

@@ -10,6 +10,8 @@
 	export let segment;
 
 	beforeUpdate(() => {
+		console.log($userAccount)
+		console.log($userAccount !== "")
 		if ($userAccount) refreshTAUBalance($userAccount)
 	})
 

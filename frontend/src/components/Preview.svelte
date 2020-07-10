@@ -2,8 +2,10 @@
     import { onMount } from 'svelte'
     import FrameCanvas from './FrameCanvas.svelte'
     import { frameSpeed } from '../js/stores.js'
+    import { isEmptyFrame } from '../js/utils.js'
 
     export let frames;
+    export let pixelSize = 10
 
     let switcher;
     $: show = 1
@@ -32,8 +34,8 @@
 
 <div class="preview-frame">
     {#if frames.length >= show}
-        <FrameCanvas pixelSize={10} pixels={frames[show - 1]}/>
+        <FrameCanvas {pixelSize} pixels={frames[show - 1]}/>
     {:else}
-        <FrameCanvas pixelSize={10} pixels={frames[show - 1]}/>
+        <FrameCanvas {pixelSize} pixels={frames[show - 1]}/>
     {/if}
 </div>
