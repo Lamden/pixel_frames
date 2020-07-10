@@ -2,8 +2,6 @@
 <script context="module">
 	import { config } from '../js/config.js'
 	export async function preload(parms) {
-		let env = process.env.NODE_ENV
-		console.log(env)
 		const options = {
 			method: 'POST',
 			headers: {
@@ -14,7 +12,7 @@
 				variableName: 'S'
 			})
 		}
-		const res = await this.fetch(`${config.blockExplorer[env]}/things/recent`, options)
+		const res = await this.fetch(`${config.blockExplorer}/things/recent`, options)
 		let data = await res.json()
 		if (!data) data = []
 	    return {recent: data}
