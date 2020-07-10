@@ -7,7 +7,6 @@
     $: buttons = []
 
     onMount(() => {
-        console.log($showModal)
         buttons = $showModal.modalData.buttons
     })
 </script>
