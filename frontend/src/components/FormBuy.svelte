@@ -6,26 +6,21 @@
 
     const { sendTransaction } = getContext('app_functions')
 
-	let price = $showModal.modalData.thingInfo.price;
-
-    const sell = () => {
-    	console.log($showModal)
+    const buy = () => {
 		const transaction = {
-			methodName: 'sell_thing',
+			methodName: 'buy_thing',
 			networkType: 'testnet',
 			stampLimit: 100000,
 			kwargs: {
-				uid: $showModal.modalData.thingInfo.uid,
-				amount: parseInt(price)
+				uid: $showModal.modalData.thingInfo.uid
 			}
 		}
-		//sendTransaction(transaction)
 
         console.log(transaction)
 		sendTransaction(transaction)
 
 		createSnack(
-			`Listing ${$showModal.modalData.thingInfo.name}`,
+			`Buying ${$showModal.modalData.thingInfo.name}!`,
 			"Please approve the Lamden Wallet transaction popup.",
 			"info"
 		)
@@ -43,14 +38,15 @@
 	.preview-row{
 		text-align: center;
 	}
-
+	textarea{
+		resize: none;
+	}
 	.button_text{
 		color: white;
 	}
 	.outlined:hover{
 		color: #ff5bb0;
 	}
-
 </style>
 
 <div class="flex-row">
@@ -58,10 +54,12 @@
 		{#if $showModal.modalData.thingInfo}
 			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15}/>
 		{/if}
-		<input type="submit" class="button_text outlined" value="List Item" form="sell" />
+		<input type="submit" class="button_text outlined" value={`Buy For ${$showModal.modalData.thingInfo.price} dTAU`} form="buy" />
 	</div>
-	<form id="sell" class="flex-col" on:submit|preventDefault={sell}>
-		<label for="price">How much does your Pixel Frame cost?</label>
-		<input id="price" type="number" min="1" required bind:value={price}/>
+	<form id="buy" class="flex-col" on:submit|preventDefault={buy}>
+		<label for="name">Name</label>
+		<input id="name" type="text" readonly value={$showModal.modalData.thingInfo.name}/>
+		<label for="desc">Description</label>
+		<textarea id="desc" type="textarea" rows="8" readonly value={$showModal.modalData.thingInfo.description}/>
 	</form>
 </div>

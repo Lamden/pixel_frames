@@ -5,6 +5,7 @@
     import Frame from './Frame.svelte'
     import FrameCanvas from './FrameCanvas.svelte'
     import Price from './Price.svelte'
+    import { createSnack } from '../js/utils.js'
 
     //Pictures
     import like_filled from '../../static/img/like-filled.svg'
@@ -40,14 +41,14 @@
 				uid: thingInfo.uid
 			}
 		}
-        console.log(transaction)
-		sendTransaction(transaction)
 
 		createSnack(
-			"Submitting Transaction",
+			`Liking ${thingInfo.name}`,
 			"Please approve the Lamden Wallet transaction popup.",
 			"info"
 		)
+
+        sendTransaction(transaction)
     }
 
 </script>

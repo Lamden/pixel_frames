@@ -3,6 +3,7 @@
     import lamden_logo from '../../static/img/lamden_logo_new.svg'
 
     import FormSell from './FormSell.svelte'
+    import FormBuy from './FormBuy.svelte'
 
     export let thingInfo
 
@@ -32,7 +33,7 @@
     </div>
     {thingInfo.price}
     {#if thingInfo.owner !== $userAccount}
-        <button class="button_text" on:click={() => openModal('FormBuy')}>buy</button>
+        <button class="button_text" on:click={() => openModal(FormBuy)}>buy</button>
     {:else}
         {#if thingInfo.price > 0}
             <button class="button_text" on:click={() => openModal(FormSell)}>set</button>
