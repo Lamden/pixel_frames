@@ -2,6 +2,7 @@
 	import { config } from '../../js/config.js'
 	export async function preload(parms) {
 		let env = process.env.NODE_ENV
+		console.log(env)
 		const options = {
 			method: 'POST',
 			headers: {

@@ -6,5 +6,5 @@ export const config = {
         "development": "http://localhost:1337",
         "production": "https://explorer.lamden.io/api"
     },
-    masternode: "https://testnet-master-1.lamden.io/"
+    masternode: "https://testnet-master-1.lamden.io"
 }
