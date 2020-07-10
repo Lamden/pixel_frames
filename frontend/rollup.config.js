@@ -9,6 +9,7 @@ import pkg from './package.json';
 import svg from 'rollup-plugin-svg';
 
 const mode = process.env.NODE_ENV;
+console.log({mode})
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 

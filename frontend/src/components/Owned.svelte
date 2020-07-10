@@ -1,5 +1,5 @@
 <script>
-    import { onMount, beforeUpdate } from 'svelte';
+    import { beforeUpdate } from 'svelte';
     import DisplayFrames from './DisplayFrames.svelte';
 
     import { decodeFrames  } from "../js/utils.js";

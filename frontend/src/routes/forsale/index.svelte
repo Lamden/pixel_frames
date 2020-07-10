@@ -1,5 +1,7 @@
 <script context="module">
+	import { config } from '../../js/config.js'
 	export async function preload(parms) {
+		let env = process.env.NODE_ENV
 		const options = {
 			method: 'POST',
 			headers: {
@@ -10,7 +12,7 @@
 				variableName: 'S'
 			})
 		}
-		const res = await this.fetch(`http://localhost:1337/things/forsale`, options)
+		const res = await this.fetch(`${config.blockExplorer[env]}/things/forsale`, options)
 		let data = await res.json()
 		if (!data) data = []
 	    return {forsale: data}
