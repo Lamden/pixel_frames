@@ -40,7 +40,6 @@
 	const handleWalletInfo = (info) => {
 		if (info.errors) {
 			if (info.errors[0].includes('lamdenWalletConnect')) lwc.sendConnection(approvalRequest)
-			else alert(JSON.stringify(info.errors[0]))
 		} else {
 			walletInfo.set(info)
 			if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
