@@ -149,7 +149,7 @@ export const processTxResults = (results) => {
 }
 
 export const refreshTAUBalance = async (account) => {
-    const res = await fetch("http://167.172.126.5:18080/contracts/currency/balances?key=" + account)
+    const res = await fetch(`${config.masternode}/contracts/currency/balances?key=${account}`)
     const data = await res.json();
     if (!data.value) dTau.set(0)
     else dTau.set(data.value);
@@ -172,7 +172,7 @@ export const sha256 = async (message) => {
 
 export const nameTaken = async (name) => {
     let hash = await sha256(name.toLowerCase().replace(" ", ""))
-    const res = await fetch(`http://167.172.126.5:18080/contracts/${config.infoContract}/S?key=names:${hash}`)
+    const res = await fetch(`${config.masternode}/contracts/${config.infoContract}/S?key=names:${hash}`)
     const data = await res.json();
     return !!data.value
 }

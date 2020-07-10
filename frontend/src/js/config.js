@@ -5,5 +5,6 @@ export const config = {
     blockExplorer: {
         "development": "http://localhost:1337",
         "production": "https://explorer.lamden.io/api"
-    }
+    },
+    masternode: "https://testnet-master-1.lamden.io/"
 }
