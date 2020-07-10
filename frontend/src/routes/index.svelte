@@ -22,7 +22,7 @@
 	import {goto} from '@sapper/app';
 	import {fade} from 'svelte/transition';
 	import {quintOut} from 'svelte/easing';
-	import {walletInstalled, walletInfo} from '../js/stores'
+	import {walletInstalled, walletInfo, snackbars} from '../js/stores'
 	import Recent from '../components/Recent.svelte'
 
 	//Components
@@ -69,6 +69,5 @@
 {:else}
 	<h2 transition:fade="{{delay: 0, duration: 300}}">... Checking for Lamden Wallet ...</h2>
 {/if}
-
 
 <Recent {recent}/>

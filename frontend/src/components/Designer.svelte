@@ -9,7 +9,8 @@
 	import RangeSlider from './RangeSlider.svelte'
 	import NewFrame from './NewFrame.svelte'
 
-	import { frames } from '../js/stores'
+	import {frames} from '../js/stores'
+
 
 </script>
 

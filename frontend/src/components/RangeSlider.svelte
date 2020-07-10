@@ -6,7 +6,10 @@
         let lsSpeed = localStorage.getItem('frameSpeed')
         if (lsSpeed) frameSpeed.set(lsSpeed)
         else frameSpeed.set(1000)
-        return (() => localStorage.setItem('frameSpeed', $frameSpeed))
+
+        return (() => {
+            if ($frameSpeed) localStorage.setItem('frameSpeed', $frameSpeed)
+        })
     })
 
 </script>
@@ -14,6 +17,7 @@
 <div class="flex-row">
      <input
          bind:value={$frameSpeed}
+         on:change={() => localStorage.setItem('frameSpeed', $frameSpeed)}
          type="range"
          min="100"
          max="2000"

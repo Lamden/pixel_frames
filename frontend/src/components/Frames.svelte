@@ -3,7 +3,6 @@
     import { emptyFrame } from '../js/utils'
     import FrameCanvas from './FrameCanvas.svelte'
     import AddFrame from './AddFrame.svelte'
-    import closeIcon from '../../static/img/cancel-blend-filled.svg'
 
     let pixelSize = 4;
     let gridSize = (pixelSize * 16) + pixelSize;

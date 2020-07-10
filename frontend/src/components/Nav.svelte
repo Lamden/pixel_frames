@@ -1,36 +1,16 @@
 <script>
-	import { userAccount, txResults } from '../js/stores'
+	import { userAccount, dTau } from '../js/stores'
 	import { beforeUpdate } from 'svelte'
 	import { goto } from '@sapper/app';
+
+	import { refreshTAUBalance } from '../js/utils.js'
 
 	import Title from './Title.svelte'
 
 	export let segment;
 
-	let tauAmount = 0;
-
 	beforeUpdate(() => {
-		if ($userAccount) refreshTAUBalance()
-	})
-
-	const refreshTAUBalance = async () => {
-		return
-		const res = await fetch("http://167.172.126.5:18080/contracts/currency/balances?key=" + $userAccount)
-		const data = await res.json();
-		if (!data.value) tauAmount = 0
-		else tauAmount = data.value;
-	}
-
-	const updateTau = (data) => {
-		if (typeof data.txBlockResult.status !== 'undefined'){
-			if (data.txBlockResult.status == 0) {
-				if (status === 0) refreshTAUBalance();
-			}
-		}
-	}
-
-	txResults.subscribe(results => {
-		if (results.data) updateTau(results.data)
+		if ($userAccount) refreshTAUBalance($userAccount)
 	})
 
 	const logout = () => {
@@ -84,7 +64,8 @@
 	}
 	.address{
 		width: 93%;
-		font-size: 0.9em;
+		font-size: 0.8em;
+		font-size: 0.8em;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -93,11 +74,12 @@
 	}
 	.dtau{
 		color: #161454;
-		font-size: 0.8em;
+		font-size: 1em;
 		margin: 0;
 	}
 	.button_text {
 		padding: 0;
+		margin-top: 0.5rem;
 	}
 	.links{
 		display: none;
@@ -164,13 +146,14 @@
 	</div>
 	<div class="flex-col account">
 		{#if $userAccount !== ""}
+			<p class="dtau"><strong>dTAU: </strong> {$dTau}</p>
 			<a href={`https://explorer.lamden.io/address/${$userAccount}`}
 			   target="_blank"
 			   rel="noopener noreferrer"
 			   class="address">
 				{$userAccount}
 			</a>
-			<p class="dtau"><strong>dTAU: </strong> {tauAmount}</p>
+
 			<button class="button_text" on:click={logout}>sign out </button>
 		{/if}
 	</div>

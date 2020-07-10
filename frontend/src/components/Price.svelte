@@ -1,14 +1,15 @@
 <script>
     import { userAccount } from '../js/stores.js'
-
-    export let thingInfo
-
-
-        import { getContext } from 'svelte'
+    import { getContext } from 'svelte'
     import { serializeFrames } from '../js/utils'
     import { frames, frameSpeed } from '../js/stores'
 
+    import lamden_logo from '../../static/img/lamden_logo_new.svg'
+
+    export let thingInfo
+
     const { sendTransaction } = getContext('app_functions')
+
 
     const sell = () => {
         const thing_string = serializeFrames($frames, $frameSpeed)

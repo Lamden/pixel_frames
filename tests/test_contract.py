@@ -87,7 +87,7 @@ with open('../contracts/con_pixel_frames_master.py') as f:
         name='con_pixel_frames_master',
         constructor_args={
             'name': 'Pixel Frames',
-            'description': 'CREATE, OWN and SELL unique pixel animations on the Lamden Blockchain!',
+            'description': 'Create, Own and Sell unique pixel animations on the Lamden Blockchain!',
             'icon_svg_base64': icon_svg_base64.decode("utf-8")
         }
     )

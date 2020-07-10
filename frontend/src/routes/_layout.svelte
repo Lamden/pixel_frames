@@ -2,10 +2,13 @@
 
 <script>
 	import Nav from '../components/Nav.svelte';
-	import { onMount, setContext } from 'svelte'
+	import {onMount, setContext} from 'svelte'
 	import WalletController from 'lamden_wallet_controller';
-	import { walletInstalled, walletInfo, txResults } from '../js/stores'
-	import { approvalRequest } from '../js/wallet_approval'
+	import {walletInstalled, walletInfo} from '../js/stores.js'
+	import {processTxResults} from '../js/utils.js'
+	import {approvalRequest} from '../js/wallet_approval'
+	import Snackbar from "../components/Snackbar.svelte";
+	import Modal from "../components/Modal.svelte";
 
 	export let segment;
 	let lwc;
@@ -16,10 +19,10 @@
 		lwc.events.on('txStatus', handleTxResults)
 
 		lwc.walletIsInstalled()
-			.then(installed => {
-				if (installed) walletInstalled.set('installed')
-				else walletInstalled.set('not-installed')
-			})
+				.then(installed => {
+					if (installed) walletInstalled.set('installed')
+					else walletInstalled.set('not-installed')
+				})
 
 		return () => {
 			lwc.events.removeListener(handleWalletInfo)
@@ -28,19 +31,22 @@
 	})
 
 	setContext('app_functions', {
-		sendTransaction: (transaction) => lwc.sendTransaction(transaction)
+		sendTransaction: (transaction) => lwc.sendTransaction(transaction),
+		lwc: () => {
+			return lwc
+		}
 	})
 
 	const handleWalletInfo = (info) => {
-		if (info.errors){
+		if (info.errors) {
 			if (info.errors[0].includes('lamdenWalletConnect')) lwc.sendConnection(approvalRequest)
 			else alert(JSON.stringify(info.errors[0]))
-		}else{
+		} else {
 			walletInfo.set(info)
 		}
 	}
 
-	const handleTxResults = (results) => txResults.set(results)
+	const handleTxResults = (results) => processTxResults(results)
 </script>
 
 <style>
@@ -56,6 +62,7 @@
 	}
 </style>
 
+<Snackbar />
 <Nav {segment}/>
 <main>
 	<slot></slot>

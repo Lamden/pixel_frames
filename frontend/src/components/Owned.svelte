@@ -15,7 +15,6 @@
 
     const formatThings = () => {
         owned.forEach(thing => {
-            thing.speed = thing.thing.split(':')[1]
             thing.frames = decodeFrames(thing.thing)
         })
         formatted =  owned
@@ -32,6 +31,7 @@
         flex-wrap: wrap;
         width: 100%;
         margin-bottom: 2rem;
+        justify-content: space-evenly;
     }
     .owned {
 		width: 100%;
@@ -53,7 +53,7 @@
 <div class="owned">
     {#each formatted as thingInfo}
         <div>
-            <DisplayFrames pixelSize={10} {thingInfo} />
+            <DisplayFrames pixelSize={12} {thingInfo} />
         </div>
     {/each}
 </div>

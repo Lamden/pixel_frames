@@ -1,4 +1,6 @@
 import { config } from './config.js'
+import { snackbars, dTau, userAccount } from "./stores";
+import { get } from 'svelte/store'
 
 export const color_to_letter = {
     //BTW
@@ -91,17 +93,13 @@ export const serializeFrame = (pixelArray) => {
     return replaceAll(pixelArray.toString(), ",","");
 }
 
-export const serializeFrames = (pixelArrays, speed) => {
-    console.log(pixelArrays)
+export const serializeFrames = (pixelArrays) => {
     let arrayCopy = JSON.parse(JSON.stringify(pixelArrays))
-    console.log(arrayCopy)
     let data = ''
     arrayCopy.forEach(pixelArray => {
         data += serializeFrame(pixelArray);
-        console.log(data.length)
     })
-    console.log(data.length)
-    return data + ':' + speed;
+    return data;
 }
 
 export const stringToArrays = (str, size) => {
@@ -115,12 +113,38 @@ export const stringToArrays = (str, size) => {
 
 export const decodeFrames = (data) => {
     let frames = stringToArrays(data, config.totalPixels)
-    console.log(frames)
     frames.forEach((c, i) => {
         frames[i] = stringToArrays(c, 1)
     })
-    console.log(frames)
     return frames
 }
 
 export const emptyFrame = (totalPixels) => Array.from(Array(config.totalPixels)).map((v)=> v = "B")
+
+export const createSnack = (title, body, type) => {
+    snackbars.update(curr => {
+        let snack = { type, time: new Date().getTime(), title, body }
+        return [...curr, snack]
+    })
+}
+
+export const processTxResults = (results) => {
+    console.log(results)
+    if (results.data) {
+        if (results.data.resultInfo) {
+            createSnack(
+                results.data.resultInfo.title,
+                results.data.resultInfo.subtitle,
+                results.data.resultInfo.type
+            )
+            refreshTAUBalance(get(userAccount))
+        }
+    }
+}
+
+export const refreshTAUBalance = async (account) => {
+    const res = await fetch("http://167.172.126.5:18080/contracts/currency/balances?key=" + account)
+    const data = await res.json();
+    if (!data.value) dTau.set(0)
+    else dTau.set(data.value);
+}

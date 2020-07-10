@@ -9,5 +9,7 @@ export const frameSpeed = writable(1000)
 
 export const walletInstalled = writable('checking');
 export const walletInfo = writable({});
-export const txResults = writable({});
 export const userAccount = writable("");
+
+export const snackbars = writable([]);
+export const dTau = writable(0);

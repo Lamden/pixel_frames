@@ -24,7 +24,7 @@
 		width: 100%;
 		padding: 2rem 1rem;
 		flex-wrap: wrap;
-
+		box-sizing: border-box;
 	}
 
 	.recent > div {

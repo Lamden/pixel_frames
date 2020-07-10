@@ -24,6 +24,7 @@
 
     export let account
 	export let owned
+
 	const thing = {
     	uid: "09777890871012081029371927389237412093812",
     	likes: 10,
@@ -33,9 +34,12 @@
 	}
 
 	onMount(() => {
+		/*
 		let things = []
 		things[0] = {...thing, "thing": localStorage.getItem('thing_string')}
 		owned = things
+		*/
+
 	})
 
 	beforeUpdate(() => {

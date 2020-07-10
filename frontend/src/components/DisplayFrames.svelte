@@ -41,28 +41,28 @@
         width: 20px;
         height: 30px;
     }
-    .button_text{
-        font-weight: 100;
-        margin: 0 0 0 5px;
-        padding: 0;
-        font-size: 0.9em;
-
-    }
     .description{
         overflow-y: auto;
         align-items: baseline;
         flex-wrap: wrap;
     }
-    p{
+    .description > p{
         width: 100%;
         margin: 0;
         overflow-y: auto;
-        height: 107px;
+        height: 49px;
         position: relative;
         font-size: 0.7em;
     }
+    h4{
+        color: #ff5bb0;
+        font-weight: bold;
+        font-size: 0.8em;
+        margin: 0;
+    }
 </style>
 
+<h4>{thingInfo.name}</h4>
 <div class="display flex-col">
     <div>
         {#if frames.length >= show}
