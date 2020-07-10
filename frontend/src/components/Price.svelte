@@ -1,49 +1,48 @@
 <script>
-    import { userAccount } from '../js/stores.js'
-    import { getContext } from 'svelte'
-    import { serializeFrames } from '../js/utils'
-    import { frames, frameSpeed } from '../js/stores'
-
+    import { userAccount, showModal } from '../js/stores.js'
     import lamden_logo from '../../static/img/lamden_logo_new.svg'
+
+    import FormSell from './FormSell.svelte'
 
     export let thingInfo
 
-    const { sendTransaction } = getContext('app_functions')
-
-
-    const sell = () => {
-        const thing_string = serializeFrames($frames, $frameSpeed)
-		console.log(thing_string)
-		console.log(thing_string.length)
-		localStorage.setItem('frames', JSON.stringify($frames))
-		localStorage.setItem('thing_string', thing_string)
-
-		const transaction = {
-			methodName: 'create_thing',
-			networkType: 'testnet',
-			stampLimit: 1000000,
-			kwargs: {
-				thing_string,
-				description: "A test string"
-			}
-		}
-		//sendTransaction(transaction)
+    const openModal = (modal) => {
+        showModal.set({modalData:{thingInfo, modal: modal}, show:true})
     }
-
 </script>
 
-{#if thingInfo.price > 0}
-    <div class="flex-row price">
-        <div class="icon">
-            {@html lamden_logo}
-        </div>
-        {thingInfo.price}
-        {#if thingInfo.owner !== $userAccount}
-            <a class="button_text" href={"buy/" + thingInfo.uid} >buy</a>
-        {:else}
-            <a class="button_text" href={"buy/" + thingInfo.uid} >set</a>
-        {/if}
+<style>
+    .icon {
+        margin-right: 5px;
+        width: 20px;
+        height: 30px;
+    }
+    .price{
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .button_text{
+        padding: 0 0 0 5px;
+    }
+</style>
+
+<div class="flex-row price">
+    <div class="icon">
+        {@html lamden_logo}
     </div>
-{:else}
-    <a class="button_text" href={"buy/" + thingInfo.uid} >sell</a>
-{/if}
+    {thingInfo.price}
+    {#if thingInfo.owner !== $userAccount}
+        <button class="button_text" on:click={() => openModal('FormBuy')}>buy</button>
+    {:else}
+        {#if thingInfo.price > 0}
+            <button class="button_text" on:click={() => openModal(FormSell)}>set</button>
+        {:else}
+            <button class="button_text" on:click={() => openModal(FormSell)}>sell</button>
+        {/if}
+    {/if}
+</div>
+
+
+
+
+

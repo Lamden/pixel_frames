@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from 'svelte'
+    import { getContext, onMount } from 'svelte'
     import {goto} from '@sapper/app';
     import { userAccount } from '../js/stores.js'
     import Frame from './Frame.svelte'
@@ -10,6 +10,8 @@
     import like_filled from '../../static/img/like-filled.svg'
     import like_unfilled from '../../static/img/like-unfilled.svg'
     import lamden_logo from '../../static/img/lamden_logo_new.svg'
+
+    const { sendTransaction } = getContext('app_functions')
 
     export let thingInfo;
     export let pixelSize = 5;
@@ -29,6 +31,25 @@
         else show = show === frames.length ? 1 : show + 1;
     }
 
+    const like = () => {
+		const transaction = {
+			methodName: 'like_thing',
+			networkType: 'testnet',
+			stampLimit: 100000,
+			kwargs: {
+				uid: thingInfo.uid
+			}
+		}
+        console.log(transaction)
+		sendTransaction(transaction)
+
+		createSnack(
+			"Submitting Transaction",
+			"Please approve the Lamden Wallet transaction popup.",
+			"info"
+		)
+    }
+
 </script>
 <style>
     .flex-row{
@@ -42,6 +63,7 @@
         margin-right: 5px;
         width: 20px;
         height: 30px;
+        cursor: pointer;
     }
     .description{
         overflow-y: auto;
@@ -76,7 +98,7 @@
 <div class="flex-col meta">
     <div class="flex-row">
         <div class="flex-row likes">
-            <div class="icon">
+            <div class="icon" on:click={like}>
                 {@html like_unfilled}
             </div>
             {thingInfo.likes}
