@@ -35,8 +35,15 @@
 		border-bottom: 1px solid #ff5bb047;
 		z-index: 1;
 	}
+	nav.flex-row{
+		justify-content: center;
+	}
+	.desktop{
+		display: none;
+	}
 	.brand{
 		align-items: center;
+		justify-content: center;
 		font-weight: 300;
 		font-size: 2em;
 		min-width: max-content;
@@ -124,6 +131,14 @@
 			display: block;
 		}
 	}
+	@media (min-width: 450px) {
+		.desktop {
+			display: block;
+		}
+		nav.flex-row{
+			justify-content: unset;
+		}
+	}
 
 </style>
 
@@ -132,7 +147,7 @@
 		<img src="logo-64.png" alt="nav logo">
 		<Title fontSize={1}/>
 	</div>
-	<div class="links">
+	<div class="links desktop">
 		<ul>
 			{#if segment !== undefined && $userAccount !== ""}
 				<li><a rel=prefetch aria-current="{segment === 'boards' ? 'page' : undefined}" href={'boards/' + $userAccount}>create</a></li>
@@ -144,7 +159,7 @@
 			<li><a rel=prefetch aria-current="{segment === 'forsale' ? 'page' : undefined}" href="forsale">for sale</a></li>
 		</ul>
 	</div>
-	<div class="flex-col account">
+	<div class="flex-col account desktop">
 		{#if $userAccount !== ""}
 			<p class="dtau"><strong>dTAU: </strong> {$dTau}</p>
 			<a href={`https://explorer.lamden.io/address/${$userAccount}`}

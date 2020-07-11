@@ -45,12 +45,33 @@
 	*{
 		text-align: center;
 	}
+	.wallet-messages{
+		display: none;
+	}
+	@media (min-width: 450px) {
+		.wallet-messages {
+			display: block;
+		}
+		.mobile-message{
+			display: none;
+		}
+
+	}
 </style>
 
-<Title fontSize={8}/>
+<div class="wallet-messages">
+	<Title class="wallet-messages" fontSize={8}/>
+</div>
+
+<div class="mobile-message">
+	<strong>This site is not mobile optimized.</strong>>
+	Please visit us on a desktop for the full experience including integration with the Lamden Wallet to enable
+	<strong>buying, selling and creating Pixel Frames animations!</strong>
+</div>
 
 {#if $walletInstalled !== 'checking'}
-	<div in:fade="{{delay: 300, duration: 500, opacity: 0.0, easing: quintOut}}">
+	<div class="wallet-messages"
+		 in:fade="{{delay: 300, duration: 500, opacity: 0.0, easing: quintOut}}">
 		{#if $walletInstalled === 'installed'}
 			{#if $walletInfo.locked == true}
 				<Unlock />
@@ -68,7 +89,7 @@
 		{/if}
 	</div>
 {:else}
-	<h2 transition:fade="{{delay: 0, duration: 300}}">... Checking for Lamden Wallet ...</h2>
+	<h2 class="wallet-messages" transition:fade="{{delay: 0, duration: 300}}">... Checking for Lamden Wallet ...</h2>
 {/if}
 
 <Recent {recent}/>

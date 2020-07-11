@@ -61,6 +61,12 @@
 		flex-direction: column;
 		justify-content: center;
 	}
+
+	@media (min-width: 450px) {
+		.wallet-messages {
+			display: block;
+		}
+	}
 </style>
 {#if $showModal.show}
 	<Modal/>
