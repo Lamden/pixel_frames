@@ -46,7 +46,7 @@
 <div class="flex-row recent">
     {#each formatted as thingInfo}
 		<div>
-			<DisplayFrames pixelSize={8} {thingInfo} title={false}/>
+			<DisplayFrames pixelSize={8} {thingInfo}/>
 		</div>
     {/each}
 </div>
