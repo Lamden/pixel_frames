@@ -135,7 +135,6 @@ export const createSnack = (title, body, type) => {
 }
 
 export const processTxResults = (results) => {
-    console.log(results)
     if (results.data) {
         if (results.data.errors) return results.data.errors
         if (results.data.resultInfo) {

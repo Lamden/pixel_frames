@@ -38,7 +38,6 @@
 	})
 
 	const handleWalletInfo = (info) => {
-		console.log(info)
 		if (info.errors) {
 			if (info.errors[0].includes('lamdenWalletConnect')) lwc.sendConnection(approvalRequest)
 			if (info.errors[0].includes('no matching vk is currently found in the wallet'))
@@ -54,7 +53,6 @@
 
 
 	const handleTxResults = (results) => {
-		console.log(results)
 		let errors = processTxResults(results)
 		if (errors.length > 0) {
 			if (errors[0].includes('have not been approved for')) lwc.sendConnection(approvalRequest, true)
