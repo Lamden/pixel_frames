@@ -38,16 +38,28 @@
 	})
 
 	const handleWalletInfo = (info) => {
+		console.log(info)
 		if (info.errors) {
 			if (info.errors[0].includes('lamdenWalletConnect')) lwc.sendConnection(approvalRequest)
+			if (info.errors[0].includes('no matching vk is currently found in the wallet'))
+				lwc.sendConnection(approvalRequest, true, true)
 		} else {
-			walletInfo.set(info)
-			if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
+			if (!info.approvals.testnet) lwc.sendConnection(approvalRequest, true)
+			else {
+				walletInfo.set(info)
+				if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
+			}
 		}
 	}
 
 
-	const handleTxResults = (results) => processTxResults(results)
+	const handleTxResults = (results) => {
+		console.log(results)
+		let errors = processTxResults(results)
+		if (errors.length > 0) {
+			if (errors[0].includes('have not been approved for')) lwc.sendConnection(approvalRequest, true)
+		}
+	}
 </script>
 
 <style>
@@ -60,12 +72,6 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-	}
-
-	@media (min-width: 450px) {
-		.wallet-messages {
-			display: block;
-		}
 	}
 </style>
 {#if $showModal.show}

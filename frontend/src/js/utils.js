@@ -137,6 +137,7 @@ export const createSnack = (title, body, type) => {
 export const processTxResults = (results) => {
     console.log(results)
     if (results.data) {
+        if (results.data.errors) return results.data.errors
         if (results.data.resultInfo) {
             createSnack(
                 results.data.resultInfo.title,
@@ -146,6 +147,7 @@ export const processTxResults = (results) => {
             refreshTAUBalance(get(userAccount))
         }
     }
+    return []
 }
 
 export const refreshTAUBalance = async (account) => {
