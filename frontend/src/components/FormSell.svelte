@@ -6,10 +6,9 @@
 
     const { sendTransaction } = getContext('app_functions')
 
-	let price = $showModal.modalData.thingInfo.price;
+	let price = $showModal.modalData.thingInfo['price:amount'];
 
     const sell = () => {
-    	console.log($showModal)
 		const transaction = {
 			methodName: 'sell_thing',
 			networkType: 'testnet',
@@ -19,9 +18,7 @@
 				amount: parseInt(price)
 			}
 		}
-		//sendTransaction(transaction)
 
-        console.log(transaction)
 		sendTransaction(transaction)
 
 		createSnack(

@@ -5,8 +5,8 @@
     import { decodeFrames  } from "../js/utils.js";
     import { userAccount } from '../js/stores'
 
-    export let owned;
-    export let account;
+    export let created;
+    export let creator;
 
     let formatted = [];
 
@@ -15,10 +15,10 @@
     })
 
     const formatThings = () => {
-        owned.forEach(thing => {
+        created.forEach(thing => {
             thing.frames = decodeFrames(thing.thing)
         })
-        formatted =  owned
+        formatted =  created
     }
 
     formatThings();
@@ -26,7 +26,7 @@
 </script>
 
 <style>
-	.owned {
+	.created {
 		width: 100%;
 		padding: 2rem 1rem;
 		flex-wrap: wrap;
@@ -34,7 +34,7 @@
 		justify-content: space-evenly;
 	}
 
-	.owned > div {
+	.created > div {
 		padding: 20px 20px;
 		width: 180px;
 		margin: 10px;
@@ -52,13 +52,25 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .button_text{
+        margin: 1px 0 0 5px;
+        padding: 0;
+    }
+    .flex-row{
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
 </style>
 
-<h2>Pixel Frames Owned By</h2>
-<p>{account === $userAccount ? 'You' : account}
-    {formatted.length == 0 ? `${account === $userAccount ? "don't" : "doesn't"} own anything yet!` : ""}
+<h2>Pixel Frames Created by</h2>
+<p class="flex-row">{creator === $userAccount ? 'You' : creator}
+    {formatted.length == 0 ? `${creator === $userAccount ? "haven't" : "hasn't"} created anything yet!` : ""}
+    {#if creator === $userAccount}
+        <a href="{`/boards/${$userAccount}`}" class="button_text">CREATE!</a>
+    {/if}
 </p>
-<div class="flex-row owned">
+<div class="flex-row created">
     {#each formatted as thingInfo}
         <div>
             <DisplayFrames pixelSize={12} {thingInfo} />

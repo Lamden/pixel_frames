@@ -28,7 +28,6 @@
 			}
 		}
 
-		console.log(transaction)
 		sendTransaction(transaction)
 
 		createSnack(

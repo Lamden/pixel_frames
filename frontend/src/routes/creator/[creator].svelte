@@ -11,21 +11,18 @@
 				variableName: 'S'
 			})
 		}
-		const res = await this.fetch(`${config.blockExplorer}/things/owned/${params.account}`, options)
+		const res = await this.fetch(`${config.blockExplorer}/things/created/${params.creator}`, options)
 		let data = await res.json()
 		if (!data) data = []
-	    return {account: params.account, owned: data}
+	    return {created: data, creator: params.creator}
 	}
 </script>
 
 <script>
-    import Owned from "../../components/Owned.svelte";
+    import Creator from "../../components/Creator.svelte";
 
-    export let account
-	export let owned
-
+    export let created
+	export let creator
 </script>
 
-<Owned {owned} {account}/>
-
-
+<Creator {created} {creator}/>

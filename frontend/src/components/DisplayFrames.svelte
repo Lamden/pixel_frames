@@ -1,6 +1,6 @@
 <script>
     import { getContext, onMount } from 'svelte'
-    import {goto} from '@sapper/app';
+    import { goto } from '@sapper/app';
     import { userAccount } from '../js/stores.js'
     import Frame from './Frame.svelte'
     import FrameCanvas from './FrameCanvas.svelte'
@@ -51,6 +51,8 @@
         sendTransaction(transaction)
     }
 
+    const showFrame = () => goto(`./frames/${thingInfo.uid}`)
+
 </script>
 <style>
     .flex-row{
@@ -84,12 +86,16 @@
         font-weight: bold;
         font-size: 0.8em;
         margin: 0 0 0.5rem;
+        cursor: pointer;
+    }
+    h4:hover{
+        text-decoration: underline;
     }
 </style>
 
-<h4>{thingInfo.name}</h4>
+<h4 on:click={showFrame}>{thingInfo.name}</h4>
 <div class="flex-col display">
-    <div>
+    <div on:click={showFrame}>
         {#if frames.length >= show}
             <FrameCanvas {pixelSize} pixels={frames[show - 1]} id={thingInfo.uid}/>
         {/if}

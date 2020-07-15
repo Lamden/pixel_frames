@@ -24,19 +24,25 @@
     }
     .button_text{
         padding: 0 0 0 5px;
+        display: none;
     }
     p{
         margin: 0;
         padding: 0;
     }
+    @media (min-width: 450px) {
+		.button_text{
+            display: block;
+        }
+	}
 </style>
 
 <div class="flex-row price">
-    {#if thingInfo.price > 0}
+    {#if thingInfo['price:amount'] > 0}
         <div class="icon">
             {@html lamden_logo}
         </div>
-        {thingInfo.price}
+        {thingInfo['price:amount']}
         {#if thingInfo.owner !== $userAccount}
             <button class="button_text" on:click={() => openModal(FormBuy)}>buy</button>
         {:else}
@@ -44,7 +50,7 @@
         {/if}
     {:else}
         {#if thingInfo.owner !== $userAccount}
-            <p class="button_text">not for sale</p>
+            <p>not for sale</p>
         {:else}
             <button class="button_text" on:click={() => openModal(FormSell)}>sell</button>
         {/if}

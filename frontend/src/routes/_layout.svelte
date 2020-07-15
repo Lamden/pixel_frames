@@ -43,11 +43,13 @@
 			if (info.errors[0].includes('no matching vk is currently found in the wallet'))
 				lwc.sendConnection(approvalRequest, true, true)
 		} else {
-			if (!info.approvals.testnet) lwc.sendConnection(approvalRequest, true)
-			else {
-				walletInfo.set(info)
-				if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
+			if (info.approvals){
+				if (!info.approvals.testnet) lwc.sendConnection(approvalRequest, true)
+				else {
+					if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
+				}
 			}
+			walletInfo.set(info)
 		}
 	}
 

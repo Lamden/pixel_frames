@@ -27,7 +27,7 @@ def add_thing(thing_string: str, name: str, description: str, meta: dict, creato
     custom_string_validations(thing_string, meta['num_of_frames'])
 
     # Required Values for Thing Compatibility
-    S[uid] = ['thing', 'type', 'name', 'description', 'owner', 'creator', 'likes', 'price:amount', 'price:hold']
+    S[uid] = ['thing', 'type', 'name', 'description', 'owner', 'creator', 'likes', 'price:amount', 'price:hold', 'meta_items']
     S[uid, 'thing'] = thing_string
     S[uid, 'type'] = 'text/plain'  # A mime/type or custom value that helps a 3rd party decode the thing_string.
     S[uid, 'name'] = name

@@ -16,7 +16,6 @@
 			}
 		}
 
-        console.log(transaction)
 		sendTransaction(transaction)
 
 		createSnack(
@@ -54,7 +53,7 @@
 		{#if $showModal.modalData.thingInfo}
 			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15}/>
 		{/if}
-		<input type="submit" class="button_text outlined" value={`Buy For ${$showModal.modalData.thingInfo.price} dTAU`} form="buy" />
+		<input type="submit" class="button_text outlined" value={`Buy For ${$showModal.modalData.thingInfo['price:amount']} dTAU`} form="buy" />
 	</div>
 	<form id="buy" class="flex-col" on:submit|preventDefault={buy}>
 		<label for="name">Name</label>
