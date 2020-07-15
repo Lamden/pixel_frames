@@ -13,10 +13,6 @@
 		if ($userAccount) refreshTAUBalance($userAccount)
 	})
 
-	const logout = () => {
-		userAccount.set("")
-		goto(`.`);
-	}
 </script>
 
 <style>
@@ -143,15 +139,13 @@
 </style>
 
 <nav class="flex-row">
-	<div class="brand flex-row" on:click={logout}>
+	<div class="brand flex-row" on:click={() => goto(`.`)}>
 		<img src="logo-64.png" alt="nav logo">
 		<Title fontSize={1}/>
 	</div>
 	<div class="links desktop">
 		<ul>
-			{#if segment !== undefined && $userAccount !== ""}
-				<li><a rel=prefetch aria-current="{segment === 'boards' ? 'page' : undefined}" href={'boards/' + $userAccount}>create</a></li>
-			{/if}
+			<li><a rel=prefetch aria-current="{segment === 'create' ? 'page' : undefined}" href="create">create</a></li>
 			{#if $userAccount !== ""}
 				<li><a rel=prefetch aria-current="{segment === 'owned' ? 'page' : undefined}" href={'owned/' + $userAccount}>owned</a></li>
 			{/if}
@@ -168,8 +162,6 @@
 			   class="address">
 				{$userAccount}
 			</a>
-
-			<button class="button_text" on:click={logout}>sign out </button>
 		{/if}
 	</div>
 </nav>

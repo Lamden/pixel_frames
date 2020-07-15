@@ -37,7 +37,7 @@
 	$: locked = $walletInfo.locked ? $walletInfo.locked : undefined;
 	$: installed = $walletInstalled
 
-	const login = () => goto('/boards/' + account)
+	const login = () => goto('/create')
 
 </script>
 

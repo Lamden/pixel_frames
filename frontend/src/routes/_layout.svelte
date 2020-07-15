@@ -2,7 +2,7 @@
 
 <script>
 	import Nav from '../components/Nav.svelte';
-	import {onMount, afterUpdate, setContext} from 'svelte'
+	import {onMount, beforeUpdate, setContext} from 'svelte'
 	import WalletController from 'lamden_wallet_controller';
 	import {walletInstalled, walletInfo, showModal, userAccount} from '../js/stores.js'
 	import {processTxResults} from '../js/utils.js'
@@ -27,6 +27,12 @@
 		return () => {
 			lwc.events.removeListener(handleWalletInfo)
 			lwc.events.removeListener(handleTxResults)
+		}
+	})
+
+	beforeUpdate(() => {
+		if (lwc){
+			if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
 		}
 	})
 
@@ -60,6 +66,8 @@
 			if (errors[0].includes('have not been approved for')) lwc.sendConnection(approvalRequest, true)
 		}
 	}
+
+
 </script>
 
 <style>
