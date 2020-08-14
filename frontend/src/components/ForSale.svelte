@@ -1,53 +1,64 @@
 
 
 <script>
+	import { scale } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+
 	import DisplayFrames from './DisplayFrames.svelte';
-	import { decodeFrames  } from "../js/utils";
+	import { formatThings  } from "../js/utils";
+	import { config } from '../js/config.js'
+	import { userAccount } from '../js/stores.js'
 
 	export let forsale;
+	export let preview = false;
 
-    let formatted = [];
+    $: formatted = formatThings(forsale.data);
     let count = forsale.count;
+    let sending = false;
 
-    const formatThings = () => {
-        forsale.data.forEach(thing => {
-            thing.frames = decodeFrames(thing.thing)
-        })
-        formatted =  forsale.data
-    }
-
-    formatThings();
+    const getMore = async () => {
+    	if (sending) return;
+    		sending = true;
+			const res = await fetch(`${config.blockExplorer}/things/${config.infoContract}/forsale?limit=15&offset=${formatted.length}`)
+			let data = await res.json()
+			if (!data) data = []
+			if (data.count !== formatted.length){
+				formatted = [...formatted, ...formatThings(data.data)]
+				count = data.count;
+			}
+			sending = false;
+	}
 
 </script>
 
 <style>
-	.forsale {
-		width: 100%;
-		padding: 2rem 1rem;
-		flex-wrap: wrap;
-		box-sizing: border-box;
-		justify-content: space-evenly;
-	}
-
-	.forsale > div {
-		padding: 20px 20px;
-		width: 180px;
-		margin: 10px;
-		box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
-		align-items: center;
-	}
 	h2{
 		border-top: 1px solid lightgray;
 		padding-top: 1rem;
 		margin-top: 2rem;
 	}
+	button, a{
+		max-width: fit-content;
+		padding: 10px 20px;
+    	margin: 0 auto;
+	}
+	.owned{
+        border: 2px dashed #ff5bb0;
+    }
 </style>
 
 <h2>Pixel Frames For Sale</h2>
-<div class="flex-row forsale">
+<div class="flex-row display-card">
     {#each formatted as thingInfo}
-		<div>
+		<div class:owned={$userAccount ? thingInfo.owner === $userAccount : false}
+			 in:scale="{{duration: 200, delay: 0, opacity: 0, start: 0.75, easing: quintOut}}">
 			<DisplayFrames pixelSize={8} {thingInfo} title={false}/>
 		</div>
     {/each}
+
 </div>
+{#if preview}
+	<a class="button" rel=prefetch href="{'forsale'}">SEE MORE</a>
+{:else}
+	<button disabled={sending} class="button" on:click={getMore}> GET MORE </button>
+{/if}

@@ -74,7 +74,7 @@
 <div class="designer">
 	<div class="info flex-col" on:drap|preventDefault>
 		<div class="flex-col">
-			<Preview frames={$frames}/>
+			<Preview frames={$frames} showWatermark={false}/>
 			<RangeSlider />
 		</div>
 		<div class="flex-col frames">

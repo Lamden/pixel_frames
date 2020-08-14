@@ -1,31 +1,100 @@
 <script>
     import { getContext } from 'svelte'
-	import { frames, showModal } from '../js/stores.js'
-	import { createSnack } from '../js/utils.js'
+	import { frames, showModal, currency, userAccount, approvalAmount } from '../js/stores.js'
+	import { createSnack, checkForApproval } from '../js/utils.js'
+	import { config } from '../js/config.js'
 	import Preview from './Preview.svelte'
 
     const { sendTransaction } = getContext('app_functions')
+
+	const updateInfo = $showModal.modalData.updateInfo
+	console.log(updateInfo)
+	const uid = $showModal.modalData.thingInfo.uid
+	const price = parseFloat($showModal.modalData.thingInfo['price:amount'])
+	const thingName = $showModal.modalData.thingInfo['name']
 
     const buy = () => {
 		const transaction = {
 			methodName: 'buy_thing',
 			networkType: 'testnet',
-			stampLimit: 100000,
 			kwargs: {
-				uid: $showModal.modalData.thingInfo.uid
+				uid
 			}
 		}
 
-		sendTransaction(transaction)
-
-		createSnack(
-			`Buying ${$showModal.modalData.thingInfo.name}!`,
-			"Please approve the Lamden Wallet transaction popup.",
-			"info"
-		)
-
-        showModal.set({modalData:{}, show: false})
+		sendTransaction(transaction, handleBuyTx)
+		closeModel()
     }
+
+	const approveBuy = (amount, to) => {
+		const transaction = {
+			contractName: 'currency',
+			methodName: 'approve',
+			networkType: 'testnet',
+			kwargs: {
+				amount,
+				to
+			}
+		}
+
+		sendTransaction(transaction, handleApproveTx)
+
+		createSnack({
+			title: `Need ${config.currencySymbol} Approval`,
+			body: `Use the Wallet popup to give us permission to spend your ${config.currencySymbol}.`,
+			type: "info"
+		})
+
+        closeModel()
+	}
+
+	const checkPrice = () => {
+    	if ($currency <=  price){
+			createSnack({
+                title: `Insufficient Funds ${config.currencySymbol}`,
+                body: `You do not have enough ${config.currencySymbol} to complete this transfer.`,
+                type: "error"
+            })
+		}else{
+    		approveAndSend();
+		}
+	}
+
+	const approveAndSend = async () => {
+		await checkForApproval().then((value) => {
+			if (value < price) {
+				let amount = price - value
+				approveBuy(amount, config.masterContract);
+			}else{
+				buy();
+			}
+		})
+	}
+
+	const handleApproveTx = (txResults) => {
+        if (txResults.txBlockResult.status === 0) {
+			console.log("all good for " + uid + ". now buying")
+        	buy(uid)
+        }
+    }
+
+	const handleBuyTx = (txResults) => {
+        if (txResults.txBlockResult.status === 0) {
+        	updateInfo({
+				owner: $userAccount,
+				"price:amount": 0,
+        	})
+			createSnack({
+				title: `Purchased!`,
+				body: `You are now the proud over of ${thingName}.`,
+				type: "info"
+			})
+		}
+    }
+
+    const closeModel = () => {
+    	if ($showModal.show) showModal.set({modalData:{}, show: false})
+	}
 </script>
 
 <style>
@@ -35,7 +104,9 @@
 		height: 100%;
 	}
 	.preview-row{
-		text-align: center;
+		align-items: center;
+		height: 100%;
+		justify-content: space-evenly;
 	}
 	textarea{
 		resize: none;
@@ -46,19 +117,27 @@
 	.outlined:hover{
 		color: #ff5bb0;
 	}
-</style>
+	.insufficient{
 
+	}
+</style>
+{#if $showModal.modalData.thingInfo}
 <div class="flex-row">
-	<div class="preview-row">
+	<div class="flex-col preview-row">
 		{#if $showModal.modalData.thingInfo}
-			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15}/>
+			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
 		{/if}
-		<input type="submit" class="button_text outlined" value={`Buy For ${$showModal.modalData.thingInfo['price:amount']} dTAU`} form="buy" />
+		{#if $currency > $showModal.modalData.thingInfo['price:amount']}
+			<input type="submit" class="button_text outlined" value={`Buy For ${$showModal.modalData.thingInfo['price:amount']} ${config.currencySymbol}`} form="buy" />
+		{:else}
+			<p class="button_text outlined insufficient">Insufficient {config.currencySymbol}</p>
+		{/if}
 	</div>
-	<form id="buy" class="flex-col" on:submit|preventDefault={buy}>
+	<form id="buy" class="flex-col" on:submit|preventDefault={checkPrice}>
 		<label for="name">Name</label>
 		<input id="name" type="text" readonly value={$showModal.modalData.thingInfo.name}/>
 		<label for="desc">Description</label>
 		<textarea id="desc" type="textarea" rows="8" readonly value={$showModal.modalData.thingInfo.description}/>
 	</form>
 </div>
+{/if}

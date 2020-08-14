@@ -1,11 +1,14 @@
 <script>
     import { onMount } from 'svelte'
     import FrameCanvas from './FrameCanvas.svelte'
-    import { frameSpeed } from '../js/stores.js'
-    import { isEmptyFrame } from '../js/utils.js'
+    import { frameSpeed, userAccount } from '../js/stores.js'
+    import { isEmptyFrame, createWatermark } from '../js/utils.js'
 
     export let frames;
+    export let thingInfo = false;
     export let pixelSize = 10
+    export let showWatermark = true;
+    export let border = true;
 
     let switcher;
     $: show = 1
@@ -27,15 +30,13 @@
 </script>
 <style>
     .preview-frame{
-        border: 2px dashed #ff5bb0;
         line-height: 0;
+    }
+    .preview-frame.border{
+        border: 2px dashed #ff5bb0;
     }
 </style>
 
-<div class="preview-frame">
-    {#if frames.length >= show}
-        <FrameCanvas {pixelSize} pixels={frames[show - 1]}/>
-    {:else}
-        <FrameCanvas {pixelSize} pixels={frames[show - 1]}/>
-    {/if}
+<div class="preview-frame" class:border={border}>
+    <FrameCanvas {pixelSize} pixels={frames[show - 1]} {thingInfo} watermark={showWatermark ? createWatermark(thingInfo, $userAccount) : undefined}/>
 </div>

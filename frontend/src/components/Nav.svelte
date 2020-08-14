@@ -1,18 +1,35 @@
 <script>
-	import { userAccount, dTau } from '../js/stores'
-	import { beforeUpdate } from 'svelte'
+	import { walletInstalled, userAccount, currency, approvalAmount, stampRatio, autoTx, walletInfo } from '../js/stores'
+	import { beforeUpdate, afterUpdate } from 'svelte'
 	import { goto } from '@sapper/app';
 
-	import { refreshTAUBalance } from '../js/utils.js'
+	import { refreshTAUBalance, checkForApproval, formatAccountAddress } from '../js/utils.js'
+	import { config } from '../js/config'
 
 	import Title from './Title.svelte'
+	import WalletConnectButton from './WalletConnectButton.svelte'
 
 	export let segment;
+	export let lwc;
+
+	let initalize = false;
+	setTimeout(() => initalize = true, 500)
+
+	$: lwcInitialized = false;
 
 	beforeUpdate(() => {
-		if ($userAccount) refreshTAUBalance($userAccount)
+		if (!lwc) lwcInitialized = false;
+		if (lwc && !lwcInitialized) lwcInitialized = true;
+
+		if ($userAccount) {
+			refreshTAUBalance($userAccount)
+			checkForApproval()
+		}
 	})
 
+	afterUpdate(() => {
+
+	})
 </script>
 
 <style>
@@ -56,34 +73,36 @@
 		align-items: flex-end;
 		justify-content: space-evenly;
 		font-weight: 200;
-		font-size: 1em;
+		font-size: 0.9em;
 		line-height: 1.2;
 		text-align: right;
 		flex-grow: 1;
 		min-width: 20%
 	}
 	.account >  p > strong {
-		font-size: 1em;
+		font-size: 0.9em;
+	}
+	.account >  p > strong.account-info{
+		color: var(--primary);
+		font-weight: 400;
 	}
 	.address{
 		width: 93%;
-		font-size: 0.8em;
-		font-size: 0.8em;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		align-self: flex-end;
 		margin: 0;
 	}
-	.dtau{
+	.address:hover{
+		color: var(--primary)
+	}
+	.currency{
 		color: #161454;
 		font-size: 1em;
 		margin: 0;
 	}
-	.button_text {
-		padding: 0;
-		margin-top: 0.5rem;
-	}
+
 	.links{
 		display: none;
 		padding: 0 20px;
@@ -121,6 +140,9 @@
 		padding: 1em 0.5em;
 		display: block;
 	}
+	li > a:hover{
+		color: var(--primary);
+	}
 
 	@media (min-width: 900px) {
 		.links {
@@ -129,20 +151,23 @@
 	}
 	@media (min-width: 450px) {
 		.desktop {
-			display: block;
+			display: flex;
 		}
 		nav.flex-row{
 			justify-content: unset;
 		}
 	}
+	a.brand{
+		text-decoration: none;
+	}
 
 </style>
 
 <nav class="flex-row">
-	<div class="brand flex-row" on:click={() => goto(`.`)}>
+	<a class="brand flex-row" rel=prefetch  href=".">
 		<img src="logo-64.png" alt="nav logo">
-		<Title fontSize={1}/>
-	</div>
+		<Title fontSize={1} subtitle={false}/>
+	</a>
 	<div class="links desktop">
 		<ul>
 			<li><a rel=prefetch aria-current="{segment === 'create' ? 'page' : undefined}" href="create">create</a></li>
@@ -153,15 +178,23 @@
 			<li><a rel=prefetch aria-current="{segment === 'forsale' ? 'page' : undefined}" href="forsale">for sale</a></li>
 		</ul>
 	</div>
-	<div class="flex-col account desktop">
-		{#if $userAccount !== ""}
-			<p class="dtau"><strong>dTAU: </strong> {$dTau}</p>
+	<div class="flex-col account desktop hide-mobile">
+		{#if $userAccount !== "" && initalize && !$walletInfo.locked}
+			<p class="currency">
+				<strong>{config.currencySymbol}: </strong> {$currency}
+				<strong class="account-info">(approval:  {$approvalAmount} auto tx: {$autoTx ? 'on' : 'off'})</strong>
+			</p>
 			<a href={`https://explorer.lamden.io/address/${$userAccount}`}
 			   target="_blank"
 			   rel="noopener noreferrer"
 			   class="address">
-				{$userAccount}
+				{`Your Pixel Frames Account: ${formatAccountAddress($userAccount, 8, 4)}`}
 			</a>
+		{:else}
+			{#if lwcInitialized && initalize}
+				<WalletConnectButton {lwc} />
+			{/if}
 		{/if}
+
 	</div>
 </nav>

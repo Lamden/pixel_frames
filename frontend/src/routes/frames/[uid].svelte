@@ -15,9 +15,74 @@
 
 <script>
 	import DisplayFramesOne from "../../components/DisplayFramesOne.svelte";
+	import OwnerControls from "../../components/OwnerControls.svelte";
+	import { userAccount } from '../../js/stores.js'
+
+    import { formatAccountAddress} from '../../js/utils.js'
 
 	export let thingInfo
 
+	let tunnel = "https://sweet-goose-47.serverless.social"
+    let ngrok = "https://f2106a2c41eb.ngrok.io"
+
+	let gifURL = `${tunnel}/dynamic/${thingInfo.uid}.gif`
+	let gifURL2 = `${ngrok}/dynamic/${thingInfo.uid}.gif`
+	let pageURL = `${tunnel}/frames/${thingInfo.uid}`
+
+	$: owner = $userAccount === thingInfo.owner;
+
+    let watermark = {
+        text: formatAccountAddress(thingInfo.owner, 6, 3),
+        fillColor: "#ff5bb0",
+        font: "30px Roboto",
+    }
+
+	const updateInfo = (updates) => {
+        console.log(updates)
+        Object.keys(updates).forEach(update => {
+            console.log(update)
+            if (typeof thingInfo[update] !== 'undefined') thingInfo[update] = updates[update]
+        })
+        console.log(thingInfo)
+    }
+
 </script>
 
-<DisplayFramesOne {thingInfo}/>
+<style>
+	.display-one{
+        max-width: 75em;
+        margin: 0 auto;
+    }
+
+</style>
+
+<svelte:head>
+	<title>thingInfo.name</title>
+
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="{thingInfo.name}" />
+	<meta name="twitter:description" content="{thingInfo.description}" />
+	<meta name="twitter:site" content="@framespixel" />
+	<meta name="twitter:creator" content="{thingInfo.owner}" />
+	<meta name="twitter:image" content="{gifURL2}" />
+	<meta name="twitter:image:alt" content="{thingInfo.name}" />
+
+	<meta property="og:url" content="{gifURL}" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Pixel Frames by Lamden" />
+	<meta property="og:image" content="{gifURL}" />
+	<meta property="og:description" content="{thingInfo.description}" />
+	<meta property="og:image:url" content="{gifURL}" />
+	<meta property="og:image:secure_url" content="{gifURL}" />
+	<meta property="og:image:width" content="150" />
+	<meta property="og:image:height" content="150" />
+	<meta property="og:image:type" content="image/gif" />
+</svelte:head>
+
+<div class="display-one">
+
+	<DisplayFramesOne {thingInfo} watermark={!owner ? watermark : undefined} {updateInfo}/>
+	{#if owner}
+		<OwnerControls {thingInfo}/>
+	{/if}
+</div>

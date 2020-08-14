@@ -165,8 +165,42 @@ form > label{
 	margin: 1rem 0 0.5rem;
 }
 
+.display-card {
+	width: 100%;
+	padding: 2rem 1rem;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+	justify-content: space-evenly;
+}
+
+.display-card > div {
+	margin:  1rem;
+	padding: 20px 20px;
+	width: 180px;
+	box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+	background: #fff6fb;
+	display: flex;
+	flex-direction: column;
+}
+
 @media (min-width: 400px) {
 	body {
 		font-size: 16px;
+	}
+}
+
+.hide-mobile {
+	display: none;
+}
+.show-mobile {
+	display: block;
+}
+
+@media (min-width: 450px) {
+	.hide-mobile {
+		display: block;
+	}
+	.show-mobile {
+		display: none;
 	}
 }

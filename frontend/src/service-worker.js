@@ -32,15 +32,16 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+
 	if (event.request.method !== 'GET' || event.request.headers.has('range')) return;
 
 	const url = new URL(event.request.url);
 
 	// don't try to handle e.g. data: URIs
-	if (!url.protocol.startsWith('http')) return;
+	//if (!url.protocol.startsWith('http')) return;
 
 	// ignore dev server requests
-	if (url.hostname === self.location.hostname && url.port !== self.location.port) return;
+	//if (url.hostname === self.location.hostname && url.port !== self.location.port) return;
 
 	// always serve static files and bundler-generated assets from cache
 	if (url.host === self.location.host && cached.has(url.pathname)) {
@@ -59,7 +60,36 @@ self.addEventListener('fetch', event => {
 	*/
 
 	if (event.request.cache === 'only-if-cached') return;
+	/*
+	console.log({pathname: url.pathname, event, "cache": event.request.cache})
+	console.log(event.request.cache)
 
+	if (event.request.cache === 'force-cache'){
+		console.log("This is a LIKED request!")
+		// for like requests respond from the cache if it's available. If not then get from network.
+		event.respondWith(
+			caches
+				.open(`offline${timestamp}`)
+				.then(async cache => {
+					console.log(cache)
+					try {
+						const response = await cache.match(event.request);
+						if (!response) throw new Error()
+						console.log({matched: response})
+						if (response) return response;
+
+					} catch(err) {
+						console.log(err)
+						const response = await fetch(event.request);
+						console.log({fetched: response})
+						cache.put(event.request, response.clone());
+						return response;
+					}
+				})
+		);
+		return
+	}
+*/
 	// for everything else, try the network first, falling back to
 	// cache if the user is offline. (If the pages never change, you
 	// might prefer a cache-first approach to a network-first one.)

@@ -1,5 +1,8 @@
 <script>
     import { beforeUpdate } from 'svelte';
+    import { scale } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+
     import DisplayFrames from './DisplayFrames.svelte';
 
     import { decodeFrames  } from "../js/utils.js";
@@ -26,21 +29,6 @@
 </script>
 
 <style>
-	.owned {
-		width: 100%;
-		padding: 2rem 1rem;
-		flex-wrap: wrap;
-		box-sizing: border-box;
-		justify-content: space-evenly;
-	}
-
-	.owned > div {
-		padding: 20px 20px;
-		width: 180px;
-		margin: 10px;
-		box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
-		align-items: center;
-	}
 	h2{
 		border-top: 1px solid lightgray;
 		padding-top: 1rem;
@@ -58,9 +46,9 @@
 <p>{account === $userAccount ? 'You' : account}
     {formatted.length == 0 ? `${account === $userAccount ? "don't" : "doesn't"} own anything yet!` : ""}
 </p>
-<div class="flex-row owned">
+<div class="flex-row display-card">
     {#each formatted as thingInfo}
-        <div>
+        <div in:scale="{{duration: 200, delay: 0, opacity: 0, start: 0.75, easing: quintOut}}">
             <DisplayFrames pixelSize={12} {thingInfo} />
         </div>
     {/each}

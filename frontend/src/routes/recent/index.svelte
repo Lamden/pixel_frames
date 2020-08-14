@@ -1,17 +1,7 @@
 <script context="module">
 	import { config } from '../../js/config.js'
 	export async function preload(parms) {
-		const options = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				contractName: 'con_pf_test',
-				variableName: 'S'
-			})
-		}
-		const res = await this.fetch(`${config.blockExplorer}/things/recent`, options)
+		const res = await this.fetch(`${config.blockExplorer}/things/${config.infoContract}/recent?limit=15`)
 		let data = await res.json()
 		if (!data) data = []
 	    return {recent: data}
@@ -19,7 +9,6 @@
 </script>
 
 <script>
-	import { afterUpdate } from 'svelte'
     import Recent from '../../components/Recent.svelte'
 
     export let recent;

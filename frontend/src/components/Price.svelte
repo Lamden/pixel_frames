@@ -6,9 +6,10 @@
     import FormBuy from './FormBuy.svelte'
 
     export let thingInfo
+    export let updateInfo
 
     const openModal = (modal) => {
-        showModal.set({modalData:{thingInfo, modal: modal}, show:true})
+        showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
     }
 </script>
 

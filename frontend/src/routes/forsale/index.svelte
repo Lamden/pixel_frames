@@ -1,17 +1,7 @@
 <script context="module">
 	import { config } from '../../js/config.js'
 	export async function preload(parms) {
-		const options = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				contractName: 'con_pf_test',
-				variableName: 'S'
-			})
-		}
-		const res = await this.fetch(`${config.blockExplorer}/things/forsale`, options)
+		const res = await this.fetch(`${config.blockExplorer}/things/${config.infoContract}/forsale?limit=15`)
 		let data = await res.json()
 		if (!data) data = []
 	    return {forsale: data}

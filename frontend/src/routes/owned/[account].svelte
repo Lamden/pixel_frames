@@ -1,20 +1,10 @@
 <script context="module">
 	import { config } from '../../js/config.js'
 	export async function preload({ params, query }) {
-		const options = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				contractName: 'con_pf_test',
-				variableName: 'S'
-			})
-		}
-		const res = await this.fetch(`${config.blockExplorer}/things/owned/${params.account}`, options)
+		const res = await this.fetch(`${config.blockExplorer}/things/${config.infoContract}/owned/${params.account}`)
 		let data = await res.json()
 		if (!data) data = []
-	    return {account: params.account, owned: data}
+	    return {account: params.account, owned: data.data}
 	}
 </script>
 

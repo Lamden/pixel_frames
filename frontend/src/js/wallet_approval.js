@@ -3,7 +3,6 @@ import { config } from './config.js'
 
 const approvalRequest = {
     appName: 'Pixel Frames',
-    description: 'Approve this website to start creating and owning unique pixel animations!',
     contractName: config.masterContract,
     networkType: 'testnet'
 }

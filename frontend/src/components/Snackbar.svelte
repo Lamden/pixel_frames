@@ -18,9 +18,10 @@
     }
 
     let remover;
+    let screenHeight;
 
     onMount(() => {
-        let remover = setInterval(autoClose, 100)
+        let remover = setInterval(autoClose, 2000)
         return(() => clearInterval(remover))
     })
 
@@ -33,14 +34,17 @@
 
 <style>
     .snack-container{
-        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        position: fixed;
         pointer-events: none;
         top: 0;
         right: 0;
         width: 300px;
-        height: 100%;
         z-index: 100;
-        padding: 98px 5px;
+        padding: 0 5px;
         box-sizing: border-box;
         overflow: hidden;
     }
@@ -89,7 +93,7 @@
     }
 
 </style>
-<div class="snack-container">
+<div class="snack-container" style={`height: ${screenHeight}px`}>
      {#each $snackbars as snack, index}
         <div class="flex-col snackbar"
              class:success={snack.type === "success"}
@@ -107,3 +111,4 @@
         </div>
     {/each}
 </div>
+<svelte:window bind:innerHeight={screenHeight} />

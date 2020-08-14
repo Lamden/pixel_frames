@@ -12,7 +12,6 @@
 		const transaction = {
 			methodName: 'sell_thing',
 			networkType: 'testnet',
-			stampLimit: 100000,
 			kwargs: {
 				uid: $showModal.modalData.thingInfo.uid,
 				amount: parseInt(price)
@@ -21,11 +20,11 @@
 
 		sendTransaction(transaction)
 
-		createSnack(
-			`Listing ${$showModal.modalData.thingInfo.name}`,
-			"Please approve the Lamden Wallet transaction popup.",
-			"info"
-		)
+		createSnack({
+			title: `${$showModal.modalData.thingInfo.name}`,
+			body: "Please approve the Lamden Wallet transaction popup.",
+			type: "info"
+		})
 
         showModal.set({modalData:{}, show: false})
     }
@@ -42,7 +41,7 @@
 	}
 
 	.button_text{
-		color: white;
+		color: #ffffff;
 	}
 	.outlined:hover{
 		color: #ff5bb0;
@@ -53,7 +52,7 @@
 <div class="flex-row">
 	<div class="preview-row">
 		{#if $showModal.modalData.thingInfo}
-			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15}/>
+			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
 		{/if}
 		<input type="submit" class="button_text outlined" value="List Item" form="sell" />
 	</div>

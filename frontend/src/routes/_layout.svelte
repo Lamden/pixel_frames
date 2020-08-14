@@ -2,19 +2,22 @@
 
 <script>
 	import Nav from '../components/Nav.svelte';
-	import {onMount, beforeUpdate, setContext} from 'svelte'
-	import WalletController from 'lamden_wallet_controller';
-	import {walletInstalled, walletInfo, showModal, userAccount} from '../js/stores.js'
-	import {processTxResults} from '../js/utils.js'
-	import {approvalRequest} from '../js/wallet_approval'
+	import {onMount, beforeUpdate, setContext} from 'svelte';
+	//import WalletController from 'lamden_wallet_controller';
+	import WalletController from '../js/walletController.js';
+	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx} from '../js/stores.js';
+	import {processTxResults, createSnack} from '../js/utils.js';
+	import { config } from '../js/config.js';
+	import {approvalRequest} from '../js/wallet_approval';
 	import Snackbar from "../components/Snackbar.svelte";
 	import Modal from "../components/Modal.svelte";
+	import CreatedWithLove from "../components/CreatedWithLove.svelte";
 
 	export let segment;
 	let lwc;
 
 	onMount(() => {
-		lwc = new WalletController()
+		lwc = new WalletController(approvalRequest)
 		lwc.events.on('newInfo', handleWalletInfo)
 		lwc.events.on('txStatus', handleTxResults)
 
@@ -31,32 +34,42 @@
 	})
 
 	beforeUpdate(() => {
-		if (lwc){
+		if (lwc) {
 			if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
 		}
+		if ($stampRatio === 1) fetchStamps();
 	})
 
+	const fetchStamps = () => {
+		fetch(`${config.blockExplorer}/lamden/stamps`)
+				.then(res => res.json())
+				.then(res => {
+					if (res.value) stampRatio.set(parseInt(res.value))
+				})
+	}
+
 	setContext('app_functions', {
-		sendTransaction: (transaction) => lwc.sendTransaction(transaction),
+		sendTransaction: (transaction, callback) => sendTransaction(transaction, callback),
 		lwc: () => {
 			return lwc
 		}
 	})
 
+	const sendTransaction = (transaction, callback) => {
+		transaction.stampLimit = determineStamps()
+		lwc.sendTransaction(transaction, callback)
+	}
+
+	const determineStamps = () => {
+		let maxStamps = $stampRatio * 5;
+		if (($currency * $stampRatio) < maxStamps) return parseInt(($currency * $stampRatio) * 0.95)
+		return parseInt(maxStamps)
+	}
+
 	const handleWalletInfo = (info) => {
-		if (info.errors) {
-			if (info.errors[0].includes('lamdenWalletConnect')) lwc.sendConnection(approvalRequest)
-			if (info.errors[0].includes('no matching vk is currently found in the wallet'))
-				lwc.sendConnection(approvalRequest, true, true)
-		} else {
-			if (info.approvals){
-				if (!info.approvals.testnet) lwc.sendConnection(approvalRequest, true)
-				else {
-					if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
-				}
-			}
-			walletInfo.set(info)
-		}
+		autoTx.set(lwc.autoTransactions)
+		userAccount.set(lwc.walletAddress)
+		walletInfo.set(info)
 	}
 
 
@@ -74,19 +87,27 @@
 	main {
 		position: relative;
 		max-width: 95em;
-		padding: 0 28px;
+		padding: 0 28px 10rem;
 		margin: 1rem auto 0;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		flex-grow: 1;
+	}
+	@media (min-width: 450px) {
+		main {
+			padding: 0 28px 10rem;
+			margin: 0 auto 0;
+		}
 	}
 </style>
 {#if $showModal.show}
 	<Modal/>
 {/if}
 <Snackbar />
-<Nav {segment}/>
+<Nav {segment} {lwc}/>
 <main>
 	<slot></slot>
 </main>
+<CreatedWithLove />

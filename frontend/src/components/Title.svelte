@@ -1,20 +1,22 @@
 <script>
-    import { onMount } from 'svelte'
-	import { letter_to_color, color_to_letter } from '../js/utils'
+	import {onMount} from 'svelte'
+	import {letter_to_color, color_to_letter} from '../js/utils'
+	import CreatedWithLove from "./CreatedWithLove.svelte";
 
-    export let fontSize = 8;
+	export let fontSize = 8;
+	export let subtitle = true;
 
 	$: framesColor = undefined;
-    onMount(() => {
-    	framesColor = letter_to_color['G'];
+	onMount(() => {
+		framesColor = letter_to_color['G'];
 		const colorTimer = setInterval(changeColor, 1000)
 		return () => {
 			clearInterval(colorTimer)
 		}
 	})
 
-    const changeColor = () => {
-    	let currIndex = Object.keys(color_to_letter).indexOf(framesColor)
+	const changeColor = () => {
+		let currIndex = Object.keys(color_to_letter).indexOf(framesColor)
 		let nextIndex = currIndex + 1
 		let nextColor = Object.keys(color_to_letter)[nextIndex]
 		if (!nextColor) framesColor = letter_to_color['G']
@@ -37,3 +39,6 @@
 <div style={`font-size: ${fontSize}em`}>Pixel
     <strong style={`color: ${framesColor};`}>Frames</strong>
 </div>
+{#if subtitle}
+	<CreatedWithLove />
+{/if}

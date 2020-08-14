@@ -16,7 +16,6 @@
 		const transaction = {
 			methodName: 'create_thing',
 			networkType: 'testnet',
-			stampLimit: 1000000,
 			kwargs: {
 				thing_string,
 				description: desc,
@@ -30,11 +29,11 @@
 
 		sendTransaction(transaction)
 
-		createSnack(
-			"Submitting Transaction",
-			"Please approve the Lamden Wallet transaction popup.",
-			"info"
-		)
+		createSnack({
+			title: "Submitting Transaction",
+			body: "Please approve the Lamden Wallet transaction popup.",
+			type: "info"
+		})
 		showModal.set({modalData:{}, show: false})
     }
 
@@ -73,7 +72,7 @@
 
 <div class="flex-row">
 	<div class="preview-row">
-		<Preview frames={$frames} pixelSize={15}/>
+		<Preview frames={$frames} pixelSize={15} showWatermark={false}/>
 		<input type="submit" class="button_text outlined" value="Create Frames!" form="create" />
 	</div>
 	<form id="create" class="flex-col" on:submit|preventDefault={upload} bind:this={formElm}>
