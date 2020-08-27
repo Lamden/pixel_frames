@@ -24,7 +24,7 @@ async function create(req, res, next) {
 
 		var stream = encoder.createReadStream();
 		res.setHeader('Content-Type', 'image/gif')
-		console.log(req.headers['user-agent'])
+
 		//if (req.headers['user-agent'].includes('facebookexternalhit')) res.setHeader('Content-Encoding', 'gzip')
 
 		stream.pipe(res);

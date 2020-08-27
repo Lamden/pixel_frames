@@ -66,7 +66,6 @@
 
 	const handleApproveTx = (txResults) => {
         if (txResults.txBlockResult.status === 0) {
-			console.log("all good for " + uid + ". now buying")
         	buy()
         }
     }

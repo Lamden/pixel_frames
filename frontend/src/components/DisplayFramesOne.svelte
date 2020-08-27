@@ -33,10 +33,10 @@
 
     const checkAlreadyLiked = () => {
         if (liked === null && $userAccount) {
-            console.log("checking")
+
             alreadyLiked(thingInfo.uid, localStorage).then(res => {
                 liked = res
-                console.log({res, liked})
+
             })
         }
     }

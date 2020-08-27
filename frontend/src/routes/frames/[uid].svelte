@@ -35,7 +35,6 @@
 
 	const updateThingInfo = (updates) => {
     	updateInfo(thingInfo, updates)
-		console.log(owner)
     }
 
 </script>
