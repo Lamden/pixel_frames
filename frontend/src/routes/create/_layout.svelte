@@ -1,4 +1,4 @@
-<!-- /frontend/src/routes/_layout.svelte -->
+<!-- /frontend/src/routes/create/_layout.svelte -->
 
 <style>
 	main {
@@ -8,6 +8,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		margin-top: 2rem;
 	}
 </style>
 

@@ -1,14 +1,14 @@
 <script>
     import { getContext } from 'svelte'
 	import { frames, showModal, currency, userAccount, approvalAmount } from '../js/stores.js'
-	import { createSnack, checkForApproval } from '../js/utils.js'
+	import { createSnack, checkForApproval, closeModel } from '../js/utils.js'
 	import { config } from '../js/config.js'
 	import Preview from './Preview.svelte'
 
     const { sendTransaction } = getContext('app_functions')
 
 	const updateInfo = $showModal.modalData.updateInfo
-	console.log(updateInfo)
+
 	const uid = $showModal.modalData.thingInfo.uid
 	const price = parseFloat($showModal.modalData.thingInfo['price:amount'])
 	const thingName = $showModal.modalData.thingInfo['name']
@@ -38,14 +38,7 @@
 		}
 
 		sendTransaction(transaction, handleApproveTx)
-
-		createSnack({
-			title: `Need ${config.currencySymbol} Approval`,
-			body: `Use the Wallet popup to give us permission to spend your ${config.currencySymbol}.`,
-			type: "info"
-		})
-
-        closeModel()
+		closeModel()
 	}
 
 	const checkPrice = () => {
@@ -74,7 +67,7 @@
 	const handleApproveTx = (txResults) => {
         if (txResults.txBlockResult.status === 0) {
 			console.log("all good for " + uid + ". now buying")
-        	buy(uid)
+        	buy()
         }
     }
 
@@ -92,9 +85,6 @@
 		}
     }
 
-    const closeModel = () => {
-    	if ($showModal.show) showModal.set({modalData:{}, show: false})
-	}
 </script>
 
 <style>

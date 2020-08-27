@@ -1,12 +1,14 @@
 <script>
     import { getContext } from 'svelte'
 	import { frames, showModal } from '../js/stores.js'
-	import { createSnack } from '../js/utils.js'
+	import { createSnack, closeModel } from '../js/utils.js'
 	import Preview from './Preview.svelte'
 
     const { sendTransaction } = getContext('app_functions')
 
+	const updateInfo = $showModal.modalData.updateInfo
 	let price = $showModal.modalData.thingInfo['price:amount'];
+    const thingName = $showModal.modalData.thingInfo['name']
 
     const sell = () => {
 		const transaction = {
@@ -18,15 +20,21 @@
 			}
 		}
 
-		sendTransaction(transaction)
+		sendTransaction(transaction, handleSellTx)
+        closeModel()
+    }
 
-		createSnack({
-			title: `${$showModal.modalData.thingInfo.name}`,
-			body: "Please approve the Lamden Wallet transaction popup.",
-			type: "info"
-		})
-
-        showModal.set({modalData:{}, show: false})
+	const handleSellTx = (txResults) => {
+        if (txResults.txBlockResult.status === 0) {
+        	updateInfo({
+				"price:amount": price,
+        	})
+			createSnack({
+				title: `Listed!`,
+				body: `${thingName} now listred for ${price}.`,
+				type: "info"
+			})
+		}
     }
 </script>
 

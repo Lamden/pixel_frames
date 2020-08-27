@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { snackbars, currency, userAccount, approvalAmount } from "./stores";
+import { snackbars, currency, userAccount, approvalAmount, showModal } from "./stores";
 import { get } from 'svelte/store'
 
 export const color_to_letter = {
@@ -239,7 +239,7 @@ export const alreadyLiked = async (uid, ls = undefined) => {
         if (ls.getItem(`${uid}:${account}:liked`) !== null) return true;
     }
 
-    const res = await fetch(`http://localhost:1337/things/${config.masterContract}/liked/${uid}/${account}`)
+    const res = await fetch(`${config.blockExplorer}/things/${config.masterContract}/liked/${uid}/${account}`)
     const data = await res.json();
     if (!data.value) return false
 
@@ -259,4 +259,15 @@ export const createWatermark = (thingInfo, account) => {
         text: 'pixelframes.lamden.io',
         fillColor: "#ff5bb0"
     }
+}
+
+export const updateInfo = (thingInfo, updates) => {
+    Object.keys(updates).forEach(update => {
+        if (typeof thingInfo[update] !== 'undefined') thingInfo[update] = updates[update]
+    })
+}
+
+export const closeModel = () => {
+    const modal = get(showModal)
+    if (modal.show) showModal.set({modalData:{}, show: false})
 }

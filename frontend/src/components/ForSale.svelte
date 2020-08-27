@@ -5,7 +5,7 @@
 	import { quintOut } from 'svelte/easing';
 
 	import DisplayFrames from './DisplayFrames.svelte';
-	import { formatThings  } from "../js/utils";
+	import { formatThings, updateInfo  } from "../js/utils";
 	import { config } from '../js/config.js'
 	import { userAccount } from '../js/stores.js'
 
@@ -29,6 +29,12 @@
 			sending = false;
 	}
 
+	const updateThing = (e) => {
+    	const { updates, index } = e.detail
+    	updateInfo(formatted[index], updates)
+		formatted = [...formatted]
+	}
+
 </script>
 
 <style>
@@ -49,10 +55,10 @@
 
 <h2>Pixel Frames For Sale</h2>
 <div class="flex-row display-card">
-    {#each formatted as thingInfo}
+    {#each formatted as thingInfo, index}
 		<div class:owned={$userAccount ? thingInfo.owner === $userAccount : false}
 			 in:scale="{{duration: 200, delay: 0, opacity: 0, start: 0.75, easing: quintOut}}">
-			<DisplayFrames pixelSize={8} {thingInfo} title={false}/>
+			<DisplayFrames pixelSize={8} {thingInfo} {index} title={false} on:update={updateThing}/>
 		</div>
     {/each}
 

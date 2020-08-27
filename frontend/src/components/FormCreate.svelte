@@ -1,7 +1,7 @@
 <script>
     import { getContext } from 'svelte'
 	import { frames, frameSpeed, showModal } from '../js/stores.js'
-	import { serializeFrames, createSnack, nameTaken } from '../js/utils.js'
+	import { serializeFrames, createSnack, nameTaken, closeModel } from '../js/utils.js'
 	import Preview from './Preview.svelte'
 
     const { sendTransaction } = getContext('app_functions')
@@ -9,6 +9,8 @@
 	let name = "";
 	let desc = "";
 	let formElm;
+
+	const created = $showModal.modalData.created
 
     const upload = () => {
     	const thing_string = serializeFrames($frames)
@@ -27,24 +29,28 @@
 			}
 		}
 
-		sendTransaction(transaction)
-
-		createSnack({
-			title: "Submitting Transaction",
-			body: "Please approve the Lamden Wallet transaction popup.",
-			type: "info"
-		})
-		showModal.set({modalData:{}, show: false})
+		sendTransaction(transaction, handleCreateTx)
+		closeModel()
     }
 
 	const checkName = async (e) => {
 		if (await nameTaken(name)) e.target.setCustomValidity("Name already taken")
 		else {
 			e.target.setCustomValidity("")
-			formElm.rest()
 		}
 		e.target.reportValidity()
 	}
+
+	const handleCreateTx = (txResults) => {
+        if (txResults.txBlockResult.status === 0) {
+        	created()
+			createSnack({
+				title: `Created!`,
+				body: `${name} is now on the blockchain.`,
+				type: "info"
+			})
+		}
+    }
 </script>
 
 <style>

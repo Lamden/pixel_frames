@@ -11,7 +11,7 @@
 
 	import {frames} from '../js/stores'
 
-
+	let itemCreated = false;
 
 </script>
 
@@ -83,12 +83,12 @@
 		<div class="flex-col buttons shadowbox">
 			<ClearButton />
 			<DeleteButton />
-			<NewFrame />
-			<CreateButton />
+			<NewFrame on:new={() => itemCreated = false}/>
+			<CreateButton on:created={() => itemCreated = true}/>
 		</div>
 	</div>
 	<div class="flex-row pallet-board">
-		<PixelBoard />
+		<PixelBoard {itemCreated}/>
 		<Pallet />
 	</div>
 </div>

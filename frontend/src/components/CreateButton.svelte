@@ -1,9 +1,18 @@
 <script>
+	import { createEventDispatcher} from 'svelte'
 	import { showModal, frames } from '../js/stores.js'
 	import FormCreate from './FormCreate.svelte'
 	import { framesEmpty } from '../js/utils.js'
 
-    const show = () => showModal.set({modalData: {modal: FormCreate}, show: true})
+	const dispatch = createEventDispatcher();
+
+	const created = () => {
+		dispatch('created', true)
+	}
+
+    const show = () => showModal.set({modalData: {modal: FormCreate, created}, show: true})
+
+
 
 </script>
 

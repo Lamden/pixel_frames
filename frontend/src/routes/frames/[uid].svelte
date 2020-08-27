@@ -18,7 +18,7 @@
 	import OwnerControls from "../../components/OwnerControls.svelte";
 	import { userAccount } from '../../js/stores.js'
 
-    import { formatAccountAddress} from '../../js/utils.js'
+    import { formatAccountAddress, updateInfo} from '../../js/utils.js'
 
 	export let thingInfo
 
@@ -37,13 +37,9 @@
         font: "30px Roboto",
     }
 
-	const updateInfo = (updates) => {
-        console.log(updates)
-        Object.keys(updates).forEach(update => {
-            console.log(update)
-            if (typeof thingInfo[update] !== 'undefined') thingInfo[update] = updates[update]
-        })
-        console.log(thingInfo)
+	const updateThingInfo = (updates) => {
+    	updateInfo(thingInfo, updates)
+		console.log(owner)
     }
 
 </script>
@@ -81,7 +77,7 @@
 
 <div class="display-one">
 
-	<DisplayFramesOne {thingInfo} watermark={!owner ? watermark : undefined} {updateInfo}/>
+	<DisplayFramesOne {thingInfo} watermark={!owner ? watermark : undefined} updateInfo={updateThingInfo}/>
 	{#if owner}
 		<OwnerControls {thingInfo}/>
 	{/if}

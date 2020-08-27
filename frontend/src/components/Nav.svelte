@@ -27,9 +27,7 @@
 		}
 	})
 
-	afterUpdate(() => {
-
-	})
+	// TODO get balance when new wallet connection is made.  probably a callback.
 </script>
 
 <style>

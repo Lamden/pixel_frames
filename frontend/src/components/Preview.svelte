@@ -14,6 +14,9 @@
     $: show = 1
 
     onMount(() => {
+        if (thingInfo){
+            switcher = setInterval(switchFrames, thingInfo.speed)
+        }
         return(() => clearInterval((switcher)))
     })
 
@@ -23,11 +26,14 @@
     }
 
     frameSpeed.subscribe(update => {
-        clearInterval((switcher))
-        switcher = setInterval(switchFrames, update)
+        if (!thingInfo){
+            clearInterval((switcher))
+            switcher = setInterval(switchFrames, update)
+        }
     })
 
 </script>
+
 <style>
     .preview-frame{
         line-height: 0;

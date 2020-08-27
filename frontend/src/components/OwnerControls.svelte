@@ -1,8 +1,7 @@
 <script>
-    export let thingInfo
+    //export let thingInfo
 
 </script>
 <h2>You Own This!</h2>
-{thingInfo.id}
 
 

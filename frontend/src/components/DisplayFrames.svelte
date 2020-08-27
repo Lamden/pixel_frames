@@ -1,5 +1,5 @@
 <script>
-    import {getContext, onMount} from 'svelte'
+    import {getContext, onMount, createEventDispatcher} from 'svelte'
     import {goto} from '@sapper/app';
     import {userAccount, autoTx} from '../js/stores.js'
     import Frame from './Frame.svelte'
@@ -14,8 +14,10 @@
     import Likes from "./Likes.svelte";
 
     const {sendTransaction} = getContext('app_functions')
+    const dispatch = createEventDispatcher();
 
     export let thingInfo;
+    export let index;
     export let pixelSize = 5;
 
     let frames = thingInfo.frames
@@ -72,6 +74,10 @@
                 type: "info"
             })
         }
+    }
+
+    const updateThingInfo = (updates) => {
+        dispatch('update', {index, updates})
     }
 
     userAccount.subscribe(account => checkAlreadyLiked())
@@ -134,7 +140,7 @@
         <Likes {thingInfo} />
     </div>
     <div>
-        <Price {thingInfo} />
+        <Price {thingInfo} updateInfo={updateThingInfo}/>
     </div>
 </div>
 <div class="description">
