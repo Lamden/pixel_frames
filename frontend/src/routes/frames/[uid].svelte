@@ -22,12 +22,8 @@
 
 	export let thingInfo
 
-	let tunnel = "https://sweet-goose-47.serverless.social"
-    let ngrok = "https://f2106a2c41eb.ngrok.io"
-
-	let gifURL = `${tunnel}/dynamic/${thingInfo.uid}.gif`
-	let gifURL2 = `${ngrok}/dynamic/${thingInfo.uid}.gif`
-	let pageURL = `${tunnel}/frames/${thingInfo.uid}`
+	let gifURL = `${config.domainName}/dynamic/${thingInfo.uid}.gif`
+	let pageURL = `${config.domainName}/frames/${thingInfo.uid}`
 
 	$: owner = $userAccount === thingInfo.owner;
 
@@ -60,7 +56,7 @@
 	<meta name="twitter:description" content="{thingInfo.description}" />
 	<meta name="twitter:site" content="@framespixel" />
 	<meta name="twitter:creator" content="{thingInfo.owner}" />
-	<meta name="twitter:image" content="{gifURL2}" />
+	<meta name="twitter:image" content="{gifURL}" />
 	<meta name="twitter:image:alt" content="{thingInfo.name}" />
 
 	<meta property="og:url" content="{gifURL}" />

@@ -3,14 +3,11 @@
 
     export let thingInfo
 
-    let tunnel = "https://sweet-goose-47.serverless.social"
-    let ngrok = "https://f2106a2c41eb.ngrok.io"
-
-    let twitter_url = `${ngrok}/frames/${thingInfo.uid}`
-    let facebook_url = `${tunnel}/frames/${thingInfo.uid}`
-    let telegram_url = `${tunnel}/dynamic/${thingInfo.uid}.gif`
-    let whatsapp_url = `${tunnel}/frames/${thingInfo.uid}`
-    let reddit_url = `${tunnel}/dynamic/${thingInfo.uid}.gif`
+    let twitter_url = `${config.domainName}/frames/${thingInfo.uid}`
+    let facebook_url = `${config.domainName}/frames/${thingInfo.uid}`
+    let telegram_url = `${config.domainName}/dynamic/${thingInfo.uid}.gif`
+    let whatsapp_url = `${config.domainName}/frames/${thingInfo.uid}`
+    let reddit_url = `${config.domainName}/dynamic/${thingInfo.uid}.gif`
     let description = thingInfo.description
     let title = thingInfo.name
 
