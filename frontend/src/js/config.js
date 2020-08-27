@@ -5,7 +5,7 @@ export const config = {
     currencySymbol: "dTau",
     domainName: "https://pixelframes.lamden.io/",
     //blockExplorer: "http://localhost:1337",
-    blockExplorer: "https://testnet.lamden.io/api",
+    blockExplorer: "https://explorer.lamden.io/api",
     //blockExplorer: "http://localhost:1337",
     masternode: "https://testnet-master-1.lamden.io"
 }
