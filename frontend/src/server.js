@@ -6,11 +6,11 @@ global.fetch = require('node-fetch')
 const fs = require('fs');
 
 import {decodeFrames, letter_to_color, formatAccountAddress} from "./js/utils";
+import { config } from './js/config'
 
 const GIFEncoder = require('gifencoder');
 
 const { createCanvas } = require('canvas');
-
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
@@ -85,7 +85,7 @@ async function create(req, res, next) {
   	let pathMatch = req.path.match(dynamicRequest)
 	if (pathMatch){
 		let uid = pathMatch[1].split(".")[0]
-		const thingInfo = await global.fetch('http://localhost:1337/things/con_pf_test/' + uid).then(data => data.json())
+		const thingInfo = await global.fetch(`${config.blockExplorer}/things/con_pf_test/` + uid).then(data => data.json())
 		if (thingInfo){
 			try{
 				sendAsGIF(thingInfo)

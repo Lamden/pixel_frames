@@ -48,7 +48,7 @@
 </style>
 
 <svelte:head>
-	<title>thingInfo.name</title>
+	<title>{thingInfo.name}</title>
 
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="{thingInfo.name}" />
