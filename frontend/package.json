@@ -6,7 +6,7 @@
     "dev": "sapper dev",
     "build": "sapper build --legacy",
     "export": "sapper export --legacy",
-    "start": "PORT=4000 node __sapper__/build ",
+    "start": "node __sapper__/build ",
     "startpm2": "npm run build && npm run start",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
