@@ -33,7 +33,7 @@ async function create(req, res, next) {
 		// Set GIF parameters
 		encoder.setRepeat(0);   // 0 for repeat, -1 for no-repeat
 		encoder.setDelay(frameSpeed);  // frame delay in ms
-		encoder.setQuality(15); // image quality. 10 is default.
+		encoder.setQuality(100); // image quality. 10 is default.
 		encoder.setTransparent('#ffffff00')
 
 		return encoder;

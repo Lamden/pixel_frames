@@ -128,11 +128,11 @@
 <p class="description">{thingInfo.description}</p>
 <div class="flex-row container">
     <div class="flex-col">
-        <a rel="prefetch noopener noreferrer" href="{'dynamic/'+ thingInfo.uid + '.gif'}" target="_blank">
+        <!--<a rel="prefetch noopener noreferrer" href="{'dynamic/'+ thingInfo.uid + '.gif'}" target="_blank">-->
             {#if frames.length >= show}
                 <FrameCanvas {pixelSize} pixels={frames[show - 1]} id={thingInfo.id} watermark={createWatermark(thingInfo, $userAccount)} />
             {/if}
-        </a>
+        <!--</a>-->
         <div class="flex-row likes-price">
             <div>
                 <Likes {thingInfo}/>
@@ -152,7 +152,7 @@
         {#if thingInfo['price:amount'] > 0 && thingInfo['price:hold'] !== ""}
             <p><strong></strong>Current held for buyer: {thingInfo['price:hold']}</p>
         {/if}
-        <SocialButtons {thingInfo}/>
+        <!--<SocialButtons {thingInfo}/>-->
     </div>
 </div>
 
