@@ -182,7 +182,7 @@
 				<strong>{config.currencySymbol}: </strong> {$currency}
 				<strong class="account-info">(approval:  {$approvalAmount} auto tx: {$autoTx ? 'on' : 'off'})</strong>
 			</p>
-			<a href={`https://explorer.lamden.io/address/${$userAccount}`}
+			<a href={`https://explorer.lamden.io/addresses/${$userAccount}`}
 			   target="_blank"
 			   rel="noopener noreferrer"
 			   class="address">
