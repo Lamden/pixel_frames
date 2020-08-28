@@ -11,6 +11,7 @@ import { config } from './js/config'
 const GIFEncoder = require('gifencoder');
 
 const { createCanvas, registerFont } = require('canvas');
+process.env.FONTCONFIG_PATH = '/etc/fonts'
 registerFont('src/fonts/Roboto-Medium.ttf', { family: 'Roboto' })
 
 const { PORT, NODE_ENV } = process.env;
