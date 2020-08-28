@@ -55,19 +55,19 @@
 	<meta name="twitter:description" content="{thingInfo.description}" />
 	<meta name="twitter:site" content="@framespixel" />
 	<meta name="twitter:creator" content="{thingInfo.owner}" />
-	<!--<meta name="twitter:image" content="{gifURL}" />-->
+	<meta name="twitter:image" content="{gifURL}" />
 	<meta name="twitter:image:alt" content="{thingInfo.name}" />
 
-	<!--<meta property="og:url" content="{gifURL}" />-->
+	<meta property="og:url" content="{gifURL}" />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content="Pixel Frames by Lamden" />
-	<!--<meta property="og:image" content="{gifURL}" />-->
+	<meta property="og:image" content="{gifURL}" />
 	<meta property="og:description" content="{thingInfo.description}" />
-	<!--<meta property="og:image:url" content="{gifURL}" />-->
-	<!--<meta property="og:image:secure_url" content="{gifURL}" />-->
-	<!--<meta property="og:image:width" content="150" />-->
-	<!--<meta property="og:image:height" content="150" />-->
-	<!--<meta property="og:image:type" content="image/gif" />-->
+	<meta property="og:image:url" content="{gifURL}" />
+	<meta property="og:image:secure_url" content="{gifURL}" />
+	<meta property="og:image:width" content="150" />
+	<meta property="og:image:height" content="150" />
+	<meta property="og:image:type" content="image/gif" />
 </svelte:head>
 
 <div class="display-one">

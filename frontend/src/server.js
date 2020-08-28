@@ -5,12 +5,13 @@ import * as sapper from '@sapper/server';
 global.fetch = require('node-fetch')
 const fs = require('fs');
 
-import {decodeFrames, letter_to_color, formatAccountAddress} from "./js/utils";
+import {decodeFrames, letter_to_color } from "./js/utils";
 import { config } from './js/config'
 
 const GIFEncoder = require('gifencoder');
 
-const { createCanvas } = require('canvas');
+const { createCanvas, registerFont } = require('canvas');
+registerFont('src/fonts/Roboto-Medium.ttf', { family: 'Roboto' })
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
@@ -33,7 +34,7 @@ async function create(req, res, next) {
 		// Set GIF parameters
 		encoder.setRepeat(0);   // 0 for repeat, -1 for no-repeat
 		encoder.setDelay(frameSpeed);  // frame delay in ms
-		encoder.setQuality(100); // image quality. 10 is default.
+		encoder.setQuality(1); // image quality. 10 is default.
 		encoder.setTransparent('#ffffff00')
 
 		return encoder;
@@ -41,7 +42,7 @@ async function create(req, res, next) {
 
 	function sendAsGIF(thingInfo) {
 		let pixelSize = 20;
-		let watermark = {text: formatAccountAddress(thingInfo.owner), fillColor: "#ff5bb0", strokeColor: "black"}
+		let watermark = {fillColor: "#ff5bb0", strokeColor: "black"}
 		const canvas = createCanvas(16 * pixelSize, 16  * pixelSize);
 		var ctx = canvas.getContext("2d");
 		let frames = decodeFrames(thingInfo.thing)
