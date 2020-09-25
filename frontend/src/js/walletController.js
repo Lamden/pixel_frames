@@ -140,12 +140,11 @@ class WalletConnectionRequest {
         }
         this.request = request
         this.appName = "";
-        this.description = "";
+        this.version = "";
         this.contractName = "";
         this.networkType = "";
         this.logo = "";
         this.background = "";
-        this.approvalHash = "";
         this.charms = []
         try{
             populate(request)
@@ -161,7 +160,7 @@ class WalletConnectionRequest {
     getInfo(){
         let info = {
             appName: this.appName, 
-            description: this.description, 
+            version: this.version,
             contractName: this.contractName, 
             networkType: this.networkType, logo: this.logo}
         if (this.background.length > 0) info.background = this.background
