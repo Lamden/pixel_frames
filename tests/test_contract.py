@@ -4,8 +4,6 @@ import base64
 from contracting.client import ContractingClient
 client = ContractingClient()
 
-icon_svg_base64 = ""
-
 frames_good_1 = ("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAABBBBBBBBABBBBBBAABBBBBBBBBBBBBBBAABBBBBBBBBBBBBBBA" +
                      "BBBBBBBBBBBBBBBBABBBBBBBBBBBBBBBABBBBBBBBBBBBBBBBABBBBBBBBBBBBBBBABBBBBBAAABBBBBAABBBBBBBBBA" +
                      "AAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" +
@@ -84,12 +82,7 @@ with open('../contracts/con_pixel_frames_master.py') as f:
     code = f.read()
     client.submit(
         code,
-        name='con_pixel_frames_master',
-        constructor_args={
-            'name': 'Pixel Frames',
-            'description': 'Create, Own and Sell unique pixel animations on the Lamden Blockchain!',
-            'icon_svg_base64': icon_svg_base64.decode("utf-8")
-        }
+        name='con_pixel_frames_master'
     )
 
 class MyTestCase(unittest.TestCase):
@@ -114,6 +107,7 @@ class MyTestCase(unittest.TestCase):
                 'num_of_frames': 4
             }
         )
+
 
     def test_01b_create_thing_assert_invalid_char(self):
         print("TEST CREATE A THING - NEG - INVALID PIXEL CHAR")

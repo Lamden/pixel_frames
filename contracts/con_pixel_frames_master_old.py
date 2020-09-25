@@ -5,11 +5,19 @@ S = Hash(default_value='')
 balances = Hash(default_value=0)
 
 @construct
-def seed():
-    S['name'] = 'Pixel Frames'
-    S['description'] = 'Create, Own and Sell unique pixel animations on the Lamden Blockchain!'
-    S['icon_svg'] = "PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiByeD0iMCIgcnk9IjAiPjwvcmVjdD48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTEyLjM3MDEgMTQuM0MxMi4yNzAxIDE0LjMgMTIuMTgwMSAxNC4yOCAxMi4wOTAxIDE0LjIzTDIuNjkwMDYgOS4zMjk5OUMyLjQ5MDA2IDkuMjI5OTkgMi4zNzAwNiA5LjAxOTk5IDIuMzcwMDYgOC43OTk5OUMyLjM3MDA2IDguNTc5OTkgMi40OTAwNiA4LjM2OTk5IDIuNjkwMDYgOC4yNjk5OUwxMi4wOTAxIDMuMzY5OTlDMTIuMjYwMSAzLjI3OTk5IDEyLjQ3MDEgMy4yNzk5OSAxMi42NDAxIDMuMzY5OTlMMjIuMDQwMSA4LjI2OTk5QzIyLjI1MDEgOC4zNjk5OSAyMi4zNzAxIDguNTc5OTkgMjIuMzcwMSA4Ljc5OTk5QzIyLjM3MDEgOS4wMTk5OSAyMi4yNTAxIDkuMjI5OTkgMjIuMDUwMSA5LjMyOTk5TDEyLjY1MDEgMTQuMjNDMTIuNTYwMSAxNC4yOCAxMi40NzAxIDE0LjMgMTIuMzcwMSAxNC4zWk00LjI3MDA2IDguNzk5OTlMMTIuMzcwMSAxMy4wMkwyMC40NzAxIDguNzk5OTlMMTIuMzcwMSA0LjU3OTk5TDQuMjcwMDYgOC43OTk5OVpNMTIuMzcgMTcuNUMxMi4yNjk5IDE3LjUgMTIuMTggMTcuNDggMTIuMDkgMTcuNDNMMi42ODk5NSAxMi41M0MyLjM5OTk1IDEyLjM4IDIuMjg5OTUgMTIuMDIgMi40Mzk5NSAxMS43MkMyLjU4OTk1IDExLjQzIDIuOTU5OTUgMTEuMzEgMy4yNDk5NSAxMS40N0wxMi4zNyAxNi4yMkwyMS40OSAxMS40NkMyMS43OCAxMS4zMSAyMi4xNSAxMS40MiAyMi4zIDExLjcxQzIyLjQ1IDEyIDIyLjM0IDEyLjM3IDIyLjA1IDEyLjUyTDEyLjY1IDE3LjQyQzEyLjU1OTkgMTcuNDggMTIuNDcgMTcuNSAxMi4zNyAxNy41Wk0xMi4wOSAyMC42M0MxMi4xOCAyMC42OCAxMi4yNyAyMC43IDEyLjM3IDIwLjdDMTIuNDcgMjAuNyAxMi41NiAyMC42OCAxMi42NSAyMC42MkwyMi4wNSAxNS43MkMyMi4zNCAxNS41NyAyMi40NSAxNS4yIDIyLjMgMTQuOTFDMjIuMTUgMTQuNjIgMjEuNzggMTQuNTEgMjEuNDkgMTQuNjZMMTIuMzcgMTkuNDJMMy4yNDk5NyAxNC42N0MyLjk1OTk3IDE0LjUxIDIuNTg5OTcgMTQuNjMgMi40Mzk5NyAxNC45MkMyLjI3OTk3IDE1LjIxIDIuMzk5OTcgMTUuNTggMi42ODk5NyAxNS43M0wxMi4wOSAyMC42M1ogICIgZmlsbD0iI2ZmNWJiMCI+PC9wYXRoPjwvc3ZnPg=="
+def seed(name: str, description: str, icon_svg_base64: str):
+    # Enforce the Thing Requirements for submitting a thing contract
+    assert len(name) > 0, "A thing contracts needs a name value."
+    assert len(description) > 0, "A thing contracts needs a description value."
 
+    # Icons are svg files that have been encoded to a base64 string.
+    # See https://base64.guru/converter/encode/image/svg for details.
+    # NOTE: the value xmlns="http://www.w3.org/2000/svg" is a REQUIRED property in your <svg> tag.
+    assert len(icon_svg_base64) > 0, "A thing contracts needs a an icon value (base64 encoded svg)."
+
+    S['name'] = name
+    S['description'] = description
+    S['icon_svg'] = icon_svg_base64
 
 @export
 def create_thing(thing_string: str, name: str, description: str, meta: dict = {}):

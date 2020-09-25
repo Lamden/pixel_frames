@@ -3,6 +3,7 @@ import { config } from './config.js'
 
 const approvalRequest = {
     appName: 'Pixel Frames',
+    version: '1.0.0',
     contractName: config.masterContract,
     networkType: 'testnet'
 }
