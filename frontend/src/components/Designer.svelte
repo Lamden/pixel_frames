@@ -68,7 +68,7 @@
 </style>
 
 <svelte:head>
-	<title>Pixel Board</title>
+	<title>Lamden Demo App</title>
 </svelte:head>
 
 <div class="designer">
