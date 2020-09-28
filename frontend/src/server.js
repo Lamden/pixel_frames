@@ -87,7 +87,7 @@ async function create(req, res, next) {
   	let pathMatch = req.path.match(dynamicRequest)
 	if (pathMatch){
 		let uid = pathMatch[1].split(".")[0]
-		const thingInfo = await global.fetch(`${config.blockExplorer}/things/con_pf_test/` + uid).then(data => data.json())
+		const thingInfo = await global.fetch(`${config.blockExplorer}/things/${config.infoContract}/` + uid).then(data => data.json())
 		if (thingInfo){
 			try{
 				sendAsGIF(thingInfo)
