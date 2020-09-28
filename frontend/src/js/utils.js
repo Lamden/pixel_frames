@@ -1,6 +1,9 @@
 import { config } from './config.js'
 import { snackbars, currency, userAccount, approvalAmount, showModal } from "./stores";
 import { get } from 'svelte/store'
+import Lamden from 'lamden-js'
+
+let API = new Lamden.Masternode_API({hosts: [config.masternode]})
 
 export const color_to_letter = {
     //BTW
@@ -188,23 +191,20 @@ export const processTxResults = (results) => {
 }
 
 export const refreshTAUBalance = async (account) => {
-    const res = await fetch(`${config.masternode}/contracts/currency/balances?key=${account}`)
-    const data = await res.json();
-    if (!data.value) currency.set(0)
-    else currency.set(data.value);
+    const res = await API.getCurrencyBalance(account)
+    currency.set(res)
 }
 
 export const checkForApproval = () => {
     return fetch(`${config.masternode}/contracts/currency/balances?key=${get(userAccount)}:${config.masterContract}`)
         .then(res => res.json())
         .then(json => {
-            if (json.value === null || typeof json === 'undefined') {
-                approvalAmount.set(0)
-                return 0
-            }else{
-                if (json.value !== get(approvalAmount)) approvalAmount.set(parseFloat(json.value))
-                return parseFloat(json.value)
-            }
+            let value = json.value || '0'
+            if (value.__fixed__) value = value.__fixed__
+            let bnValue = Lamden.Encoder('bigNumber', value)
+            if (bnValue !== get(approvalAmount)) approvalAmount.set(bnValue)
+            return bnValue
+
         })
         .catch(e => console.log(e.message))
 }
@@ -256,7 +256,7 @@ export const formatAccountAddress = (account, lsize = 8, rsize = 4) => {
 export const createWatermark = (thingInfo, account) => {
     if (account === thingInfo.owner) return
     return {
-        text: 'pixelframes.lamden.io',
+        text: 'demoapp.lamden.io',
         fillColor: "#ff5bb0"
     }
 }

@@ -74,9 +74,9 @@ async function create(req, res, next) {
 			ctx.strokeStyle = watermark.strokeColor;
 			ctx.lineWidth = 1;
 			ctx.miterLimit=2;
-			ctx.strokeText('pixelframes.lamden.io', canvas.width / 2, canvas.height - (canvas.height / 4));
+			ctx.strokeText('demoapp.lamden.io', canvas.width / 2, canvas.height - (canvas.height / 4));
 			ctx.fillStyle = watermark.fillColor;
-			ctx.fillText('pixelframes.lamden.io', canvas.width / 2, canvas.height - (canvas.height / 4));
+			ctx.fillText('demoapp.lamden.io', canvas.width / 2, canvas.height - (canvas.height / 4));
 			encoder.addFrame(ctx);
 		})
 

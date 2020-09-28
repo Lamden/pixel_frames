@@ -50,7 +50,7 @@
         const transaction = {
             methodName: 'like_thing',
             networkType: 'testnet',
-            stampLimit: 100000,
+            stampLimit: 50,
             kwargs: {
                 uid: thingInfo.uid
             }

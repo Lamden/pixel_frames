@@ -12,7 +12,7 @@
 	export let forsale;
 	export let preview = false;
 
-    $: formatted = formatThings(forsale.data);
+    $: formatted = formatThings(forsale.data).filter(thing => thing['price:amount'] > 0);
     let count = forsale.count;
     let sending = false;
 
@@ -32,7 +32,7 @@
 	const updateThing = (e) => {
     	const { updates, index } = e.detail
     	updateInfo(formatted[index], updates)
-		formatted = [...formatted]
+		formatted = [...formatted].filter(thing => thing['price:amount'] > 0)
 	}
 
 </script>

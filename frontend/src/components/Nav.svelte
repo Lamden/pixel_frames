@@ -1,6 +1,6 @@
 <script>
 	import { walletInstalled, userAccount, currency, approvalAmount, stampRatio, autoTx, walletInfo } from '../js/stores'
-	import { beforeUpdate, afterUpdate } from 'svelte'
+	import { beforeUpdate, onMount } from 'svelte'
 	import { goto } from '@sapper/app';
 
 	import { refreshTAUBalance, checkForApproval, formatAccountAddress } from '../js/utils.js'
@@ -13,18 +13,29 @@
 	export let lwc;
 
 	let initalize = false;
+	let balance;
+	let timer;
 	setTimeout(() => initalize = true, 500)
 
 	$: lwcInitialized = false;
 
-	beforeUpdate(() => {
-		if (!lwc) lwcInitialized = false;
-		if (lwc && !lwcInitialized) lwcInitialized = true;
+	onMount(() => {
+		timer = setTimeout(() => {
+			if ($userAccount && !balance) {
+				balance = refreshTAUBalance($userAccount)
+				checkForApproval()
+				timer = null;
+			}
+		}, 1000)
+	})
 
-		if ($userAccount) {
-			refreshTAUBalance($userAccount)
-			checkForApproval()
+
+	beforeUpdate(() => {
+		if (!lwc) {
+			balance = undefined
+			lwcInitialized = false;
 		}
+		if (lwc && !lwcInitialized) lwcInitialized = true;
 	})
 
 	// TODO get balance when new wallet connection is made.  probably a callback.

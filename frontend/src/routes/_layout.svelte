@@ -56,7 +56,8 @@
 	})
 
 	const sendTransaction = (transaction, callback) => {
-		transaction.stampLimit = determineStamps()
+		if (transaction.methodName === 'create_thing') transaction.stampLimit = 200
+		else transaction.stampLimit = determineStamps(transaction)
 		lwc.sendTransaction(transaction, callback)
 	}
 
