@@ -17,7 +17,7 @@
     "gifencoder": "^2.0.1",
     "lamden-js": "^1.20.6",
     "lamden_wallet_controller": "^0.3.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "polka": "next",
     "sirv": "^0.4.0"
   },
