@@ -2,8 +2,8 @@
 import { config } from './config.js'
 
 const approvalRequest = {
-    appName: 'Pixel Frames',
-    version: '1.0.0',
+    appName: 'Lamden Demo App',
+    version: '1.1.0',
     contractName: config.masterContract,
     networkType: 'testnet'
 }
