@@ -1,4 +1,5 @@
 <script>
+	// Components
 	import PixelBoard from './PixelBoard.svelte'
 	import Pallet from './Pallet.svelte'
 	import Frames from './Frames.svelte'
@@ -8,10 +9,19 @@
 	import CreateButton from "./CreateButton.svelte";
 	import RangeSlider from './RangeSlider.svelte'
 	import NewFrame from './NewFrame.svelte'
+	import SavedFrames from './SavedFrames.svelte'
+	import NewButton from './NewButton.svelte'
+	import Tools from './Tools.svelte'
 
-	import {frames} from '../js/stores'
+	// Misc
+	import { frames, frameStore, activeFrame } from '../js/stores'
 
 	let itemCreated = false;
+
+	const handleCreated = () => {
+		itemCreated = true
+		setTimeout(() => itemCreated = false, 2100)
+	}
 
 </script>
 
@@ -46,10 +56,14 @@
 		margin: 0;
 		height: unset;
 	}
+	hr{
+		color: var(--gray-5);
+		width: 100%;
+	}
 
 	@media (min-width: 980px) {
 		.designer {
-			flex-direction: row;
+			flex-direction: column;
 		}
 		.info{
 			flex-direction: column;
@@ -68,27 +82,38 @@
 </style>
 
 <svelte:head>
-	<title>Lamden Demo App</title>
+	<title>Pixel Frames Designer!</title>
 </svelte:head>
 
 <div class="designer">
-	<div class="info flex-col" on:drap|preventDefault>
-		<div class="flex-col">
-			<Preview frames={$frames} showWatermark={false}/>
-			<RangeSlider />
+	<div class="flex-row">
+		<div class="info flex-col" on:drap|preventDefault>
+			<div class="flex-col">
+				<Preview frames={$frames} showWatermark={false}/>
+				<RangeSlider />
+			</div>
+
+			<div class="flex-col buttons shadowbox">
+				<NewButton />
+				<hr>
+				<ClearButton />
+				<DeleteButton />
+				<NewFrame />
+				<CreateButton on:created={handleCreated}/>
+			</div>
 		</div>
-		<div class="flex-col frames">
-			<Frames />
-		</div>
-		<div class="flex-col buttons shadowbox">
-			<ClearButton />
-			<DeleteButton />
-			<NewFrame on:new={() => itemCreated = false}/>
-			<CreateButton on:created={() => itemCreated = true}/>
+		<div class="flex-row pallet-board">
+			<div class="flex-col">
+				<Frames />
+				<PixelBoard {itemCreated}/>
+			</div>
+			<div class="flex-col">
+				<Pallet />
+				<Tools />
+			</div>
 		</div>
 	</div>
-	<div class="flex-row pallet-board">
-		<PixelBoard {itemCreated}/>
-		<Pallet />
+	<div>
+		<SavedFrames />
 	</div>
 </div>

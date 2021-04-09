@@ -1,7 +1,7 @@
 S = Hash(default_value='')
 
 @export
-def add_thing(thing_string: str, name: str, description: str, meta: dict, creator: str ):
+def add_thing(thing_string: str, name: str, description: str, meta: dict, creator: str):
 
     #Enforce the thing requirements on the standard arguments
     enforce_thing_standards(thing_string, name, description, meta)
@@ -42,9 +42,10 @@ def add_thing(thing_string: str, name: str, description: str, meta: dict, creato
     # Meta Items can also be appended to your thing_string before hashing, if they add to it's uniqueness.
     # Then they can be stored separately here for easy lookup later
 
-    S[uid, 'meta_items'] = ['speed', 'num_of_frames']
+    S[uid, 'meta_items'] = ['speed', 'num_of_frames', 'royalty_percent']
     S[uid, 'meta', 'speed'] = meta['speed']
     S[uid, 'meta', 'num_of_frames'] = meta['num_of_frames']
+    S[uid, 'meta', 'royalty_percent'] = meta['royalty_percent']
 
     return uid
 
@@ -61,26 +62,32 @@ def enforce_thing_standards(thing_string: str, name: str, description: str, meta
 
 def custom_string_validations(thing_string: str, num_of_frames: int):
     #Validate num_of_frames
-    assert num_of_frames >= 1 and num_of_frames <= 4, "num_of_frames value " + str(num_of_frames) + " is out of range (1-4)."
+    assert num_of_frames >= 1 and num_of_frames <= 8, "num_of_frames value " + str(num_of_frames) + " is out of range (1-4)."
     assert len(thing_string) % num_of_frames == 0, "num_of_frames value is invalid."
 
     #Validate Frames Data
-    assert len(thing_string) / num_of_frames == 256, "Frames Data is Invalid, must be 256 pixels/frame."
+    assert len(thing_string) / num_of_frames == 625, "Frames Data is Invalid, must be 625 pixels/frame."
     assertPixelValues(thing_string)
 
 def assertPixelValues(thing_string):
     for pixel in thing_string:
-        assert ord(pixel) >= 65 and ord(pixel) <= 90, "Frames Data contains invalid pixel " + pixel + "."
+        assert (ord(pixel) >= 65 and ord(pixel) <= 122) and ord(pixel) != 92, "Frames Data contains invalid pixel {}.".format(pixel)
+
 
 def custom_meta_validations(meta):
     #Validate Speed
-    assert 'speed' in meta, "Missing meta value 'speed'."
+    assert 'speed' in meta, "Missing meta value 'speed' (int)."
     assert isinstance(meta['speed'], int), "Speed value is not an integer."
     assert meta['speed'] >= 100 and meta['speed'] <= 2000, "Speed value " + str(meta['speed']) + " is out of range (100ms-2000ms)."
 
     # Validate num_of_frames
-    assert 'num_of_frames' in meta, "Missing meta value 'num_of_frames'."
+    assert 'num_of_frames' in meta, "Missing meta value 'num_of_frames' (int)."
     assert isinstance(meta['num_of_frames'], int), "num_of_frames value is not an integer."
+
+    # Validate royalty_ammount
+    assert 'royalty_percent' in meta, "Missing meta value 'royalty_percent' (int)."
+    assert isinstance(meta['royalty_percent'], int), "royalty_percent value is not an integer."
+    assert meta['royalty_percent'] >= 0 and meta['royalty_percent'] <= 100, "royalty_percent value " + str(meta['royalty_percent']) + " is out of range (0-100)."
 
 @export
 def thing_exists(thing_string: str):
@@ -90,6 +97,10 @@ def thing_exists(thing_string: str):
 @export
 def get_owner(uid: str):
     return S[uid, 'owner']
+
+@export
+def get_creator(uid: str):
+    return S[uid, 'creator']
 
 @export
 def set_price(uid: str, amount: int, hold: str):
@@ -102,6 +113,10 @@ def set_price(uid: str, amount: int, hold: str):
 @export
 def get_price_amount(uid: str):
     return S[uid, 'price', 'amount']
+
+@export
+def get_royalty_amount(uid: str):
+    return S[uid, 'meta', 'royalty_percent']
 
 @export
 def get_price_hold(uid: str):

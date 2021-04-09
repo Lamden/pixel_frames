@@ -9,9 +9,13 @@
     export let pixelSize = 10
     export let showWatermark = true;
     export let border = true;
+    export let solidBorder = false;
+    export let solidBorderColor = false;
+    export let speed = null
 
     let switcher;
     $: show = 1
+    $: animationSpeed = setSpeed(speed || $frameSpeed)
 
     onMount(() => {
         if (thingInfo){
@@ -25,12 +29,12 @@
         else show = show === frames.length ? 1 : show + 1;
     }
 
-    frameSpeed.subscribe(update => {
+    const setSpeed = (s) => {
         if (!thingInfo){
             clearInterval((switcher))
-            switcher = setInterval(switchFrames, update)
+            switcher = setInterval(switchFrames, s)
         }
-    })
+    }
 
 </script>
 
@@ -39,10 +43,13 @@
         line-height: 0;
     }
     .preview-frame.border{
-        border: 2px dashed #ff5bb0;
+        border: 2px dashed var(--primary);
+    }
+    .preview-frame.solid-border{
+        border: 1px solid;
     }
 </style>
 
-<div class="preview-frame" class:border={border}>
+<div class="preview-frame" class:border={border} class:solid-border={solidBorder} style={solidBorderColor !== "" ? `border-color: ${solidBorderColor};`: ""}>
     <FrameCanvas {pixelSize} pixels={frames[show - 1]} {thingInfo} watermark={showWatermark ? createWatermark(thingInfo, $userAccount) : undefined}/>
 </div>

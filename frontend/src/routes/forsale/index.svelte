@@ -1,7 +1,6 @@
 <script context="module">
-	import { config } from '../../js/config.js'
-	export async function preload(parms) {
-		const res = await this.fetch(`${config.blockExplorer}/things/${config.infoContract}/forsale?limit=15`)
+	export async function preload() {
+		const res = await this.fetch(`./forsale.json?limit=25`)
 		let data = await res.json()
 		if (!data) data = []
 	    return {forsale: data}
@@ -12,7 +11,10 @@
     import ForSale from '../../components/ForSale.svelte'
 
     export let forsale;
-
 </script>
+
+<svelte:head>
+	<title>Pixel Frames For Sale!</title>
+</svelte:head>
 
 <ForSale {forsale}/>

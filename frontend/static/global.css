@@ -8,7 +8,18 @@ body {
 }
 
 body{
-	--primary: #ff5bb0;
+	/* #ff5bb0 */
+	--primary: #21d6ab;
+	/* 820043 */
+	--primary-dark: #00523e;
+	--primary-highlight: #00ffc2;
+	--color-success: #7fff5b;
+	--gray-2: #dedede;
+	--gray-5: #a0a0a0;
+	--gray-6: #6d6d6d;
+	--color-black: black;
+	/* ffe5f1 */
+	--color-white-primary-tint: #f0fffb;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -25,14 +36,66 @@ a {
 	color: inherit;
 }
 
-flex-col{
+a:hover {
+	color: var(--primary);
+}
+
+.text-color-gray-5{
+	color: var(--gray-5);
+}
+
+.text-color-primary{
+	color: var(--primary);
+}
+
+.text-color-primary-dark{
+	color: var(--primary-dark);
+}
+
+.text-color-gray-6{
+	color: var(--gray-6);
+}
+
+.text-color-black{
+	color: var(--color-black);
+}
+
+.text-color-white-primary-tint{
+	color: var(--color-white-primary-tint);
+}
+
+.flex{
+	display: flex;
+}
+
+.flex-col{
 	display: flex;
 	flex-direction: column;
 }
 
-flex-row{
+.flex-row{
 	display: flex;
 	flex-direction: row;
+}
+
+.flex-align-center{
+	align-items: center;
+}
+
+.flex-justify-end{
+	justify-content: flex-end;
+}
+
+.flex-justify-center{
+	justify-content: center;
+}
+
+.text-center{
+	text-align: center;
+}
+
+.weight-600{
+	font-weight: 600;
 }
 
 .shadowbox {
@@ -80,11 +143,11 @@ flex-row{
 }
 
 .button {
-	box-shadow:inset 0px 1px 0px 0px #fbafe3;
-	background:linear-gradient(to bottom, #ff5bb0 5%, #ef027d 100%);
-	background-color:#ff5bb0;
+	box-shadow:inset 0px 1px 0px 0px var(--primary);
+	background:linear-gradient(to bottom, var(--primary) 5%, var(--primary-dark) 100%);
+	background-color: var(--primary);
 	border-radius:6px;
-	border:1px solid #ee1eb5;
+	border:1px solid var(--primary-dark);
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
@@ -93,17 +156,18 @@ flex-row{
 	font-weight:bold;
 	padding:6px 25px;
 	text-decoration:none;
-	text-shadow:0px 1px 0px #c70067;
+	text-shadow:0px 1px 0px var(--primary-dark);
 	outline: none;
 	line-height: 1;
+	height: fit-content;
 }
 .button:disabled{
-	background: linear-gradient(to bottom, #ff5bb07d 5%, #ef027d7d 100%);
+	background: linear-gradient(to bottom, var(--primary) 5%, #759e94 100%);
     color: #e8e8e8;
 }
-.button:hover {
-	background:linear-gradient(to bottom, #ef027d 5%, #ff5bb0 100%);
-	background-color:#ef027d;
+.button:hover:enabled {
+	background: linear-gradient(to bottom, var(--primary-highlight) 5%, var(--primary) 100%);
+	background-color: var(--primary-highlight);
 }
 .button:active {
 	position:relative;
@@ -115,7 +179,7 @@ flex-row{
 	background-color: transparent;
 	display:inline-block;
 	cursor:pointer;
-	color:#ff5bb0;
+	color: var(--primary);
 	font-family:Arial;
 	font-size:17px;
 	font-weight:200;
@@ -123,8 +187,24 @@ flex-row{
 	text-decoration:none;
 	outline: none;
 }
+.button_text.small {
+	font-size:14px;
+}
+
+.button.icon {
+    padding: 0;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button_text.white {
+	color: var(--color-white-primary-tint);
+}
 .button_text:hover {
-	color:#ff0084;
+	color: var(--primary-highlight);
 }
 .button_text:active {
 	position:relative;
@@ -132,13 +212,13 @@ flex-row{
 }
 
 .outlined {
-	border: 1px dotted #fff5fa;
+	border: 1px dotted var(--color-white-primary-tint);
 	border-radius: 5px;
 }
 
 .outlined:hover {
-	background: #ffc4e1;
-	border: 1px solid #fff5fa;
+	background: var(--color-white-primary-tint);
+	border: 1px solid var(--primary-highlight);
 }
 
 input[type="text"], input[type="number"], textarea {
@@ -151,18 +231,22 @@ input[type="text"], input[type="number"], textarea {
 input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
 	border: 2px dashed transparent;
 	outline: 1px solid #afafaf;
+	margin-bottom: 1rem;
 }
 
 form{
-	padding: 1rem;
+	padding-left: 1rem;
 	height: 100%;
 	justify-content: center;
 	box-sizing: border-box;
-	width: 50%;
 }
 form > label{
 	color: #fff5fa;
-	margin: 1rem 0 0.5rem;
+	margin: 0 0 0.5rem;
+}
+
+.preview-row > input[type="submit"]{
+	margin-top: 1rem;
 }
 
 .display-card {
@@ -177,10 +261,13 @@ form > label{
 	margin:  1rem;
 	padding: 20px 20px;
 	width: 180px;
-	box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+	box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
+	-webkit-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
+	-moz-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
 	background: #fff6fb;
 	display: flex;
 	flex-direction: column;
+	border-radius: 5px;
 }
 
 @media (min-width: 400px) {

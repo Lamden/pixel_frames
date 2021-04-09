@@ -1,54 +1,83 @@
-import con_pixel_frames
 import currency
+I = importlib
 
 S = Hash(default_value='')
 balances = Hash(default_value=0)
+metadata = Hash(default_value=0)
+
 
 @construct
 def seed():
-    S['name'] = 'Pixel Frames'
-    S['description'] = 'Create, Own and Sell unique pixel animations on the Lamden Blockchain!'
-    S['icon_svg'] = "PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiByeD0iMCIgcnk9IjAiPjwvcmVjdD48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTEyLjM3MDEgMTQuM0MxMi4yNzAxIDE0LjMgMTIuMTgwMSAxNC4yOCAxMi4wOTAxIDE0LjIzTDIuNjkwMDYgOS4zMjk5OUMyLjQ5MDA2IDkuMjI5OTkgMi4zNzAwNiA5LjAxOTk5IDIuMzcwMDYgOC43OTk5OUMyLjM3MDA2IDguNTc5OTkgMi40OTAwNiA4LjM2OTk5IDIuNjkwMDYgOC4yNjk5OUwxMi4wOTAxIDMuMzY5OTlDMTIuMjYwMSAzLjI3OTk5IDEyLjQ3MDEgMy4yNzk5OSAxMi42NDAxIDMuMzY5OTlMMjIuMDQwMSA4LjI2OTk5QzIyLjI1MDEgOC4zNjk5OSAyMi4zNzAxIDguNTc5OTkgMjIuMzcwMSA4Ljc5OTk5QzIyLjM3MDEgOS4wMTk5OSAyMi4yNTAxIDkuMjI5OTkgMjIuMDUwMSA5LjMyOTk5TDEyLjY1MDEgMTQuMjNDMTIuNTYwMSAxNC4yOCAxMi40NzAxIDE0LjMgMTIuMzcwMSAxNC4zWk00LjI3MDA2IDguNzk5OTlMMTIuMzcwMSAxMy4wMkwyMC40NzAxIDguNzk5OTlMMTIuMzcwMSA0LjU3OTk5TDQuMjcwMDYgOC43OTk5OVpNMTIuMzcgMTcuNUMxMi4yNjk5IDE3LjUgMTIuMTggMTcuNDggMTIuMDkgMTcuNDNMMi42ODk5NSAxMi41M0MyLjM5OTk1IDEyLjM4IDIuMjg5OTUgMTIuMDIgMi40Mzk5NSAxMS43MkMyLjU4OTk1IDExLjQzIDIuOTU5OTUgMTEuMzEgMy4yNDk5NSAxMS40N0wxMi4zNyAxNi4yMkwyMS40OSAxMS40NkMyMS43OCAxMS4zMSAyMi4xNSAxMS40MiAyMi4zIDExLjcxQzIyLjQ1IDEyIDIyLjM0IDEyLjM3IDIyLjA1IDEyLjUyTDEyLjY1IDE3LjQyQzEyLjU1OTkgMTcuNDggMTIuNDcgMTcuNSAxMi4zNyAxNy41Wk0xMi4wOSAyMC42M0MxMi4xOCAyMC42OCAxMi4yNyAyMC43IDEyLjM3IDIwLjdDMTIuNDcgMjAuNyAxMi41NiAyMC42OCAxMi42NSAyMC42MkwyMi4wNSAxNS43MkMyMi4zNCAxNS41NyAyMi40NSAxNS4yIDIyLjMgMTQuOTFDMjIuMTUgMTQuNjIgMjEuNzggMTQuNTEgMjEuNDkgMTQuNjZMMTIuMzcgMTkuNDJMMy4yNDk5NyAxNC42N0MyLjk1OTk3IDE0LjUxIDIuNTg5OTcgMTQuNjMgMi40Mzk5NyAxNC45MkMyLjI3OTk3IDE1LjIxIDIuMzk5OTcgMTUuNTggMi42ODk5NyAxNS43M0wxMi4wOSAyMC42M1ogICIgZmlsbD0iI2ZmNWJiMCI+PC9wYXRoPjwvc3ZnPg=="
+    S['thing_info_contract'] = 'con_pixel_frames'
 
+    # LST002
+    metadata['operator'] = ctx.caller
+    metadata['things_name'] = 'Pixel Frames Test 2'
+    metadata['things_description'] = 'Create, Own and Sell unique pixel animations on the Lamden Blockchain!'
+
+# LST002
+@export
+def change_metadata(key: str, value: Any):
+    assert ctx.caller == metadata['operator'], 'Only operator can set metadata!'
+    metadata[key] = value
 
 @export
 def create_thing(thing_string: str, name: str, description: str, meta: dict = {}):
+    thing_info = I.import_module(S['thing_info_contract'])
     sender = ctx.caller
-    thing_uid = con_pixel_frames.add_thing(thing_string, name, description, meta, sender)
+    thing_uid = thing_info.add_thing(thing_string, name, description, meta, sender)
     add_to_balance(sender)
     return thing_uid
 
 @export
 def buy_thing(uid: str):
-    owner = con_pixel_frames.get_owner(uid)
+    thing_info = I.import_module(S['thing_info_contract'])
     sender = ctx.caller
+
+    owner = thing_info.get_owner(uid)
+    creator = thing_info.get_creator(uid)
+
     assert_already_owned(uid, sender)
 
-    price_amount = con_pixel_frames.get_price_amount(uid)
+    price_amount = thing_info.get_price_amount(uid)
+    royalty_percent = thing_info.get_royalty_amount(uid)
     assert price_amount, uid + ' is not for sale'
     assert price_amount > 0, uid + ' is not for sale'
 
-    price_hold = con_pixel_frames.get_price_hold(uid)
+    price_hold = thing_info.get_price_hold(uid)
     if price_hold != '':
-        assert sender == price_hold, 'this item is being held for ' + price_hold
+        assert sender == price_hold, uid + ' is being held for ' + price_hold
 
-    # currency.transfer_from(amount: float, to: str, main_account: str)
-    currency.transfer_from(price_amount, owner, sender)
+    if royalty_percent > 0:
+        # calculate the royalty
+        royalty_amount = price_amount * (royalty_percent / 100)
+        # calculate the amount that goes to the seller
+        net_amount = price_amount - royalty_amount
+        # send royalty to creator
+        currency.transfer_from(royalty_amount, creator, sender)
+    else:
+        net_amount = price_amount
 
-    # if the TAU transfer did not take place then this part will not execute as the whole method will fail
+    # send currency to current owner
+    currency.transfer_from(net_amount, owner, sender)
+
+    # if the TAU transfers did not take place then this part will not execute as the whole method will fail
     transfer_ownership(uid, sender)
 
 @export
 def sell_thing(uid: str, amount: int):
     # make sure the caller owns the item
     assert_ownership(uid, ctx.caller)
-    con_pixel_frames.set_price(uid, amount, '')
+    thing_info = I.import_module(S['thing_info_contract'])
+    thing_info.set_price(uid, amount, '')
 
 @export
 def sell_thing_to(uid: str, amount: int, hold: str):
     # make sure the caller owns the item
     assert_ownership(uid, ctx.caller)
-    con_pixel_frames.set_price(uid, amount, hold)
+
+    thing_info = I.import_module(S['thing_info_contract'])
+    thing_info.set_price(uid, amount, hold)
 
 @export
 def give_thing(uid: str, new_owner: str):
@@ -62,31 +91,39 @@ def give_thing(uid: str, new_owner: str):
 def like_thing(uid: str):
     sender = ctx.caller
     assert S['liked', uid, sender] == '', sender + " already liked " + uid
-    con_pixel_frames.like_thing(uid)
+
+    thing_info = I.import_module(S['thing_info_contract'])
+    thing_info.like_thing(uid)
+
     S['liked', uid, sender] = True
 
 @export
 def prove_ownership(uid: str, code: str):
     sender = ctx.caller
     assert_ownership(uid, sender)
-    con_pixel_frames.set_proof(uid, code)
+
+    thing_info = I.import_module(S['thing_info_contract'])
+    thing_info.set_proof(uid, code)
 
 def assert_ownership(uid: str, sender):
-    owner = con_pixel_frames.get_owner(uid)
+    thing_info = I.import_module(S['thing_info_contract'])
+    owner = thing_info.get_owner(uid)
     assert owner == sender, uid + ' not owned by ' + sender
 
 def assert_already_owned(uid: str, sender):
-    owner = con_pixel_frames.get_owner(uid)
+    thing_info = I.import_module(S['thing_info_contract'])
+    owner = thing_info.get_owner(uid)
     assert owner != sender, uid + ' already owned by ' + sender
 
 def transfer_ownership(uid:str, new_owner: str):
-    old_owner = con_pixel_frames.get_owner(uid)
+    thing_info = I.import_module(S['thing_info_contract'])
+    old_owner = thing_info.get_owner(uid)
     #change ownership to new owner
-    con_pixel_frames.set_owner(uid, new_owner)
+    thing_info.set_owner(uid, new_owner)
 
     # if item was for sale make it no longer for sale
-    if con_pixel_frames.get_price_amount(uid) > 0:
-        con_pixel_frames.set_price(uid, 0, '')
+    if thing_info.get_price_amount(uid) > 0:
+        thing_info.set_price(uid, 0, '')
 
     #adjust balances
     add_to_balance(new_owner)

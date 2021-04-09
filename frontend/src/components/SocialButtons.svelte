@@ -13,7 +13,16 @@
     let title = thingInfo.name
 
 </script>
-<p>Share it on social media </p>
+<style>
+    p{
+        margin-bottom: 0;
+    }
+    p.subtext{
+        margin: 0 0 1rem;
+    }
+
+</style>
+<p class="text-color-gray-5">Share it on social media! </p>
 <div >
     <Twitter class="share-button" text={title} url={twitter_url} />
     <Facebook class="share-button" url={facebook_url} />

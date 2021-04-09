@@ -1,7 +1,13 @@
 <script>
     import { getContext } from 'svelte'
-	import { frames, frameSpeed, showModal } from '../js/stores.js'
+	import { goto } from '@sapper/app';
+
+    //MISC
+	import { frames, frameSpeed, showModal, frameStore, activeFrame } from '../js/stores.js'
 	import { serializeFrames, createSnack, nameTaken, closeModel } from '../js/utils.js'
+	import { config } from '../js/config.js';
+
+    // Components
 	import Preview from './Preview.svelte'
 
     const { sendTransaction } = getContext('app_functions')
@@ -17,7 +23,7 @@
 
 		const transaction = {
 			methodName: 'create_thing',
-			networkType: 'testnet',
+			networkType: config.networkType,
 			kwargs: {
 				thing_string,
 				description: desc,
@@ -26,7 +32,8 @@
 					speed: parseInt($frameSpeed),
 					num_of_frames: $frames.length
 				}
-			}
+			},
+			stampLimit: 130 + (20 * $frames.length)
 		}
 
 		sendTransaction(transaction, handleCreateTx)
@@ -42,6 +49,7 @@
 	}
 
 	const handleCreateTx = (txResults) => {
+		console.log(txResults)
         if (txResults.txBlockResult.status === 0) {
         	created()
 			createSnack({
@@ -49,20 +57,43 @@
 				body: `${name} is now on the blockchain.`,
 				type: "info"
 			})
+
+			const oldIndex = $activeFrame
+			let newIndex = oldIndex  - 1
+            if (newIndex < 0 ) newIndex = 0
+            activeFrame.set(newIndex)
+
+            frameStore.update(currentValue => {
+                currentValue.splice(oldIndex, 1)
+                console.log({currentValue})
+                return currentValue
+            })
+			let stateChange = txResults.txBlockResult.state.find(f => f.key.includes(':names:'))
+			if (stateChange && stateChange.value) redirect(stateChange.value, window.location.href)
 		}
     }
+
+    const redirect = (uid, location) =>  {
+    	let maxChecks = 30
+		let checks = 0
+    	const checkForThing = async () => {
+    		if (window.location.href !== location) return
+    		checks = checks + 1
+    		let res = await fetch(`./frames/${uid}.json`).then(res => res.json())
+			if (res === null) {
+				if (checks < maxChecks)setTimeout(checkForThing, 500)
+			}else {
+				if (window.location.href === location) goto(`/frames/${uid}`)
+			}
+		}
+		checkForThing()
+	}
 </script>
 
 <style>
-	.flex-row{
-		align-items: center;
-		justify-content: space-evenly;
-		height: 100%;
-	}
 	.preview-row{
 		text-align: center;
 	}
-
 	textarea{
 		resize: none;
 	}
@@ -71,12 +102,13 @@
 		color: white;
 	}
 	.outlined:hover{
-		color: #ff5bb0;
+		color: var(--primary);
 	}
+
 
 </style>
 
-<div class="flex-row">
+<div class="modal-form flex-row">
 	<div class="preview-row">
 		<Preview frames={$frames} pixelSize={15} showWatermark={false}/>
 		<input type="submit" class="button_text outlined" value="Create Frames!" form="create" />

@@ -2,8 +2,10 @@
     import { beforeUpdate } from 'svelte';
     import DisplayFrames from './DisplayFrames.svelte';
 
-    import { decodeFrames  } from "../js/utils.js";
+    // MISC
+    import { decodeFrames, formatAccountAddress, isLamdenKey  } from "../js/utils.js";
     import { userAccount } from '../js/stores'
+    import { config } from '../js/config'
 
     export let created;
     export let creator;
@@ -38,8 +40,11 @@
 		padding: 20px 20px;
 		width: 180px;
 		margin: 10px;
-		box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+        box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
+	    -webkit-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
+	    -moz-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
 		align-items: center;
+        border-radius: 5px;
 	}
 	h2{
 		border-top: 1px solid lightgray;
@@ -60,20 +65,29 @@
         flex-wrap: wrap;
         align-items: center;
     }
+    a{
+		color: var(--primary);
+	}
 
 </style>
+<h2 class="text-color-primary-dark">
+	All Pixel Frames Created by
+	{#if isLamdenKey(creator)}
+		<a href="{`${config.blockExplorer}/addresses/${creator}`}" >{formatAccountAddress(creator, 8, 5)}</a>
+	{:else}
+		{creator.length > 15 && !creator.startsWith("con_") ? formatAccountAddress(creator, 8, 5) : creator}
+	{/if}
+</h2>
 
-<h2>Pixel Frames Created by</h2>
-<p class="flex-row">{creator === $userAccount ? 'You' : creator}
-    {formatted.length == 0 ? `${creator === $userAccount ? "haven't" : "hasn't"} created anything yet!` : ""}
-    {#if creator === $userAccount}
-        <a href="{`/boards/${$userAccount}`}" class="button_text">CREATE!</a>
-    {/if}
-</p>
+{#if formatted.length == 0}
+	<p>
+		{`${creator === $userAccount ? "You haven't" : "This user hasn't"} created anything yet!`}
+	</p>
+{/if}
 <div class="flex-row created">
     {#each formatted as thingInfo}
         <div>
-            <DisplayFrames pixelSize={12} {thingInfo} />
+            <DisplayFrames pixelSize={7} {thingInfo} />
         </div>
     {/each}
 </div>

@@ -1,11 +1,16 @@
 <script>
     import { getContext, onMount } from 'svelte'
     import { goto } from '@sapper/app';
-    import { userAccount, autoTx } from '../js/stores.js'
+
+    // Components
     import Frame from './Frame.svelte'
     import FrameCanvas from './FrameCanvas.svelte'
     import Price from './Price.svelte'
+
+    // Misc
     import { createSnack, alreadyLiked, createWatermark } from '../js/utils.js'
+    import { config } from '../js/config.js';
+    import { userAccount, autoTx } from '../js/stores.js'
 
     //Pictures
     import like_filled from '../../static/img/like-filled.svg'
@@ -31,8 +36,7 @@
 
 		const transaction = {
 			methodName: 'like_thing',
-			networkType: 'testnet',
-			stampLimit: 50,
+			networkType: config.networkType,
 			kwargs: {
 				uid: thingInfo.uid
 			}
@@ -60,6 +64,9 @@
         margin-right: 5px;
         width: 20px;
         height: 30px;
+
+    }
+    .logged-in{
         cursor: pointer;
     }
 
@@ -67,7 +74,7 @@
 
 
 <div class="flex-row likes">
-    <div class="hide-mobile icon" on:click={like}>
+    <div class="hide-mobile icon " class:logged-in={$userAccount} on:click={like}>
         {#if liked !== null}
             {@html liked ? like_filled : like_unfilled}
         {:else}

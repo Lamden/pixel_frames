@@ -1,12 +1,18 @@
 <script>
     import { userAccount, showModal } from '../js/stores.js'
+    import { stringToFixed, toBigNumber } from '../js/utils.js'
+
+    // Pictures
     import lamden_logo from '../../static/img/lamden_logo_new.svg'
 
+    // Components
     import FormSell from './FormSell.svelte'
     import FormBuy from './FormBuy.svelte'
 
     export let thingInfo
     export let updateInfo
+
+    $: price = toBigNumber(thingInfo.price_amount)
 
     const openModal = (modal) => {
         showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
@@ -39,21 +45,25 @@
 </style>
 
 <div class="flex-row price">
-    {#if thingInfo['price:amount'] > 0}
+    {#if price.isGreaterThan(0)}
         <div class="icon">
             {@html lamden_logo}
         </div>
-        {thingInfo['price:amount']}
-        {#if thingInfo.owner !== $userAccount}
-            <button class="button_text" on:click={() => openModal(FormBuy)}>buy</button>
-        {:else}
-            <button class="button_text" on:click={() => openModal(FormSell)}>set</button>
+        {stringToFixed(price, 8)}
+        {#if $userAccount}
+            {#if thingInfo.owner !== $userAccount}
+                <button class="button_text" on:click={() => openModal(FormBuy)}>buy!</button>
+            {:else}
+                <button class="button_text" on:click={() => openModal(FormSell)}>set</button>
+            {/if}
         {/if}
     {:else}
         {#if thingInfo.owner !== $userAccount}
-            <p>not for sale</p>
+            <p class="text-color-gray-5">not for sale</p>
         {:else}
-            <button class="button_text" on:click={() => openModal(FormSell)}>sell</button>
+            {#if $userAccount}
+                <button class="button_text" on:click={() => openModal(FormSell)}>sell</button>
+            {/if}
         {/if}
     {/if}
 </div>

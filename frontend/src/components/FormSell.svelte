@@ -1,19 +1,24 @@
 <script>
     import { getContext } from 'svelte'
+
+	// Misc
 	import { frames, showModal } from '../js/stores.js'
 	import { createSnack, closeModel } from '../js/utils.js'
+	import { config } from '../js/config.js';
+
+	// Components
 	import Preview from './Preview.svelte'
 
     const { sendTransaction } = getContext('app_functions')
 
 	const updateInfo = $showModal.modalData.updateInfo
-	let price = $showModal.modalData.thingInfo['price:amount'];
+	let price = $showModal.modalData.thingInfo['price_amount'];
     const thingName = $showModal.modalData.thingInfo['name']
 
     const sell = () => {
 		const transaction = {
 			methodName: 'sell_thing',
-			networkType: 'testnet',
+			networkType: config.networkType,
 			kwargs: {
 				uid: $showModal.modalData.thingInfo.uid,
 				amount: parseInt(price)
@@ -25,13 +30,14 @@
     }
 
 	const handleSellTx = (txResults) => {
+    	console.log(txResults)
         if (txResults.txBlockResult.status === 0) {
         	updateInfo({
-				"price:amount": price,
+				"price_amount": price,
         	})
 			createSnack({
 				title: `Listed!`,
-				body: `${thingName} now listred for ${price}.`,
+				body: `${thingName} now listed for ${price}.`,
 				type: "info"
 			})
 		}
@@ -39,11 +45,6 @@
 </script>
 
 <style>
-	.flex-row{
-		align-items: center;
-		justify-content: space-evenly;
-		height: 100%;
-	}
 	.preview-row{
 		text-align: center;
 	}
@@ -52,7 +53,7 @@
 		color: #ffffff;
 	}
 	.outlined:hover{
-		color: #ff5bb0;
+		color: var(--primary);
 	}
 
 </style>

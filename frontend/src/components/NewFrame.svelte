@@ -1,12 +1,17 @@
 <script>
-    import { frames, currentFrame, totalPixels } from '../js/stores'
-    import { emptyFrame } from '../js/utils.js'
+    // MISC
+    import { currentFrame, frameStore, activeFrame } from '../js/stores'
+    import { newPixelFrame } from '../js/defaults'
 
     const reset = () => {
         let wipe = confirm("Wipe project and start again?")
         if (wipe){
             currentFrame.set(0)
-            frames.set([emptyFrame($totalPixels)])
+            frameStore.update(currentValue => {
+                currentValue[$activeFrame] = newPixelFrame()
+                return currentValue
+
+            })
         }
     }
 </script>

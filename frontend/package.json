@@ -7,16 +7,21 @@
     "build": "sapper build --legacy",
     "export": "sapper export --legacy",
     "start": "PORT=80 node __sapper__/build ",
+    "start:blockgrabber": "node blockGrabber/app.mjs",
     "startpm2": "npm run build && npm run start",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "test": "run-p --race dev cy:run"
   },
   "dependencies": {
+    "base64-stream": "^1.0.0",
+    "canvas": "^2.7.0",
     "compression": "^1.7.1",
+    "dotenv": "^8.2.0",
     "gifencoder": "^2.0.1",
-    "lamden-js": "^1.20.6",
-    "lamden_wallet_controller": "^0.3.0",
+    "lamden_wallet_controller": "^0.6.3",
+    "lamden-js": "^1.6.1",
+    "mongoose": "^5.12.2",
     "node-fetch": "^2.6.0",
     "polka": "next",
     "sirv": "^0.4.0"

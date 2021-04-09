@@ -53,6 +53,8 @@
         padding: 8px;
         margin-bottom: 1rem;
         box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+	    -webkit-box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+	    -moz-box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
     }
     .top-bar{
         align-items: end;
@@ -82,7 +84,7 @@
         color: #ffecec;
     }
     .info{
-        background: #ff5bb0;
+        background: var(--primary);
         border: 1px solid #afafaf;
         color: #fff5fa;
     }

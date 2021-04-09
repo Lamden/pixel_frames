@@ -1,8 +1,11 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import { currentColor } from '../js/stores'
-    import { letter_to_color } from '../js/utils.js'
     const dispatch = createEventDispatcher();
+
+    // MISC
+    import { currentColor, brushSize } from '../js/stores'
+    import { letter_to_color } from '../js/utils.js'
+
     export let pixel
     export let index
 
@@ -17,24 +20,39 @@
     }
 
     const dispatchColorChange = (button) => {
-        if ($currentColor[button] == pixel) return
+        if ($currentColor[button] == pixel && $brushSize === 1) return
         dispatch('colorChange', {index, button})
     }
 </script>
 
 <style>
+    div{
+        color: var(--gray-2);
+    }
     .pixel{
         transition: color, 0.5s;
         transition: border, 0s;
     }
     .pixel:hover{
-        border: 1px dotted #ff5bb0;
+        border: 1px dotted var(--primary);
+    }
+    .noselect {
+      -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+         -khtml-user-select: none; /* Konqueror HTML */
+           -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome, Edge, Opera and Firefox */
     }
 </style>
 
-<div class="pixel pixel__border" 
+<div class="pixel pixel__border noselect"
      style={`background: ${letter_to_color[pixel]}`}
      on:mousedown={colorChange}
      on:mouseover={colorChangeOver}
-     on:drag|preventDefault />
+     on:drag|preventDefault
+     title={index}>
+    {#if pixel === "A"} x {/if}
+</div>
 

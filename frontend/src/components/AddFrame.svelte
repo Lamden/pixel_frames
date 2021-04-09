@@ -1,12 +1,15 @@
 <script>
-    import { frames, currentFrame } from '../js/stores'
+    import { tick }  from 'svelte'
+    import { frames, currentFrame, frameStore, activeFrame } from '../js/stores'
+    import { config } from '../js/config'
 
-    const addFrame = () => {
-        if ($frames.length < 5) {
-            frames.update(f => {
-                f.push(Array.from(f[f.length - 1]));
+    const addFrame = async () => {
+        if ($frames.length < config.totalFrames + 1) {
+            frameStore.update(f => {
+                f[$activeFrame].frames.push(Array.from(f[$activeFrame].frames[f[$activeFrame].frames.length - 1]));
                 return f
             })
+            await tick()
             currentFrame.set($frames.length - 1)
         }
     }
@@ -20,6 +23,6 @@
     }
 </style>
 
-<button class="button" on:click={addFrame}>
+<button class="button" on:click={addFrame} >
     +
 </button>

@@ -1,13 +1,19 @@
 <!-- /frontend/src/routes/_layout.svelte -->
 
 <script>
+	// TODO - Royalties
+	// TODO - Backup Warning for Wallet connection
+	// TODO - disclaimer when creating art
+	// TODO - disclaimer when buying art
+	// TODO - disclaimer when selling art
+
+
 	import Nav from '../components/Nav.svelte';
 	import {onMount, beforeUpdate, setContext} from 'svelte';
-	//import WalletController from 'lamden_wallet_controller';
-	import WalletController from '../js/walletController.js';
-	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx} from '../js/stores.js';
-	import {processTxResults, createSnack} from '../js/utils.js';
-	import { config } from '../js/config.js';
+	import WalletController from 'lamden_wallet_controller';
+	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden} from '../js/stores.js';
+	import {processTxResults, createSnack, refreshTAUBalance} from '../js/utils.js';
+	import { config, stampLimits } from '../js/config.js';
 	import {approvalRequest} from '../js/wallet_approval';
 	import Snackbar from "../components/Snackbar.svelte";
 	import Modal from "../components/Modal.svelte";
@@ -15,6 +21,8 @@
 
 	export let segment;
 	let lwc;
+	let lastCurrencyCheck = new Date()
+	let fetchingStamps = false;
 
 	onMount(() => {
 		lwc = new WalletController(approvalRequest)
@@ -27,9 +35,13 @@
 					else walletInstalled.set('not-installed')
 				})
 
+		document.addEventListener("visibilitychange", setTabActive);
+		refreshCurrencyBalance()
+
 		return () => {
 			lwc.events.removeListener(handleWalletInfo)
 			lwc.events.removeListener(handleTxResults)
+			document.removeEventListener("visibilitychange", setTabActive);
 		}
 	})
 
@@ -37,14 +49,17 @@
 		if (lwc) {
 			if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
 		}
-		if ($stampRatio === 1) fetchStamps();
+		if (!$stampRatio) fetchStamps();
 	})
 
 	const fetchStamps = () => {
-		fetch(`${config.blockExplorer}/lamden/stamps`)
+		if (fetchingStamps) return
+		fetchingStamps = true;
+		fetch(`${config.blockExplorer}/api/lamden/stamps`)
 				.then(res => res.json())
 				.then(res => {
 					if (res.value) stampRatio.set(parseInt(res.value))
+					fetchingStamps = false;
 				})
 	}
 
@@ -56,15 +71,24 @@
 	})
 
 	const sendTransaction = (transaction, callback) => {
-		if (transaction.methodName === 'create_thing') transaction.stampLimit = 200
-		else transaction.stampLimit = determineStamps(transaction)
-		lwc.sendTransaction(transaction, callback)
+		let usersStamps = determineUsersTotalStamps()
+		let stampsToSendTx = transaction.stampLimit;
+		if (!stampsToSendTx) stampsToSendTx = stampLimits[transaction.methodName]
+		console.log({transaction, usersStamps, stampsToSendTx})
+		if (usersStamps < stampsToSendTx){
+			createSnack({
+                title: `Insufficient ${config.currencySymbol}`,
+                body: `You do not have enough ${config.currencySymbol} to send this transaction. Send more ${config.currencySymbol} to your Pixel Frames account.`,
+                type: "error"
+            })
+		}else{
+			transaction.stampLimit = stampsToSendTx
+			lwc.sendTransaction(transaction, callback)
+		}
 	}
 
-	const determineStamps = () => {
-		let maxStamps = $stampRatio * 5;
-		if (($currency * $stampRatio) < maxStamps) return parseInt(($currency * $stampRatio) * 0.95)
-		return parseInt(maxStamps)
+	const determineUsersTotalStamps = () => {
+		return parseInt($currency * $stampRatio)
 	}
 
 	const handleWalletInfo = (info) => {
@@ -81,7 +105,19 @@
 		}
 	}
 
+	const refreshCurrencyBalance = async  () => {
+		if ($tabHidden || !$userAccount) setTimeout(refreshCurrencyBalance, 10000)
+		else{
+			await refreshTAUBalance()
+			lastCurrencyCheck = new Date()
+			setTimeout(refreshCurrencyBalance, 10000)
+		}
+	}
 
+	const setTabActive = () => {
+		tabHidden.set(document.hidden)
+		if (!$tabHidden && $userAccount && new Date() - lastCurrencyCheck > 5000 ) refreshTAUBalance()
+	}
 </script>
 
 <style>

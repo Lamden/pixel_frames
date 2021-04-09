@@ -1,19 +1,26 @@
 <script context="module">
-	import { config } from '../../js/config.js'
 	import { decodeFrames } from '../../js/utils.js'
-	export async function preload({ params, query }) {
-		const res = await this.fetch(`${config.blockExplorer}/things/${config.infoContract}/${params.uid}`)
-		let data = await res.json()
 
-		if (!data) data = null
-		else {
-			data.frames = decodeFrames(data.thing)
+	export async function preload({ params, query }) {
+		let thingInfo = null
+		let data = await Promise.all([
+				this.fetch(`./frames/${params.uid}.json`).then(res => res.json()),
+				this.fetch(`./history/${params.uid}.json`).then(res => res.json())
+		])
+		try{
+			thingInfo = data[0]
+			thingInfo.frames = decodeFrames(thingInfo.thing)
+		}catch(e){null}
+
+	    return {
+			thingInfo,
+			salesHistory: data[1]
 		}
-	    return {thingInfo: data}
 	}
 </script>
 
 <script>
+	import { config } from '../../js/config.js'
 	import DisplayFramesOne from "../../components/DisplayFramesOne.svelte";
 	import OwnerControls from "../../components/OwnerControls.svelte";
 	import { userAccount } from '../../js/stores.js'
@@ -21,19 +28,13 @@
     import { formatAccountAddress, updateInfo} from '../../js/utils.js'
 
 	export let thingInfo
+	export let salesHistory
 
 	let gifURL = `${config.domainName}/dynamic/${thingInfo.uid}.gif`
 	let pageURL = `${config.domainName}/frames/${thingInfo.uid}`
 
-	$: owner = $userAccount === thingInfo.owner;
-
-    let watermark = {
-        text: formatAccountAddress(thingInfo.owner, 6, 3),
-        fillColor: "#ff5bb0",
-        font: "30px Roboto",
-    }
-
 	const updateThingInfo = (updates) => {
+    	console.log(updates)
     	updateInfo(thingInfo, updates)
     }
 
@@ -71,9 +72,5 @@
 </svelte:head>
 
 <div class="display-one">
-
-	<DisplayFramesOne {thingInfo} watermark={!owner ? watermark : undefined} updateInfo={updateThingInfo}/>
-	{#if owner}
-		<OwnerControls {thingInfo}/>
-	{/if}
+	<DisplayFramesOne {thingInfo} {salesHistory} updateInfo={updateThingInfo}/>
 </div>

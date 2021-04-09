@@ -3,7 +3,7 @@
 	import { beforeUpdate, onMount } from 'svelte'
 	import { goto } from '@sapper/app';
 
-	import { refreshTAUBalance, checkForApproval, formatAccountAddress } from '../js/utils.js'
+	import { refreshTAUBalance, checkForApproval, formatAccountAddress, stringToFixed } from '../js/utils.js'
 	import { config } from '../js/config'
 
 	import Title from './Title.svelte'
@@ -22,7 +22,7 @@
 	onMount(() => {
 		timer = setTimeout(() => {
 			if ($userAccount && !balance) {
-				balance = refreshTAUBalance($userAccount)
+				balance = refreshTAUBalance()
 				checkForApproval()
 				timer = null;
 			}
@@ -38,7 +38,6 @@
 		if (lwc && !lwcInitialized) lwcInitialized = true;
 	})
 
-	// TODO get balance when new wallet connection is made.  probably a callback.
 </script>
 
 <style>
@@ -88,9 +87,10 @@
 		flex-grow: 1;
 		min-width: 20%
 	}
-	.account >  p > strong {
-		font-size: 0.9em;
+	.currency > strong {
+		margin-left: 4px;
 	}
+
 	.account >  p > strong.account-info{
 		color: var(--primary);
 		font-weight: 400;
@@ -102,6 +102,7 @@
 		text-overflow: ellipsis;
 		align-self: flex-end;
 		margin: 0;
+		color: var(--primary);
 	}
 	.address:hover{
 		color: var(--primary)
@@ -140,7 +141,7 @@
 		content: '';
 		width: calc(100% - 1em);
 		height: 2px;
-		background-color: #ff5bb0;
+		background-color: var(--primary);
 		display: block;
 		bottom: -1px;
 	}
@@ -190,14 +191,13 @@
 	<div class="flex-col account desktop hide-mobile">
 		{#if $userAccount !== "" && initalize && !$walletInfo.locked}
 			<p class="currency">
-				<strong>{config.currencySymbol}: </strong> {$currency}
-				<strong class="account-info">(approval:  {$approvalAmount} auto tx: {$autoTx ? 'on' : 'off'})</strong>
+				{stringToFixed($currency, 8)}<strong>{config.currencySymbol}</strong>
 			</p>
-			<a href={`https://explorer.lamden.io/addresses/${$userAccount}`}
+			<a href={`${config.blockExplorer}/addresses/${$userAccount}`}
 			   target="_blank"
 			   rel="noopener noreferrer"
 			   class="address">
-				{`Your Pixel Frames Account: ${formatAccountAddress($userAccount, 8, 4)}`}
+				{`${formatAccountAddress($userAccount, 8, 4)}`}
 			</a>
 		{:else}
 			{#if lwcInitialized && initalize}

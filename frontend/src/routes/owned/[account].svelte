@@ -1,21 +1,29 @@
 <script context="module">
 	import { config } from '../../js/config.js'
 	export async function preload({ params, query }) {
-		const res = await this.fetch(`${config.blockExplorer}/things/${config.infoContract}/owned/${params.account}`)
-		let data = await res.json()
-		if (!data) data = []
-	    return {account: params.account, owned: data.data}
+		let things = await this.fetch(`./owned/${params.account}.json?limit=25`).then(res => res.json())
+
+	    return {
+			account: params.account,
+			owned: things
+		}
 	}
 </script>
 
 <script>
     import Owned from "../../components/Owned.svelte";
 
+    import { formatAccountAddress } from '../../js/utils'
+
     export let account
 	export let owned
 
 </script>
 
-<Owned {owned} {account}/>
+<svelte:head>
+	<title>{`Pixel Frames owned by ${formatAccountAddress(account)}`}</title>
+</svelte:head>
+
+<Owned owned={owned} {account}/>
 
 

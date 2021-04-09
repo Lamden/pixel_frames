@@ -30,15 +30,21 @@
 		min-width: -moz-fit-content;
 		min-width: max-content;
 		text-align: center;
+		color: var(--primary);
 	}
 	div > strong {
-		transition: color, 0.5s;
+		transition: color 1s ease-in-out ;
+	}
+	p{
+		margin: -2rem 0 0;
 	}
 </style>
 
 <div style={`font-size: ${fontSize}em`}>Pixel
-    <strong style={`color: ${framesColor};`}>Frames</strong>
+    <strong style={`color: ${framesColor};`}>Whale</strong>
 </div>
 {#if subtitle}
-	<CreatedWithLove />
+	<p class="text-color-primary-dark weight-600">
+		On-chain Pixel Animations created by YOU!
+	</p>
 {/if}

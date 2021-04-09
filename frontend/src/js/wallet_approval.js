@@ -2,13 +2,23 @@
 import { config } from './config.js'
 
 const approvalRequest = {
-    appName: 'Lamden Demo App',
-    version: '1.1.0',
+    appName: 'Pixel Whale Testing',
+    version: '2.0',
     contractName: config.masterContract,
-    networkType: 'testnet'
+    networkType: config.networkType
 }
 
-approvalRequest.logo = 'logo-192.png'
+const charms = [
+    {
+        name: 'Owned',
+        variableName: "balances",
+        key: "<wallet vk>",
+        formatAs: "number",
+        iconPath: "logo-192.png"
+    }
+]
+approvalRequest.charms = charms
+approvalRequest.logo = 'wallet/logo.png'
 approvalRequest.background = 'wallet/background.png'
 
 export { approvalRequest };

@@ -1,22 +1,27 @@
 <script>
     import {getContext, onMount} from 'svelte';
     import {goto} from '@sapper/app';
-    import {userAccount} from '../js/stores.js';
-    import Frame from './Frame.svelte';
+
+    // Misc
+    import {userAccount, showModal} from '../js/stores.js';
+    import { config } from '../js/config.js';
+    import {createSnack, createWatermark, alreadyLiked, formatAccountAddress} from '../js/utils.js';
+
+    // Components
+    import FormGive from './FormGive.svelte'
+    import SalesHistory from './SalesHistory.svelte'
     import FrameCanvas from './FrameCanvas.svelte';
     import Price from './Price.svelte';
     import Likes from './Likes.svelte'
-    import {createSnack, createWatermark, alreadyLiked} from '../js/utils.js';
+    import OwnerControls from './OwnerControls.svelte'
 
-    //Pictures
-    import like_filled from '../../static/img/like-filled.svg'
-    import like_unfilled from '../../static/img/like-unfilled.svg'
-    import lamden_logo from '../../static/img/lamden_logo_new.svg'
+    // Pictures
     import SocialButtons from "./SocialButtons.svelte";
 
     const {sendTransaction} = getContext('app_functions')
 
     export let thingInfo;
+    export let salesHistory;
     export let pixelSize = 17;
     export let updateInfo
 
@@ -26,10 +31,15 @@
     $: show = 1
 
     onMount(() => {
+        console.log(salesHistory)
         checkAlreadyLiked()
         switcher = setInterval(switchFrames, thingInfo.speed)
         return (() => clearInterval((switcher)))
     })
+
+    const openModal = (modal) => {
+        showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
+    }
 
     const checkAlreadyLiked = () => {
         if (liked === null && $userAccount) {
@@ -49,8 +59,7 @@
     const like = () => {
         const transaction = {
             methodName: 'like_thing',
-            networkType: 'testnet',
-            stampLimit: 50,
+            networkType: config.networkType,
             kwargs: {
                 uid: thingInfo.uid
             }
@@ -71,8 +80,10 @@
 <style>
     .container{
         flex-wrap: wrap;
-        align-items: center;
         justify-content: center;
+    }
+    .frame-border{
+        border: 1px solid #ff5bb033;
     }
     .likes-price{
         width: 100%;
@@ -89,7 +100,7 @@
         cursor: pointer;
     }
     .description{
-        color: #ff5bb0;
+        color: var(--primary);
         font-size: 1.2em;
         max-width: fit-content;
 
@@ -115,19 +126,23 @@
         word-break: break-word;
     }
     h1{
-        color: #ff5bb0;
+        color: var(--primary);
         font-weight: bold;
-        margin: 1rem 0 2rem;
+        margin: 2rem 0 2rem;
+        text-align: center;
     }
     strong{
-        color: #ff5bb0;
+        color: var(--primary);
+    }
+    .sales-history{
+        padding-top: 3rem;
+        width: 100%;
     }
 </style>
 
 <h1>{thingInfo.name}</h1>
-<p class="description">{thingInfo.description}</p>
 <div class="flex-row container">
-    <div class="flex-col">
+    <div>
         <a rel="prefetch noopener noreferrer" href="{'dynamic/'+ thingInfo.uid + '.gif'}" target="_blank">
             {#if frames.length >= show}
                 <FrameCanvas {pixelSize} pixels={frames[show - 1]} id={thingInfo.id} watermark={createWatermark(thingInfo, $userAccount)} />
@@ -141,18 +156,30 @@
                 <Price {thingInfo} {updateInfo}/>
             </div>
         </div>
+        <div>
+            <OwnerControls {thingInfo} owner="" }/>
+        </div>
     </div>
-    <div class="flex-col shadowbox">
-        <p><strong>Creator</strong> <a href="{`./creator/${thingInfo.creator}`}">{thingInfo.creator}</a></p>
-        <p><strong>Current Owner</strong> <a href="{`./owned/${thingInfo.owner}`}">{thingInfo.owner}</a></p>
-        <p><strong>Unique Thing ID</strong> {thingInfo.uid}</p>
+    <div class="shadowbox">
+        <p><strong>Name</strong> {thingInfo.name}</p>
+        <p><strong>Description</strong> {thingInfo.description}</p>
+        <p><strong>ID</strong> {formatAccountAddress(thingInfo.uid, 8, 4)}</p>
+        <p><strong>Current Owner</strong> <a href="{`./owned/${thingInfo.owner}`}">{formatAccountAddress(thingInfo.owner, 8, 4)}</a></p>
+        <p><strong>Creator</strong> <a href="{`./creator/${thingInfo.creator}`}">{formatAccountAddress(thingInfo.creator, 8, 4)}</a></p>
+        <p><strong>Date Created</strong> {new Date(thingInfo.datetimeCreated).toLocaleString()}</p>
         <p><strong>Frame Speed</strong> {thingInfo.speed}ms</p>
         <p><strong>Number of Frames</strong> {thingInfo.num_of_frames}</p>
-        <p class="price"><strong>Current Price</strong> <Price {thingInfo}/></p>
-        {#if thingInfo['price:amount'] > 0 && thingInfo['price:hold'] !== ""}
-            <p><strong></strong>Current held for buyer: {thingInfo['price:hold']}</p>
+        <p class="price"><strong>Current Price</strong> <Price {thingInfo} {updateInfo}/></p>
+        {#if thingInfo['price_amount'] > 0 && thingInfo['price_hold'] !== ""}
+            <p><strong></strong>Currently held for buyer: {thingInfo['price_hold']}</p>
+        {/if}
+        {#if thingInfo.owner === $userAccount}
+            <button class="button" on:click={() => openModal(FormGive)}>Gift</button>
         {/if}
         <SocialButtons {thingInfo}/>
     </div>
+</div>
+<div class="sales-history">
+    <SalesHistory {salesHistory}/>
 </div>
 

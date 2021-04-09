@@ -42,7 +42,7 @@
        class="button">Install Wallet</a>
 {:else}
      {#if locked}
-        <button class="button" on:click={() => location.reload()}>Wallet Locked</button>
+        <button class="button" disabled={true}>Wallet Locked</button>
     {:else}
          {#if !connected}
             <button class="button" on:click={() => lwc.sendConnection()}> Connect to Wallet</button>

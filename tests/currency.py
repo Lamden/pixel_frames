@@ -4,7 +4,11 @@ balances = Hash(default_value=0)
 def seed():
     balances['jeff'] = 1000000
     balances['stu'] = 1000000
-    balances['alex'] = 1000000
+    balances['ben'] = 1000000
+    balances['jeff', 'con_pixel_frames_master'] = 1000000
+    balances['stu', 'con_pixel_frames_master'] = 1000000
+    balances['ben', 'con_pixel_frames_master'] = 1000000
+
 
 @export
 def transfer(amount: float, to: str):

@@ -17,17 +17,19 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 600px;
+        width: fit-content;
         max-width: 100%;
-        height: 400px;
         max-height: 100%;
-        background: #ff5bb0;
+        background: var(--primary);
         border-radius: 5px;
         box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+	    -webkit-box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+	    -moz-box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
         z-index: 500;
     }
     .data{
         flex-grow: 1;
+        padding: 1rem;
     }
     .buttons{
         padding: 1rem 0;

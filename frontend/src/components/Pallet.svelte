@@ -2,6 +2,15 @@
     import { currentColor } from '../js/stores'
     import { color_to_letter, letter_to_color } from '../js/utils.js'
 
+    $: pallet = makePallet()
+
+    const makePallet = () => {
+        let colors = JSON.parse(JSON.stringify(color_to_letter))
+        delete colors['#ffffff00']
+        delete colors['white']
+        return colors
+    }
+
     const changeCurrentColor = (index, letter) => {
         currentColor.update( curr => {
             curr[index] = letter;
@@ -18,12 +27,20 @@
 </script>
 
 <style>
+    .top-pallet {
+        display: grid;
+        width: fit-content;
+        grid-template-columns: repeat(2, 30px);
+        grid-template-rows: repeat(1, 30px);
+        grid-gap: 4px;
+        margin-bottom: 4px;
+    }
     .pallet {
         display: grid;
         width: fit-content;
-        grid-template-columns: repeat(3, 30px);
-        grid-template-rows: repeat(9, 30px);
-        grid-gap: 2px;
+        grid-template-columns: repeat(5, 30px);
+        grid-template-rows: repeat(10, 30px);
+        grid-gap: 4px;
     }
 
     .color{
@@ -40,9 +57,11 @@
         top: -2px;
         z-index: 1;
         box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
+	    -webkit-box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
+	    -moz-box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
     }
     .selected{
-        border: 2px solid #ff5bb0;
+        border: 2px solid var(--primary);
     }
     .selected-colors{
         display: grid;
@@ -51,12 +70,14 @@
         grid-template-rows: 46px;
         grid-gap: 2px;
         padding: 1rem;
-        border: 1px dashed #ff5bb0;
+        border: 1px dashed var(--primary);
         margin-bottom: 3rem;
     }
     .selected-colors > div {
         position: relative;
         box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
+	    -webkit-box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
+	    -moz-box-shadow: 0px 10px 14px -7px rgba(0,0,0,0.75);
         border: 1px solid #afafaf;
         border-radius: 5px;
         display: flex;
@@ -75,7 +96,7 @@
         top: -19px;
         left: 18px;
         font-size: 0.7em;
-        color: #ff5bb0;
+        color: var(--primary);
         font-weight: bold;
     }
 </style>
@@ -87,20 +108,33 @@
         <div
             style={`background: ${letter_to_color[$currentColor[0]]}`}
             on:contextmenu|preventDefault={e => changeSecondary(e, $currentColor[0])}>
-            {$currentColor[0] === "B" ? "X" : ""}
+            {$currentColor[0] === "A" ? "X" : ""}
             <label>L</label>
         </div>
         <div
             style={`background: ${letter_to_color[$currentColor[1]]}`}
             on:click={e => changePrimary(e, $currentColor[1])}>
-            {$currentColor[1] === "B" ? "X" : ""}
+            {$currentColor[1] === "A" ? "X" : ""}
             <label>R</label>
         </div>
     </div>
+    <div class="top-pallet" >
+        <div class="color"
+             style={`background: #ffffff00`}
+             on:click={e => changePrimary(e, color_to_letter['#ffffff00'])}
+             on:contextmenu|preventDefault={e => changeSecondary(e, color_to_letter['#ffffff00'])}>
+             X
+        </div>
+        <div class="color"
+             style={`background: white`}
+             on:click={e => changePrimary(e, color_to_letter['white'])}
+             on:contextmenu|preventDefault={e => changeSecondary(e, color_to_letter['white'])}>
+        </div>
+    </div>
+
     <div class="pallet" >
-        {#each Object.keys(color_to_letter) as color}
+        {#each Object.keys(pallet) as color}
             <div class="color"
-                 class:selected={color_to_letter[color] === $currentColor}
                  style={`background: ${color}`}
                  on:click={e => changePrimary(e, color_to_letter[color])}
                  on:contextmenu|preventDefault={e => changeSecondary(e, color_to_letter[color])}>
@@ -108,6 +142,5 @@
             </div>
         {/each}
     </div>
-
 </div>
 

@@ -1,17 +1,25 @@
 <script>
     import {getContext, onMount, createEventDispatcher} from 'svelte'
     import {goto} from '@sapper/app';
+
+    // Misc
     import {userAccount, autoTx} from '../js/stores.js'
+    import {createSnack, alreadyLiked, createWatermark, formatAccountAddress} from '../js/utils.js'
+    import { config } from '../js/config.js';
+
+    // Components
     import Frame from './Frame.svelte'
     import FrameCanvas from './FrameCanvas.svelte'
     import Price from './Price.svelte'
-    import {createSnack, alreadyLiked, createWatermark} from '../js/utils.js'
+    import Likes from "./Likes.svelte";
 
     //Pictures
     import like_filled from '../../static/img/like-filled.svg'
     import like_unfilled from '../../static/img/like-unfilled.svg'
     import lamden_logo from '../../static/img/lamden_logo_new.svg'
-    import Likes from "./Likes.svelte";
+    import artist from '../../static/img/artist.svg'
+    import owner from '../../static/img/owner.svg'
+
 
     const {sendTransaction} = getContext('app_functions')
     const dispatch = createEventDispatcher();
@@ -46,8 +54,7 @@
 
         const transaction = {
             methodName: 'like_thing',
-            networkType: 'testnet',
-            stampLimit: 50,
+            networkType: config.networkType,
             kwargs: {
                 uid: thingInfo.uid
             }
@@ -84,7 +91,7 @@
 
 </script>
 <style>
-    .flex-row{
+    .buy-like{
         align-items: center;
         justify-content: space-between;
     }
@@ -109,27 +116,50 @@
         position: relative;
         font-size: 0.7em;
     }
-    h4{
-        color: #ff5bb0;
-        font-weight: bold;
-        font-size: 0.8em;
-        margin: 0 0 1rem;
-        cursor: pointer;
-    }
-    h4:hover{
-        text-decoration: underline;
-    }
+
     .buy-like{
         flex-wrap: wrap;
     }
     a{
-        text-decoration: none;
+        text-decoration: underline;
+    }
+    a.name{
         align-self: center;
+
+    }
+    .title{
+        justify-content: space-between;
+    }
+    .title > a {
+        align-self: end;
+        color: var(--primary);
+        font-weight: bold;
+        font-size: 0.8em;
+        margin: 0;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .icons{
+        margin: 0 0 0.5rem 8px;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .icon{
+        width: 20px;
+        height: 20px;
     }
 
 </style>
+<div class="title flex-row">
+    <a href="{`./frames/${thingInfo.uid}`}" class="name">{thingInfo.name}</a>
+    <div class="icons text-color-gray-5 flex-row">
+        <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html artist}</a>
+        <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html owner}</a>
+    </div>
+</div>
 
-<h4><a href="{`./frames/${thingInfo.uid}`}">{thingInfo.name}</a></h4>
 <a href="{`./frames/${thingInfo.uid}`}">
     {#if frames.length >= show}
         <FrameCanvas {pixelSize} pixels={frames[show - 1]} {thingInfo} watermark={createWatermark(thingInfo, $userAccount)} }/>

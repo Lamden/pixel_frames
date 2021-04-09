@@ -1,11 +1,10 @@
 <script context="module">
-	import { config } from '../../js/config.js'
 	export async function preload(parms) {
-		const res = await this.fetch(`${config.blockExplorer}/things/${config.infoContract}/recent?limit=15`)
-		let data = await res.json()
-		if (!data) data = []
-	    return {recent: data}
-	}
+		let things = await this.fetch(`./recent_things.json?limit=25`).then(res => res.json())
+
+	    return {
+			recent: things
+		}}
 </script>
 
 <script>
@@ -14,5 +13,9 @@
     export let recent;
 
 </script>
+
+<svelte:head>
+	<title>Pixel Frames Recent Creations!</title>
+</svelte:head>
 
 <Recent {recent}/>

@@ -1,16 +1,16 @@
 <script>
-    import { frames, currentFrame, totalPixels } from '../js/stores'
-    import { emptyFrame } from '../js/utils.js'
+    import { currentFrame, frameStore, activeFrame } from '../js/stores'
+    import { newPixelBoard } from '../js/defaults.js'
 
-    const clear = () => {
+    const handleClick = () => {
         let wipe = confirm("Wipe current frame?")
         if (wipe) {
-            frames.update(f => {
-                f[$currentFrame] = emptyFrame($totalPixels);
+            frameStore.update(f => {
+                f[$activeFrame].frames[$currentFrame] = newPixelBoard();
                 return f
             })
         }
     }
 </script>
 
-<button class="button_text" value="clear" on:click ={clear}> Clear Current Frame </button>
+<button class="button_text" value="clear" on:click ={handleClick}> Clear Current Frame </button>
