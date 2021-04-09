@@ -3,11 +3,11 @@ import path from 'path';
 
 export async function get(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    console.log({query_deleteLink: req.query})
+    //console.log({query_deleteLink: req.query})
 	const { uid, challenge } = req.query;
 
     let authCodeInfo = await global.models.AuthCodes.findOne({uid})
-    console.log({authCodeInfo_deleteLink: authCodeInfo, uid, challenge, date: new Date()})
+    //console.log({authCodeInfo_deleteLink: authCodeInfo, uid, challenge, date: new Date()})
     if (!authCodeInfo || !authCodeInfo.validated) {
         res.end(JSON.stringify({error: "Auth Code not valid."}));
         return

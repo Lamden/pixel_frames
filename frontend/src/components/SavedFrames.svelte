@@ -41,6 +41,14 @@
         padding: 1rem;
         margin: 1rem 0;
     }
+    .outlined{
+        border: 1px dotted var(--primary);
+        margin-left: 10px;
+    }
+    .outlined.white{
+        border: 1px dotted var(--color-white-primary-tint);
+        margin-left: 10px;
+    }
     .current{
         background: var(--primary);
     }
@@ -79,7 +87,8 @@
                 </div>
                 <div class="flex-row flex-align-center">
                     <button
-                            class="button_text outlined" class:white={$activeFrame === index}
+                            class="button_text outlined"
+                            class:white={$activeFrame === index}
                             on:click={() => handleDelete(index)}>
                         delete
                     </button>

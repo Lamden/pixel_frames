@@ -46,7 +46,7 @@
 
 	const handleAuthCode = async (txResults) => {
     	console.log(txResults)
-		if (txResults.txBlockResult.status === 0) {
+		if (txResults.data.txBlockResult.status === 0) {
 			let authResponse = await checkForValidAuth()
 			console.log("DONE AWAITING")
 			console.log({authResponse})

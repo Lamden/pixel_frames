@@ -31,7 +31,7 @@
 
 	const handleSellTx = (txResults) => {
     	console.log(txResults)
-        if (txResults.txBlockResult.status === 0) {
+        if (txResults.data.txBlockResult.status === 0) {
         	updateInfo({
 				"price_amount": price,
         	})

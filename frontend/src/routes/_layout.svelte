@@ -11,7 +11,7 @@
 	import Nav from '../components/Nav.svelte';
 	import {onMount, beforeUpdate, setContext} from 'svelte';
 	import WalletController from 'lamden_wallet_controller';
-	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden} from '../js/stores.js';
+	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice} from '../js/stores.js';
 	import {processTxResults, createSnack, refreshTAUBalance} from '../js/utils.js';
 	import { config, stampLimits } from '../js/config.js';
 	import {approvalRequest} from '../js/wallet_approval';
@@ -37,6 +37,7 @@
 
 		document.addEventListener("visibilitychange", setTabActive);
 		refreshCurrencyBalance()
+		refreshTauPrice()
 
 		return () => {
 			lwc.events.removeListener(handleWalletInfo)
@@ -114,9 +115,18 @@
 		}
 	}
 
+	const refreshTauPrice = async  () => {
+		if ($tabHidden || !$userAccount) setTimeout(refreshTauPrice, 60000)
+		else{
+			tauPrice.refreshPrice()
+			setTimeout(refreshTauPrice, 60000)
+		}
+	}
+
 	const setTabActive = () => {
 		tabHidden.set(document.hidden)
 		if (!$tabHidden && $userAccount && new Date() - lastCurrencyCheck > 5000 ) refreshTAUBalance()
+		if (!$tabHidden && $userAccount && new Date() - tauPrice.lastCheck > 60000 ) tauPrice.refreshPrice()
 	}
 </script>
 

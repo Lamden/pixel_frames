@@ -13,9 +13,9 @@ export const config = {
 }
 
 export const stampLimits = {
-    sell_thing: 70,
-    like_thing: 75,
-    buy_thing: 90,
-    give_thing: 75,
-    prove_ownership: 70
+    sell_thing: 85,
+    like_thing: 85,
+    buy_thing: 110,
+    give_thing: 100,
+    prove_ownership: 85
 }

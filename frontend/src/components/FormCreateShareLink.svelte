@@ -46,7 +46,7 @@
 
 	const handleAuthCode = async (txResults) => {
     	console.log(txResults)
-		if (txResults.txBlockResult.status === 0) {
+		if (txResults.data.txBlockResult.status === 0) {
 			let authResponse = await checkForValidAuth()
 			console.log("DONE AWAITING")
 			console.log({authResponse})
@@ -128,13 +128,13 @@
 		<div class="flex-col flex-justify-center info weight-600">
 			<p>As the owner of this art you can create a shareable link that has no watermark.</p>
 			<p>Creating a new link always invalidates previous links so be sure to save the link after creation.</p>
-			<p>Share links are always invalidated after a Pixel Frame is sold.</p>
+			<p>Share links are always invalidated after the art is sold.</p>
 		</div>
 
 	</div>
 
 	<hr>
-	<p class="text-center text-color-black">
+	<p class="text-center text-color-primary-dark">
 		Click below to send A PROOF transaction to validate your ownership.
 	</p>
 	<form id="create_share_link" class="flex-col" on:submit|preventDefault={proveOwnership}>

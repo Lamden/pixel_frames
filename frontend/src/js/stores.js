@@ -20,6 +20,37 @@ export const approvalAmount = writable(0);
 export const showModal = writable({data: {}, show: false});
 export const tabHidden = writable();
 
+export const tauPrice = (() => {
+    let store = writable([])
+    let lastCheck
+
+    if (typeof window !== 'undefined') {
+        let lsValue = localStorage.getItem('tau_price')
+        if (!lsValue) store.set(0)
+        else store.set(parseFloat(lsValue))
+
+        store.subscribe(current => localStorage.setItem('tau_price', JSON.stringify(current)))
+
+        refreshPrice()
+    }
+
+    async function refreshPrice(){
+        lastCheck = new Date()
+        let priceData = await fetch('./tauPrice.json').then(res => res.json())
+        store.set(priceData.currentPrice)
+    }
+
+    const setStore = (value) => store.set(value)
+
+
+    return {
+        subscribe: store.subscribe,
+        get: () => get(store),
+        refreshPrice,
+        lastCheck
+    }
+})()
+
 export const frameStore = (() => {
     let store = writable([])
     if (typeof window !== 'undefined') {

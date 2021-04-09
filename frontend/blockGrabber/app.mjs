@@ -2,6 +2,7 @@ import {config} from 'dotenv'
 config()
 import { getDatabase, mongoose_models} from "../database/database.mjs";
 import { runBlockGrabber } from './blockgrabber.mjs'
+import { update_tau_price } from './price-updater.mjs'
 import {getUtils} from './bg-utils.mjs'
 
 const MASTERNODE_URLS = {
@@ -30,6 +31,10 @@ grabberConfig.utils = getUtils(grabberConfig)
 
 const start = async () => {
     grabberConfig.db = await getDatabase()
+
+    let tauUpdater = update_tau_price(grabberConfig.models)
+    tauUpdater.updatePrice()
+
     let blockGrabber = runBlockGrabber(grabberConfig)
     let nextCheck = 15000
     var timer = setInterval(async () => {

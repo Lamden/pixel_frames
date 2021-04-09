@@ -16,6 +16,7 @@
   "dependencies": {
     "base64-stream": "^1.0.0",
     "canvas": "^2.7.0",
+    "coingecko-api": "^1.0.10",
     "compression": "^1.7.1",
     "dotenv": "^8.2.0",
     "gifencoder": "^2.0.1",

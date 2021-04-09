@@ -25,7 +25,7 @@
 <div class="flex-row pixelwall">
     {#each formatted as thingInfo}
 		<a rel=prefetch href="{'frames/' + thingInfo.uid}">
-			<Preview solidBorder={true} solidBorderColor="#ff5bb033" frames={thingInfo.frames} pixelSize={4} {thingInfo} showWatermark={false} border={false}/>
+			<Preview solidBorder={true} solidBorderColor="#00d6a22b" frames={thingInfo.frames} pixelSize={4} {thingInfo} showWatermark={false} border={false}/>
 		</a>
     {/each}
 </div>

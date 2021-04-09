@@ -66,6 +66,7 @@
 </style>
 
 <h2 class="text-color-primary-dark">Recent Creations</h2>
+
 <div class="flex-row display-card">
     {#each formatted as thingInfo, index}
 		<div class:owned={$userAccount ? thingInfo.owner === $userAccount : false}

@@ -1,10 +1,10 @@
 export async function get(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    console.log({query_getShareLink: req.query})
+    //console.log({query_getShareLink: req.query})
 	const { uid, challenge } = req.query;
 
     let authCodeInfo = await global.models.AuthCodes.findOne({uid})
-    console.log({authCodeInfo_getShareLink: authCodeInfo, uid, challenge, date: new Date()})
+    //console.log({authCodeInfo_getShareLink: authCodeInfo, uid, challenge, date: new Date()})
     if (!authCodeInfo || !authCodeInfo.validated) {
         res.end(JSON.stringify({error: "Auth Code not valid."}));
         return
@@ -23,7 +23,7 @@ export async function get(req, res, next) {
         }
         shareLinkInfo.link = `share_${thingInfo.uid}_${global.randomHash().substring(0,10)}`
         shareLinkInfo.dateCreated = new Date()
-        console.log({shareLinkInfo})
+        //console.log({shareLinkInfo})
         await shareLinkInfo.save()
         await authCodeInfo.remove()
         authCodeInfo = await global.models.AuthCodes.findOne({uid})

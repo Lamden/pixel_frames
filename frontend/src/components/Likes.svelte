@@ -27,7 +27,8 @@
     })
 
     const checkAlreadyLiked = () => {
-        if (liked === null && $userAccount)  alreadyLiked(thingInfo.uid, localStorage).then(res => liked = res)
+        console.log({liked, $userAccount})
+        if (liked === null && $userAccount)  alreadyLiked(thingInfo.uid).then(res => liked = res)
     }
 
 
@@ -46,7 +47,8 @@
     }
 
     const handleLikeTx = (txResults) => {
-        if (txResults.txBlockResult.status === 0) {
+        console.log(txResults)
+        if (txResults.data.txBlockResult.status === 0) {
             liked = true;
             thingInfo.likes = thingInfo.likes + 1;
         }

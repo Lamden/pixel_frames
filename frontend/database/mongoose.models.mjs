@@ -32,6 +32,8 @@ var pixelFrame = new mongoose.Schema({
     price_hold: String,
     speed: Number,
     num_of_frames: Number,
+    royalty_percent: Number,
+    royalties_earned: String,
     num_of_owners: Number,
     stamps_used: Number,
     lastSaleDate: Date,
@@ -52,6 +54,7 @@ var salesHistory = new mongoose.Schema({
     uid: String,
     saleDate: Date,
     price: String,
+    royaltyPaid: String,
     seller: String,
     buyer: String,
     wasHeld: Boolean,
@@ -74,6 +77,11 @@ var authCodes = new mongoose.Schema({
     dateCreated: Date
 })
 
+var prices = new mongoose.Schema({
+    symbol: String,
+    currentPrice: Number,
+    lastUpdated: Date
+})
 
 var Blocks = mongoose.model('Blocks', blocks, 'blocks');
 var Stamps = mongoose.model('Stamps', stamps, 'stamps');
@@ -83,6 +91,7 @@ var LikedByUser = mongoose.model('LikedByUser', likedByUser, 'likedByUser');
 var SalesHistory = mongoose.model('SalesHistory', salesHistory, 'salesHistory');
 var ShareLinks = mongoose.model('ShareLinks', shareLinks, 'shareLinks');
 var AuthCodes = mongoose.model('AuthCodes', authCodes, 'authCodes');
+var Prices = mongoose.model('Prices', prices, 'prices');
 
 export default {
     Blocks,
@@ -90,5 +99,6 @@ export default {
     PixelFrame,
     Likes, LikedByUser,
     SalesHistory,
-    ShareLinks, AuthCodes
+    ShareLinks, AuthCodes,
+    Prices
 };

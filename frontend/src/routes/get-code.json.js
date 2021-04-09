@@ -12,7 +12,7 @@ export async function get(req, res, next) {
         }).save()
     }
 
-    console.log({authCodeInfo_getCode: authCodeInfo, date: new Date()})
+    //console.log({authCodeInfo_getCode: authCodeInfo, date: new Date()})
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(authCodeInfo));

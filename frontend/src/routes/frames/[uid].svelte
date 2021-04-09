@@ -20,12 +20,12 @@
 </script>
 
 <script>
-	import { config } from '../../js/config.js'
+	// Components
 	import DisplayFramesOne from "../../components/DisplayFramesOne.svelte";
-	import OwnerControls from "../../components/OwnerControls.svelte";
-	import { userAccount } from '../../js/stores.js'
 
-    import { formatAccountAddress, updateInfo} from '../../js/utils.js'
+	// MISC
+    import { updateInfo} from '../../js/utils.js'
+	import { config } from '../../js/config.js'
 
 	export let thingInfo
 	export let salesHistory
@@ -35,7 +35,7 @@
 
 	const updateThingInfo = (updates) => {
     	console.log(updates)
-    	updateInfo(thingInfo, updates)
+    	thingInfo = updateInfo(thingInfo, updates)
     }
 
 </script>

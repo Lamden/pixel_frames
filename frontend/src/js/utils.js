@@ -312,20 +312,20 @@ export const nameTaken = async (name) => {
     return taken
 }
 
-export const alreadyLiked = async (uid, ls = undefined) => {
+export const alreadyLiked = async (uid) => {
     let account = get(userAccount)
-    if (account === '') return false;
+    console.log({account, uid})
+    if (account === '' || typeof window === 'undefined') return false;
 
-    if (ls){
-        if (ls.getItem(`${uid}:${account}:liked`) !== null) return true;
-    }
+    let lsValue = localStorage.getItem(`${uid}:${account}:liked`)
+    console.log({lsValue})
+    if (lsValue !== null) return true;
 
-    const res = await fetch(`./${uid}.json?account=${account}`)
-    const liked = await res.json();
+    const liked = await fetch(`./${uid}.json?account=${account}`).then(res => res.json())
+    console.log(liked)
 
-    if (ls){
-        if (liked === true) ls.setItem(`${uid}:${account}:liked`, true)
-    }
+    if (liked === true) localStorage.setItem(`${uid}:${account}:liked`, true)
+
     return liked
 }
 
@@ -346,6 +346,7 @@ export const updateInfo = (thingInfo, updates) => {
         console.log({update, thingInfoValue: thingInfo[update], updateValue: updates[update]})
         if (typeof thingInfo[update] !== 'undefined') thingInfo[update] = updates[update]
     })
+    return thingInfo
     console.log(thingInfo)
 }
 

@@ -2,7 +2,7 @@ export async function get(req, res, next) {
 	let { uid } = req.params;
 	let { limit, offset } = req.query;
 
-	console.log({uid, limit,offset})
+	//console.log({uid, limit,offset})
 
 	limit = parseInt(limit) || 25
 
@@ -23,7 +23,7 @@ export async function get(req, res, next) {
 		.aggregate([facet])
 		.collation(collation)
 
-	console.log({things})
+	//console.log({things})
 
 	res.setHeader('Content-Type', 'application/json');
 	res.end(JSON.stringify({data: things[0].data, count: things[0].count.length}));

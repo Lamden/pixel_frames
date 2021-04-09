@@ -14,7 +14,8 @@ export const getDbUtils = (config) => {
         "price:amount": "price_amount",
         "price:hold": "price_hold",
         "meta:speed": "speed",
-        "meta:num_of_frames": "num_of_frames"
+        "meta:num_of_frames": "num_of_frames",
+        "meta:royalty_percent": "royalty_percent"
     }
 
     const create_new_thing = async (transactionInfo, blockNmber) => {
@@ -41,6 +42,8 @@ export const getDbUtils = (config) => {
             price_hold: "",
             speed: stateValues.speed,
             num_of_frames: stateValues.num_of_frames,
+            royalty_percent: stateValues.royalty_percent,
+            royalties_earned: "0",
             num_of_owners: 1,
             stamps_used,
             lastSaleDate: null,
@@ -65,6 +68,8 @@ export const getDbUtils = (config) => {
             price_hold: "",
             speed: stateValues.speed,
             num_of_frames: stateValues.num_of_frames,
+            royalty_percent: stateValues.royalty_percent,
+            royalties_earned: "0",
             num_of_owners: 1,
             stamps_used,
             lastSaleDate: null,
@@ -73,6 +78,7 @@ export const getDbUtils = (config) => {
     }
 
     const update_liked = async (transactionInfo) => {
+        //console.log({})
         const { transaction, state } = transactionInfo
         const {  payload, metadata } = transaction
         const uid =  payload.kwargs.uid
@@ -81,12 +87,13 @@ export const getDbUtils = (config) => {
         pixel_frame.likes =  getStateValue(state, makeThingKey(uid, 'likes'))
         pixel_frame.lastUpdate = new Date(metadata.timestamp * 1000)
         await pixel_frame.save()
-
+        //console.log({transaction, state, payload, uid})
         await update_uid_likes(uid, sender)
         await update_user_likes(sender, uid)
 
     }
     const update_uid_likes = async (uid, vk) => {
+        //console.log({vk, uid})
         let likes = await models.Likes.findOne({vk})
         if (!likes) {
             likes = await new models.Likes({
@@ -96,10 +103,12 @@ export const getDbUtils = (config) => {
         }else{
             likes.liked_by.push(vk)
         }
+        console.log({likes})
         await likes.save()
     }
 
     const update_user_likes = async (vk, uid) => {
+        //console.log({vk, uid})
         let likedByUser = await models.LikedByUser.findOne({vk})
         if (!likedByUser) {
             likedByUser = await new models.LikedByUser({
@@ -109,6 +118,7 @@ export const getDbUtils = (config) => {
         }else{
             likedByUser.likes.push(uid)
         }
+        //console.log({likedByUser})
         await likedByUser.save()
     }
 
@@ -132,11 +142,23 @@ export const getDbUtils = (config) => {
         let newOwner = getStateValue(state, makeThingKey(uid, 'owner'))
         let seller = pixel_frame.owner
         let wasHeld = pixel_frame.price_hold !== ""
+        let priceBN = toBigNumber(pixel_frame.price_amount)
+        let royaltyPaid = "0"
+        if (priceBN.isGreaterThan(0)) {
+            royaltyPaid = priceBN.multipliedBy(pixel_frame.royalty_percent / 100)
+            if (royaltyPaid.isNaN()) royaltyPaid = toBigNumber("0")
+            if (royaltyPaid.isGreaterThan(0)){
+                let currentRoyalties = toBigNumber(pixel_frame.royalties_earned)
+                pixel_frame.royalties_earned = currentRoyalties.plus(royaltyPaid)
+            }
+        }
+
 
         await new models.SalesHistory({
             uid,
             saleDate: new Date(metadata.timestamp * 1000),
             price: pixel_frame.price_amount,
+            royaltyPaid: royaltyPaid.toString(),
             seller,
             buyer: newOwner,
             wasHeld: wasHeld,
@@ -195,12 +217,18 @@ export const getDbUtils = (config) => {
         return `${INFO_CONTRACT}.S:${uid}:${metaitem}`
     }
 
+    function toBigNumber (value) {
+      if (Lamden.Encoder.BigNumber.isBigNumber(value)) return value
+      return Lamden.Encoder.BigNumber(value)
+    }
+
     return  {
         create_new_thing,
         update_liked,
         update_price_info,
         update_change_ownership,
-        update_auth_codes
+        update_auth_codes,
+        toBigNumber
     }
 }
 
