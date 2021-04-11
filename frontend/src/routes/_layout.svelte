@@ -11,7 +11,7 @@
 	import Nav from '../components/Nav.svelte';
 	import {onMount, beforeUpdate, setContext} from 'svelte';
 	import WalletController from 'lamden_wallet_controller';
-	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice} from '../js/stores.js';
+	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice, released} from '../js/stores.js';
 	import {processTxResults, createSnack, refreshTAUBalance, checkForApproval} from '../js/utils.js';
 	import { config, stampLimits } from '../js/config.js';
 	import {approvalRequest} from '../js/wallet_approval';
@@ -25,6 +25,12 @@
 	let fetchingStamps = false;
 
 	onMount(() => {
+		fetch('./checkRelease.json')
+			.then(res => res.json())
+			.then(isReleased => {
+				released.set(isReleased)
+			})
+
 		lwc = new WalletController(approvalRequest)
 		lwc.events.on('newInfo', handleWalletInfo)
 		lwc.events.on('txStatus', handleTxResults)

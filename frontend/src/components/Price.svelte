@@ -1,5 +1,5 @@
 <script>
-    import { userAccount, showModal } from '../js/stores.js'
+    import { userAccount, showModal, released } from '../js/stores.js'
     import { stringToFixed, toBigNumber } from '../js/utils.js'
 
     // Pictures
@@ -16,6 +16,15 @@
 
     const openModal = (modal) => {
         showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
+    }
+
+    const handleBuy = () => {
+        console.log($released)
+        if ($released){
+            openModal(FormBuy)
+        }else{
+            alert('Buying will be enabled when Pixel Whale releases, April 19th @ 8pm UTC.')
+        }
     }
 </script>
 
@@ -52,7 +61,7 @@
         {stringToFixed(price, 8)}
         {#if $userAccount}
             {#if thingInfo.owner !== $userAccount}
-                <button class="button_text" on:click={() => openModal(FormBuy)}>buy!</button>
+                <button class="button_text" on:click={handleBuy}>buy!</button>
             {:else}
                 <button class="button_text" on:click={() => openModal(FormSell)}>set</button>
             {/if}

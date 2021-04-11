@@ -48,6 +48,13 @@
 	*{
 		text-align: center;
 	}
+	.release-date{
+		margin: 2rem 0 -4rem;
+		font-size: 3rem;
+    	font-weight: 200;
+		color: var(--primary-dark);
+    	text-shadow: 2px 2px #c3c3c3;
+	}
 	.hide-mobile{
 		margin: 3rem auto;
 	}
@@ -63,6 +70,7 @@
 	<title>Pixel Whale: On-chain Animations!</title>
 </svelte:head>
 
+<p class="release-date">Official Release April 19th @ 22:00 UTC</p>
 <div class="hide-mobile">
 	<Title fontSize={8}/>
 </div>

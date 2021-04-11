@@ -2,6 +2,8 @@ import { writable, get, derived } from 'svelte/store';
 import { config } from './config.js'
 import { newPixelFrame } from './defaults'
 
+export const released = writable(false);
+
 export const totalPixels = writable(256)
 export const currentColor = writable(['A','B'])
 // export const frames = writable([Array.from(Array(config.totalPixels)).map((v)=> v = "B")])
