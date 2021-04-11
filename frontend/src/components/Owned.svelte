@@ -66,7 +66,7 @@
 </style>
 
 <h2 class="text-color-primary-dark">
-	All Pixel Frames owned by
+	All artwork owned by
 	{#if isLamdenKey(account)}
 		<a href="{`${config.blockExplorer}/addresses/${account}`}" >{formatAccountAddress(account, 8, 5)}</a>
 	{:else}

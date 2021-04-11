@@ -82,7 +82,7 @@
 </style>
 
 <svelte:head>
-	<title>Pixel Frames Designer!</title>
+	<title>Pixel Whale Art Designer!</title>
 </svelte:head>
 
 <div class="designer">

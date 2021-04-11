@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head>
-	<title>Pixel Frames Recent Creations!</title>
+	<title>Pixel Whale Recent Creations!</title>
 </svelte:head>
 
 <Recent {recent}/>

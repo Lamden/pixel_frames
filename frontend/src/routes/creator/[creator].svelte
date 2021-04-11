@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>{`Pixel Frames created by ${formatAccountAddress(creator)}`}</title>
+	<title>{`Artwork created by ${formatAccountAddress(creator)}`}</title>
 </svelte:head>
 
 <Creator {created} {creator}/>

@@ -18,7 +18,7 @@
     }
 
     const handleDelete = (index) => {
-        let deleteFrame = confirm("Delete this saved Pixel Frame?")
+        let deleteFrame = confirm("Delete this saved Artwork?")
         if(deleteFrame){
             let newIndex = index  - 1
             if (newIndex < 0 ) newIndex = 0

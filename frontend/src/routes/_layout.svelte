@@ -80,7 +80,7 @@
 		if (usersStamps < stampsToSendTx){
 			createSnack({
                 title: `Insufficient ${config.currencySymbol}`,
-                body: `You do not have enough ${config.currencySymbol} to send this transaction. Send more ${config.currencySymbol} to your Pixel Frames account.`,
+                body: `You do not have enough ${config.currencySymbol} to send this transaction. Send more ${config.currencySymbol} to your Pixel Whale account.`,
                 type: "error"
             })
 		}else{

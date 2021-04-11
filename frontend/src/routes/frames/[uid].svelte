@@ -61,7 +61,7 @@
 
 	<meta property="og:url" content="{gifURL}" />
 	<meta property="og:type" content="article" />
-	<meta property="og:title" content="Pixel Frames by Lamden" />
+	<meta property="og:title" content="Pixel Whale by Lamden" />
 	<meta property="og:image" content="{gifURL}" />
 	<meta property="og:description" content="{thingInfo.description}" />
 	<meta property="og:image:url" content="{gifURL}" />
