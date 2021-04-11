@@ -109,12 +109,12 @@ def transfer_from(uid: str, to: str, main_account: str):
     assert balances[main_account, uid, sender], "You have not been given approval to transfer this user's item."
     assert_ownership(uid, main_account)
 
-    # revoke the approval
-    balances[main_account, uid, sender] = None
-
     # transfer
     assert_already_owned(uid, to)
     transfer_ownership(uid, to)
+
+    # revoke the approval
+    balances[main_account, uid, sender] = None
 
 @export
 def like_thing(uid: str):
