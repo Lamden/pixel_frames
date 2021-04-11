@@ -12,6 +12,10 @@ Follow your OS specific install instructions [here](https://docs.mongodb.com/man
 ## Install PM2
 1. `npm install pm2 -g`
 
+## Install font config
+1. `mv /etc/fonts /etc/fonts.bak`
+2. `sudo apt install fontconfig --reinstall`
+
 ## Clone Repo
 1. `https://github.com/Lamden/pixel_frames.git`
 2. `cd pixel-frames`

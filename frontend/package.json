@@ -7,8 +7,10 @@
     "build": "sapper build --legacy",
     "export": "sapper export --legacy",
     "start": "PORT=80 node __sapper__/build ",
+    "start-ssl": "PORT=443 node __sapper__/build ",
     "start:blockgrabber": "node blockGrabber/app.mjs",
     "startpm2": "npm run build && npm run start",
+    "startpm2-ssl": "npm run build && npm run start",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "test": "run-p --race dev cy:run"
