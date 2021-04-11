@@ -103,7 +103,7 @@ def get_creator(uid: str):
     return S[uid, 'creator']
 
 @export
-def set_price(uid: str, amount: int, hold: str):
+def set_price(uid: str, amount: float, hold: str):
     assert amount >= 0, 'Cannot set a negative price'
     S[uid, 'price', 'amount'] = amount
 

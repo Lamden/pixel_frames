@@ -12,7 +12,7 @@
 	import {onMount, beforeUpdate, setContext} from 'svelte';
 	import WalletController from 'lamden_wallet_controller';
 	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice} from '../js/stores.js';
-	import {processTxResults, createSnack, refreshTAUBalance} from '../js/utils.js';
+	import {processTxResults, createSnack, refreshTAUBalance, checkForApproval} from '../js/utils.js';
 	import { config, stampLimits } from '../js/config.js';
 	import {approvalRequest} from '../js/wallet_approval';
 	import Snackbar from "../components/Snackbar.svelte";
@@ -38,6 +38,7 @@
 		document.addEventListener("visibilitychange", setTabActive);
 		refreshCurrencyBalance()
 		refreshTauPrice()
+		checkForApproval()
 
 		return () => {
 			lwc.events.removeListener(handleWalletInfo)

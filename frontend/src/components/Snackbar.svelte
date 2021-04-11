@@ -86,7 +86,7 @@
     .info{
         background: var(--primary);
         border: 1px solid #afafaf;
-        color: #fff5fa;
+        color: var(--primary-dark);
     }
     .warning{
         background: khaki;

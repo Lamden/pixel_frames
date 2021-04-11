@@ -276,19 +276,29 @@ export const refreshTAUBalance = async () => {
 }
 
 export const checkForApproval = async () => {
-        if (!get(userAccount)) return
-        let keyList = [
-            {
-                "contractName": "currency",
-                "variableName": "balances",
-                "key": `${get(userAccount)}:${config.masterContract}`
-            }
-	    ]
-        const res = await blockexplorer_api.getKeys(keyList)
-        let data = valuesToBigNumber(res)
-        let approval = data[`currency.balances:${keyList[0].key}`]
-        approvalAmount.set(approval)
+    if (!get(userAccount)) return
+    let keyList = [
+        {
+            "contractName": "currency",
+            "variableName": "balances",
+            "key": `${get(userAccount)}:${config.masterContract}`
+        }
+    ]
+    const res = await blockexplorer_api.getKeys(keyList)
+    let data = valuesToBigNumber(res)
+    let approval = data[`currency.balances:${keyList[0].key}`]
+    if (approval === null ) approval = toBigNumber(0)
+    approvalAmount.set(approval)
+    return approval
 }
+
+export const needsApproval = async () => {
+    let approval = await checkForApproval()
+
+
+}
+
+approvalAmount.subscribe(val => console.log(val))
 
 export const sha256 = async (message) => {
     // encode as UTF-8

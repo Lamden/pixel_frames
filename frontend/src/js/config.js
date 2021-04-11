@@ -2,8 +2,8 @@ export const config = {
     frameWidth: 25,
     totalPixels: 625,
     totalFrames: 8,
-    infoContract: "con_pw_info_2",
-    masterContract: "con_pw_master_2",
+    infoContract: "con_pw_info_3",
+    masterContract: "con_pw_master_3",
     networkType: "testnet",
     currencySymbol: "DTAU",
     domainName: "https://localhost",
@@ -15,7 +15,8 @@ export const config = {
 export const stampLimits = {
     sell_thing: 85,
     like_thing: 85,
-    buy_thing: 110,
+    buy_thing: 120,
     give_thing: 100,
-    prove_ownership: 85
+    prove_ownership: 85,
+    approve: 25
 }

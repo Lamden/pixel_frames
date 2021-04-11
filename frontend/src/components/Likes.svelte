@@ -51,6 +51,7 @@
         if (txResults.data.txBlockResult.status === 0) {
             liked = true;
             thingInfo.likes = thingInfo.likes + 1;
+            localStorage.setItem(`${thingInfo.uid}:${$userAccount}:liked`, true)
         }
     }
 

@@ -51,7 +51,7 @@
 	}
 
 	const handleCreateTx = (txResults) => {
-		console.log(data)
+
         if (txResults.data.txBlockResult.status === 0) {
         	created()
 			createSnack({

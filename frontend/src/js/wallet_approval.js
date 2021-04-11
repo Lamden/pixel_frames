@@ -3,7 +3,7 @@ import { config } from './config.js'
 
 const approvalRequest = {
     appName: 'Pixel Whale Testing',
-    version: '2.0',
+    version: '3.0',
     contractName: config.masterContract,
     networkType: config.networkType
 }

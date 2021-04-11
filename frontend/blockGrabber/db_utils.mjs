@@ -204,7 +204,7 @@ export const getDbUtils = (config) => {
         let stateChange = state.find(s => s.key === key)
         if (!stateChange) return null
         if (!stateChange.value) return null
-        if (stateChange.value.__fixed__) return value.__fixed__
+        if (stateChange.value.__fixed__) return stateChange.value.__fixed__
         return stateChange.value
     }
 

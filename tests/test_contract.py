@@ -749,13 +749,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu'])), 0)
         self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['ben'])), 1)
 
-    def test_06a_give_thing(self):
-        print("TEST GIVE THING")
+    def test_06a_transfer(self):
+        print("TEST TRANSFER")
         self.change_signer('ben')
         stu_prev_currency_bal = self.currency_contract.quick_read('balances', 'stu')
         ben_prev_currency_bal = self.currency_contract.quick_read('balances', 'ben')
 
-        self.con_pixel_frames_master.give_thing(
+        self.con_pixel_frames_master.transfer(
             uid=frames_good_1_uid,
             new_owner='stu'
         )
@@ -777,11 +777,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu'])), 1)
         self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['ben'])), 0)
 
-    def test_06b_give_thing_neg_not_owner(self):
-        print("TEST GIVE THING - NEG - NOT OWNER")
+    def test_06b_transfer_neg_not_owner(self):
+        print("TEST TRANSFER THING - NEG - NOT OWNER")
         self.change_signer('jeff')
         with self.assertRaises(AssertionError) as cm:
-            self.con_pixel_frames_master.give_thing(
+            self.con_pixel_frames_master.transfer(
             uid=frames_good_1_uid,
             new_owner='jeff'
         )
@@ -796,11 +796,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu'])), 1)
         self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['jeff'])), 0)
 
-    def test_06c_give_thing_neg_already_owned(self):
-        print("TEST GIVE THING - NEG - ALREADY OWNED")
+    def test_06c_transfer_neg_already_owned(self):
+        print("TEST TRANSFER THING - NEG - ALREADY OWNED")
         self.change_signer('stu')
         with self.assertRaises(AssertionError) as cm:
-            self.con_pixel_frames_master.give_thing(
+            self.con_pixel_frames_master.transfer(
             uid=frames_good_1_uid,
             new_owner='stu'
         )
@@ -813,6 +813,7 @@ class MyTestCase(unittest.TestCase):
 
         # balances not updated
         self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu'])), 1)
+
 
     def test_07a_like_thing(self):
         print("TEST LIKE THING")
@@ -865,5 +866,130 @@ class MyTestCase(unittest.TestCase):
 
         # code did not change
         self.assertEqual(self.con_pixel_frames.quick_read('S', (':').join([frames_good_1_uid, 'proof'])), 'testing')
+
+
+    def test_09a_transfer_from_neg_not_approved(self):
+        print("TEST TRANSFER FROM - NEG - NOT APPROVED")
+        self.change_signer('jeff')
+        with self.assertRaises(AssertionError) as cm:
+            self.con_pixel_frames_master.transfer_from(
+                uid=frames_good_1_uid,
+                to="ben",
+                main_account="stu"
+            )
+        self.assertEqual(
+            "You have not been given approval to transfer this user's item.",
+            str(cm.exception)
+        )
+
+        # owner did not change
+        self.assertEqual(self.con_pixel_frames.quick_read('S', (':').join([frames_good_1_uid, 'owner'])), 'stu')
+
+    def test_09b_transfer_from_neg_approve_not_owned(self):
+        print("TEST APPROVAL - NEG - NOT OWNED")
+        self.change_signer('jeff')
+        with self.assertRaises(AssertionError) as cm:
+            self.con_pixel_frames_master.approve(
+                uid=frames_good_1_uid,
+                to="ben"
+            )
+        self.assertEqual(
+            frames_good_1_uid + ' not owned by jeff',
+            str(cm.exception)
+        )
+
+        # approval did not change
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['jeff', frames_good_1_uid, 'ben'])), None)
+
+    def test_09c_approve(self):
+        print("TEST APPROVAL")
+        self.change_signer('stu')
+        self.con_pixel_frames_master.approve(
+            uid=frames_good_1_uid,
+            to="jeff"
+        )
+
+        # approval added
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu', frames_good_1_uid, 'jeff'])), True)
+
+    def test_09d_transfer_from(self):
+        print("TEST TRANSFER FROM")
+        self.change_signer('jeff')
+
+        stu_prev_currency_bal = self.currency_contract.quick_read('balances', 'stu')
+        jeff_prev_currency_bal = self.currency_contract.quick_read('balances', 'jeff')
+        ben_prev_currency_bal = self.currency_contract.quick_read('balances', 'ben')
+
+        # Approval exists
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu', frames_good_1_uid, 'jeff'])), True)
+
+        # Transfer Stu's art to Ben on Stu's Behalf
+        self.con_pixel_frames_master.transfer_from(
+            uid=frames_good_1_uid,
+            to="ben",
+            main_account="stu"
+        )
+
+        stu_curr_currency_bal = self.currency_contract.quick_read('balances', 'stu')
+        jeff_curr_currency_bal = self.currency_contract.quick_read('balances', 'jeff')
+        ben_curr_currency_bal = self.currency_contract.quick_read('balances', 'ben')
+
+        # approval revoked after the fact
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu', frames_good_1_uid, 'jeff'])), None)
+
+        # price still zero
+        self.assertEqual(self.con_pixel_frames.quick_read('S', (':').join([frames_good_1_uid, 'price', 'amount'])), 0)
+        # owner changes
+        self.assertEqual(self.con_pixel_frames.quick_read('S', (':').join([frames_good_1_uid, 'owner'])), 'ben')
+        # creator doesn't change
+        self.assertEqual(self.con_pixel_frames.quick_read('S', (':').join([frames_good_1_uid, 'creator'])), 'jeff')
+        # giver's currency balance doesn't change
+        self.assertEqual(ben_prev_currency_bal, ben_curr_currency_bal)
+        # receiver's currency balance doesn't change
+        self.assertEqual(stu_curr_currency_bal, stu_prev_currency_bal)
+        # receiver's currency balance doesn't change
+        self.assertEqual(jeff_curr_currency_bal, jeff_prev_currency_bal)
+
+        # balances updated
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['stu'])), 0)
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['ben'])), 1)
+
+        # balance didn't change
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['jeff'])), 0)
+
+    def test_10a_revoke_approval(self):
+        print("TEST APPROVAL")
+        self.change_signer('ben')
+        self.con_pixel_frames_master.approve(
+            uid=frames_good_1_uid,
+            to="stu"
+        )
+
+        # Approval is set
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['ben', frames_good_1_uid, 'stu'])), True)
+
+        # Revoke approval
+        self.con_pixel_frames_master.revoke(
+            uid=frames_good_1_uid,
+            to="stu"
+        )
+
+        # Approval is removed
+        self.assertEqual(self.con_pixel_frames_master.quick_read('balances', (':').join(['ben', frames_good_1_uid, 'stu'])), None)
+
+        # Attempt by Stu to transfer art does not work
+        self.change_signer('stu')
+        with self.assertRaises(AssertionError) as cm:
+            self.con_pixel_frames_master.transfer_from(
+                uid=frames_good_1_uid,
+                to="stu",
+                main_account="ben"
+            )
+        self.assertEqual(
+            "You have not been given approval to transfer this user's item.",
+            str(cm.exception)
+        )
+
+
 if __name__ == '__main__':
     unittest.main()

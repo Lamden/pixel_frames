@@ -65,14 +65,14 @@ def buy_thing(uid: str):
     transfer_ownership(uid, sender)
 
 @export
-def sell_thing(uid: str, amount: int):
+def sell_thing(uid: str, amount: float):
     # make sure the caller owns the item
     assert_ownership(uid, ctx.caller)
     thing_info = I.import_module(S['thing_info_contract'])
     thing_info.set_price(uid, amount, '')
 
 @export
-def sell_thing_to(uid: str, amount: int, hold: str):
+def sell_thing_to(uid: str, amount: float, hold: str):
     # make sure the caller owns the item
     assert_ownership(uid, ctx.caller)
 
@@ -80,12 +80,41 @@ def sell_thing_to(uid: str, amount: int, hold: str):
     thing_info.set_price(uid, amount, hold)
 
 @export
-def give_thing(uid: str, new_owner: str):
+def transfer(uid: str, new_owner: str):
     sender = ctx.caller
+
     # make sure the caller owns the item
     assert_ownership(uid, sender)
+
+    #Make sure the new owner doesn't already own it (sending to themselves)
     assert_already_owned(uid, new_owner)
+
+    #transfer the item
     transfer_ownership(uid, new_owner)
+
+@export
+def approve(uid: str, to: str):
+    sender = ctx.caller
+    assert_ownership(uid, sender)
+    balances[sender, uid, to] = True
+
+@export
+def revoke(uid: str, to: str):
+    balances[ctx.caller, uid, to] = None
+
+@export
+def transfer_from(uid: str, to: str, main_account: str):
+    sender = ctx.caller
+
+    assert balances[main_account, uid, sender], "You have not been given approval to transfer this user's item."
+    assert_ownership(uid, main_account)
+
+    # revoke the approval
+    balances[main_account, uid, sender] = None
+
+    # transfer
+    assert_already_owned(uid, to)
+    transfer_ownership(uid, to)
 
 @export
 def like_thing(uid: str):

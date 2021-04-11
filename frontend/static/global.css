@@ -244,9 +244,9 @@ input[type="text"], input[type="number"], textarea {
 }
 
 input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
-	border: 2px dashed transparent;
-	outline: 1px solid #afafaf;
-	margin-bottom: 1rem;
+    border: 2px dashed transparent;
+    outline: 1px solid #afafaf;
+    border-radius: 5px;
 }
 
 form{

@@ -1,19 +1,33 @@
 <script>
-    import { getContext } from 'svelte'
+    import { getContext, onMount } from 'svelte'
 
 	// Misc
 	import { frames, showModal } from '../js/stores.js'
-	import { createSnack, closeModel } from '../js/utils.js'
+	import { createSnack, closeModel, toBigNumber, stringToFixed } from '../js/utils.js'
 	import { config } from '../js/config.js';
 
 	// Components
 	import Preview from './Preview.svelte'
 
+	let inputElm
+
     const { sendTransaction } = getContext('app_functions')
 
 	const updateInfo = $showModal.modalData.updateInfo
-	let price = $showModal.modalData.thingInfo['price_amount'];
+	const currentSellPrice = $showModal.modalData.thingInfo['price_amount']
     const thingName = $showModal.modalData.thingInfo['name']
+	const royalty_percent = $showModal.modalData.thingInfo['royalty_percent']
+
+	$: price = toBigNumber("0")
+	$: royaltyAmount = toBigNumber(price).multipliedBy(royalty_percent / 100)
+	$: netAmount = toBigNumber(price).minus(royaltyAmount)
+
+	onMount(() => {
+		console.log($showModal.modalData.thingInfo)
+		console.log(currentSellPrice)
+		inputElm.value = toBigNumber(stringToFixed(currentSellPrice, 8))
+		price = toBigNumber(inputElm.value)
+	})
 
     const sell = () => {
 		const transaction = {
@@ -21,7 +35,7 @@
 			networkType: config.networkType,
 			kwargs: {
 				uid: $showModal.modalData.thingInfo.uid,
-				amount: parseInt(price)
+				amount: {"__fixed__": price}
 			}
 		}
 
@@ -37,23 +51,50 @@
         	})
 			createSnack({
 				title: `Listed!`,
-				body: `${thingName} now listed for ${price}.`,
+				body: `${thingName} now listed for ${price} ${config.currencySymbol}.`,
 				type: "info"
 			})
 		}
     }
+
+	const handleInput = (e) => {
+		let validateValue = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')
+		if (validateValue !== e.target.value) {
+			inputElm.value = validateValue
+		}else{
+			let value = toBigNumber(e.target.value)
+			if (value.isNaN()) value = toBigNumber("0")
+			value = toBigNumber(stringToFixed(value, 8))
+			inputElm.value = stringToFixed(value, 8)
+			price = value
+		}
+	}
 </script>
 
 <style>
+	label{
+		font-weight: 600;
+	}
 	.preview-row{
 		text-align: center;
 	}
-
-	.button_text{
-		color: #ffffff;
+	.outlined{
+		color: var(--color-white-primary-tint);
 	}
-	.outlined:hover{
-		color: var(--primary);
+	.outlined:disabled {
+		background: var(--primary-dark);
+		color: var(--gray-2);
+	}
+	p{
+		color: var(--color-white-primary-tint);
+		margin: 1rem 0 0 ;
+		font-weight: 600;
+	}
+	strong {
+		color: var(--primary-dark);
+		font-weight: 600;
+		font-size: 1.3em;
+		margin-left: 8px;
 	}
 
 </style>
@@ -63,10 +104,22 @@
 		{#if $showModal.modalData.thingInfo}
 			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
 		{/if}
-		<input type="submit" class="button_text outlined" value="List Item" form="sell" />
+		<input type="submit" class="button_text outlined" value="List Artwork!" form="sell" disabled="{price.isLessThanOrEqualTo(0) || price.isEqualTo(currentSellPrice)}"/>
 	</div>
-	<form id="sell" class="flex-col" on:submit|preventDefault={sell}>
-		<label for="price">How much does your Pixel Frame cost?</label>
-		<input id="price" type="number" min="1" required bind:value={price}/>
-	</form>
+	<div class="flex-col">
+		<form id="sell" class="flex-col" on:submit|preventDefault={sell}>
+			<label for="price">How much does this art cost?</label>
+			<input id="price" type="number" step="0.1" required bind:this={inputElm} on:input={handleInput}/>
+
+
+		<!--{#if $showModal.modalData.thingInfo.owner !== $showModal.modalData.thingInfo.creator}-->
+			<p>Royalty Percentage </p>
+			<strong>{royalty_percent}%</strong>
+			<p>Royalty Amount </p>
+			<strong>{`${stringToFixed(royaltyAmount, 8)} ${config.currencySymbol}`}</strong>
+			<p>You Get </p>
+			<strong>{`${stringToFixed(netAmount, 8)} ${config.currencySymbol}`}</strong>
+		<!--{/if}-->
+		</form>
+	</div>
 </div>

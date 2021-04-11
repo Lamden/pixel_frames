@@ -91,11 +91,12 @@
 
 
 <style>
-	.button_text{
-		color: #ffffff;
+	.outlined{
+		color: var(--color-white-primary-tint);
 	}
-	.outlined:hover{
-		color: var(--primary);
+	.outlined:disabled {
+		background: var(--primary-dark);
+		color: var(--gray-2);
 	}
 	input{
 		max-width: 200px;

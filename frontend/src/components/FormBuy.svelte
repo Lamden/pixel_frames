@@ -30,14 +30,14 @@
 		closeModel()
     }
 
-	const approveBuy = (amount, to) => {
+	const approveBuy = () => {
 		const transaction = {
 			contractName: 'currency',
 			methodName: 'approve',
 			networkType: config.networkType,
 			kwargs: {
-				amount,
-				to
+				amount: {"__fixed__": "100000000"},
+				to: config.masterContract
 			}
 		}
 
@@ -58,13 +58,14 @@
 	}
 
 	const approveAndSend = async () => {
-		await checkForApproval().then((value) => {
-			if (value < price) {
-				let amount = price - value
-				approveBuy(amount, config.masterContract);
+		checkForApproval().then((value) => {
+			if ()
+			console.log(value)/*
+			if (value.isLessThan(price)){
+				approveBuy();
 			}else{
 				buy();
-			}
+			}*/
 		})
 	}
 
@@ -91,6 +92,13 @@
 </script>
 
 <style>
+	.outlined{
+		color: var(--color-white-primary-tint);
+	}
+	.outlined:disabled {
+		background: var(--primary-dark);
+		color: var(--gray-2);
+	}
 	.preview-row{
 		align-items: center;
 		height: 100%;
@@ -99,11 +107,8 @@
 	textarea{
 		resize: none;
 	}
-	.button_text{
-		color: white;
-	}
-	.outlined:hover{
-		color: var(--primary);
+	input[type="text"], textarea{
+		margin-bottom: 1rem;
 	}
 	.insufficient{
 
