@@ -15,7 +15,7 @@
 		if ($released){
 			showModal.set({modalData: {modal: FormCreate, created}, show: true})
 		}else{
-			fetch(`./checkWhitelistArtists.json?artist=${userAccount}`)
+			fetch(`./checkWhitelistArtists.json?artist=${$userAccount}`)
 				.then(res => res.json())
 				.then(isWhitelisted => {
 					console.log(isWhitelisted)

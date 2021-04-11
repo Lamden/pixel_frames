@@ -6,6 +6,7 @@
 /frontend/GIFS
 /frontend/src/js/config.js
 /frontend/src/js/wallet_approval.js
+/frontend/src/js/whitelist.json
 .DS_Store
 /tests/logs/test/Seneca.Parser.log
 /tests/logs/test/Seneca.Parser.log_color
