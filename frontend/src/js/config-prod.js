@@ -2,14 +2,13 @@ export const config = {
     frameWidth: 25,
     totalPixels: 625,
     totalFrames: 8,
-    infoContract: "con_pw_info_3",
-    masterContract: "con_pw_master_3",
-    networkType: "testnet",
-    currencySymbol: "DTAU",
-    domainName: "https://localhost",
-    //blockExplorer: "http://localhost:1337",
-    blockExplorer: "https://testnet.lamden.io",
-    masternode: "https://testnet-master-1.lamden.io"
+    infoContract: "con_pixel_whale_info_v1",
+    masterContract: "con_pixel_whale_master_v1",
+    networkType: "mainnet",
+    currencySymbol: "TAU",
+    domainName: "https://www.pixelwhale.com",
+    blockExplorer: "https://mainnet.lamden.io",
+    masternode: "https://masternode-01.lamden.io/"
 }
 
 
@@ -21,7 +20,7 @@ export const stampLimits = (()=>{
         transfer: 105,
         prove_ownership: 95
     }
-    stampValues['currency'] = {
+    stampValues.currency = {
         approve: 25
     }
     return stampValues
