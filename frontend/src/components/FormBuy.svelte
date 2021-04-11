@@ -59,7 +59,6 @@
 
 	const approveAndSend = async () => {
 		checkForApproval().then((value) => {
-			if ()
 			console.log(value)/*
 			if (value.isLessThan(price)){
 				approveBuy();
