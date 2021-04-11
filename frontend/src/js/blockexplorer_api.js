@@ -15,7 +15,7 @@ export const blockexplorer_api = (() => {
             .catch(err => console.log(err))
         let keysObj = {}
         data.map(kvPair => {
-            if (kvPair.value?.__fixed__) kvPair.value = kvPair.value?.__fixed__
+            if (kvPair.value.__fixed__) kvPair.value = kvPair.value.__fixed__
             keysObj[kvPair.key] = kvPair.value
         })
         return keysObj
