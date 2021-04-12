@@ -37,7 +37,8 @@ var pixelFrame = new mongoose.Schema({
     num_of_owners: Number,
     stamps_used: Number,
     lastSaleDate: Date,
-    lastUpdate: Date
+    lastUpdate: Date,
+    blacklist: Boolean
 });
 
 var likes = new mongoose.Schema({

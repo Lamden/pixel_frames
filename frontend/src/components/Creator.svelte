@@ -86,9 +86,13 @@
 {/if}
 <div class="flex-row created">
     {#each formatted as thingInfo}
-        <div>
-            <DisplayFrames pixelSize={7} {thingInfo} />
-        </div>
+        {#if thingInfo.blacklist && thingInfo.owner !== $userAccount}
+
+		{:else}
+            <div>
+                <DisplayFrames pixelSize={7} {thingInfo} />
+            </div>
+        {/if}
     {/each}
 </div>
 

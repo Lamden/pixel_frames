@@ -1,5 +1,6 @@
 <script context="module">
 	import { decodeFrames } from '../../js/utils.js'
+	import { goto } from '@sapper/app';
 
 	export async function preload({ params, query }) {
 		let thingInfo = null
@@ -10,7 +11,9 @@
 		try{
 			thingInfo = data[0]
 			thingInfo.frames = decodeFrames(thingInfo.thing)
-		}catch(e){null}
+		}catch(e){
+			goto("./404")
+		}
 
 	    return {
 			thingInfo,

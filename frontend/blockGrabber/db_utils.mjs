@@ -1,8 +1,7 @@
 import Lamden from 'lamden-js'
+import fs from "fs";
 
-const blacklist = [
-    "3dbcf43eacfb297a648153bc7afcd1e48015e6cd259bd28c7ac19d12cb2615f4"
-]
+
 
 export const getDbUtils = (config) => {
     const { models } = config
@@ -28,8 +27,7 @@ export const getDbUtils = (config) => {
         console.log({result})
 
         const uid = result.replace(/'/g, '');
-
-        if (blacklist.includes(uid)) return
+        var blacklist = JSON.parse(fs.readFileSync('./blockGrabber/blacklist.json', 'utf8'));
 
         let stateValues = getStateValues(state, uid)
 
@@ -55,7 +53,8 @@ export const getDbUtils = (config) => {
             num_of_owners: 1,
             stamps_used,
             lastSaleDate: null,
-            lastUpdate: new Date(metadata.timestamp * 1000)
+            lastUpdate: new Date(metadata.timestamp * 1000),
+            blacklist: blacklist.art.includes(uid) || blacklist.creators.includes(stateValues.creator)
         }).save()
 
         console.log({
@@ -92,6 +91,7 @@ export const getDbUtils = (config) => {
         const uid =  payload.kwargs.uid
         const sender = payload.sender
         let pixel_frame = await models.PixelFrame.findOne({uid})
+        if (!pixel_frame) return
         pixel_frame.likes =  getStateValue(state, makeThingKey(uid, 'likes'))
         pixel_frame.lastUpdate = new Date(metadata.timestamp * 1000)
         await pixel_frame.save()

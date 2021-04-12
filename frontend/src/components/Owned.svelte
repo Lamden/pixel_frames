@@ -82,10 +82,14 @@
 
 <div class="flex-row display-card">
     {#each formatted as thingInfo, index}
-        <div in:scale="{{duration: 200, delay: 0, opacity: 0, start: 0.75, easing: quintOut}}"
-		bind:this={elements[index]}>
-            <DisplayFrames pixelSize={7} {thingInfo} {index} on:update={updateThing}/>
-        </div>
+		{#if thingInfo.blacklist && thingInfo.owner !== $userAccount}
+
+		{:else}
+			<div in:scale="{{duration: 200, delay: 0, opacity: 0, start: 0.75, easing: quintOut}}"
+				bind:this={elements[index]}>
+				<DisplayFrames pixelSize={7} {thingInfo} {index} on:update={updateThing}/>
+        	</div>
+		{/if}
     {/each}
 </div>
 
