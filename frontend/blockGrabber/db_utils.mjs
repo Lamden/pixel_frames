@@ -1,5 +1,9 @@
 import Lamden from 'lamden-js'
 
+const blacklist = [
+    "3dbcf43eacfb297a648153bc7afcd1e48015e6cd259bd28c7ac19d12cb2615f4"
+]
+
 export const getDbUtils = (config) => {
     const { models } = config
     const { INFO_CONTRACT, MASTER_CONTRACT } = config
@@ -22,8 +26,11 @@ export const getDbUtils = (config) => {
         const {hash, result, transaction, stamps_used, state } = transactionInfo
         const { metadata } = transaction
         console.log({result})
-        //const uid = result.replaceAll("'", "")
+
         const uid = result.replace(/'/g, '');
+
+        if (blacklist.includes(uid)) return
+
         let stateValues = getStateValues(state, uid)
 
         await new models.PixelFrame({
