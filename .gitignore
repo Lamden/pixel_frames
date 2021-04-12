@@ -1,6 +1,7 @@
 /logs
 /.idea/
 /frontend/__sapper__
+/frontend/.env
 /frontend/node_modules
 /frontend/src/node_modules
 /frontend/GIFS
