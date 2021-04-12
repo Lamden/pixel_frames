@@ -109,7 +109,9 @@ const runBlockGrabber = (config ) => {
 									if (tx.transaction.payload.function === 'sell_thing' || tx.transaction.payload.function === 'sell_thing_to') {
 										utils.update_price_info(tx)
 									}
-									if (tx.transaction.payload.function === 'buy_thing' || tx.transaction.payload.function === 'give_thing') {
+									if (tx.transaction.payload.function === 'buy_thing' ||
+										tx.transaction.payload.function === 'transfer' ||
+										tx.transaction.payload.function === 'transfer_from') {
 										utils.update_change_ownership(tx)
 									}
 									if (tx.transaction.payload.function === 'prove_ownership') {
