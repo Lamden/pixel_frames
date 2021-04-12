@@ -103,7 +103,7 @@ export const getDbUtils = (config) => {
         }else{
             likes.liked_by.push(vk)
         }
-        console.log({likes})
+        //console.log({likes})
         await likes.save()
     }
 
@@ -179,11 +179,11 @@ export const getDbUtils = (config) => {
         const { uid } = payload.kwargs
         console.log('!!!!!  FOUND AUTH CODE !!!!')
         let authCodeInfo = await models.AuthCodes.findOne({uid})
-        console.log({authCodeInfo_UpdateAuthCodes: authCodeInfo, payload, state})
+        //console.log({authCodeInfo_UpdateAuthCodes: authCodeInfo, payload, state})
         if (!authCodeInfo) return
 
         let code = getStateValue(state, makeThingKey(uid, 'proof'))
-        console.log({code})
+        //console.log({code})
 
         if (authCodeInfo.code === code){
             authCodeInfo.validated = true

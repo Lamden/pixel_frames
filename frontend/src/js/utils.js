@@ -261,6 +261,7 @@ export const processTxResults = (results) => {
 }
 
 export const refreshTAUBalance = async () => {
+    console.log("refreshing TAU balance")
     if (!get(userAccount)) return
     let keyList = [
 		{
@@ -272,6 +273,7 @@ export const refreshTAUBalance = async () => {
     const res = await blockexplorer_api.getKeys(keyList)
     let data = valuesToBigNumber(res)
     let balance = data[`currency.balances:${keyList[0].key}`]
+    console.log({res, balance})
     if (balance) currency.set(balance)
 }
 
@@ -298,8 +300,6 @@ export const needsApproval = async () => {
 
 }
 
-approvalAmount.subscribe(val => console.log(val))
-
 export const sha256 = async (message) => {
     // encode as UTF-8
     const msgBuffer = new TextEncoder('utf-8').encode(message);
@@ -324,15 +324,15 @@ export const nameTaken = async (name) => {
 
 export const alreadyLiked = async (uid) => {
     let account = get(userAccount)
-    console.log({account, uid})
+    //console.log({account, uid})
     if (account === '' || typeof window === 'undefined') return false;
 
     let lsValue = localStorage.getItem(`${uid}:${account}:liked`)
-    console.log({lsValue})
+    //console.log({lsValue})
     if (lsValue !== null) return true;
 
     const liked = await fetch(`./${uid}.json?account=${account}`).then(res => res.json())
-    console.log(liked)
+    //console.log(liked)
 
     if (liked === true) localStorage.setItem(`${uid}:${account}:liked`, true)
 
@@ -353,11 +353,11 @@ export const createWatermark = (thingInfo, account) => {
 
 export const updateInfo = (thingInfo, updates) => {
     Object.keys(updates).forEach(update => {
-        console.log({update, thingInfoValue: thingInfo[update], updateValue: updates[update]})
+        //console.log({update, thingInfoValue: thingInfo[update], updateValue: updates[update]})
         if (typeof thingInfo[update] !== 'undefined') thingInfo[update] = updates[update]
     })
     return thingInfo
-    console.log(thingInfo)
+    //console.log(thingInfo)
 }
 
 export const closeModel = () => {

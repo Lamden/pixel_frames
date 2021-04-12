@@ -34,7 +34,7 @@
 	let pageURL = `${config.domainName}/frames/${thingInfo.uid}`
 
 	const updateThingInfo = (updates) => {
-    	console.log(updates)
+    	//console.log(updates)
     	thingInfo = updateInfo(thingInfo, updates)
     }
 
