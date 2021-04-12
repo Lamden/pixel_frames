@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-	<title>{`Artwork owned by ${formatAccountAddress(account)}`}</title>
+	<title>{`NFTs owned by ${formatAccountAddress(account)}`}</title>
 </svelte:head>
 
 <Owned owned={owned} {account}/>

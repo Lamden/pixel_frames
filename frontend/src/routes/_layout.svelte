@@ -1,11 +1,11 @@
 <!-- /frontend/src/routes/_layout.svelte -->
 
 <script>
-	// TODO - Royalties
+	// TODO - Royalties displayed on buy page
 	// TODO - Backup Warning for Wallet connection
-	// TODO - disclaimer when creating art
-	// TODO - disclaimer when buying art
-	// TODO - disclaimer when selling art
+	// TODO - disclaimer when creating NFT
+	// TODO - disclaimer when buying NFT
+	// TODO - disclaimer when selling NFT
 
 
 	import Nav from '../components/Nav.svelte';

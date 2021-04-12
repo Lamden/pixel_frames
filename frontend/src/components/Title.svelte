@@ -45,6 +45,6 @@
 </div>
 {#if subtitle}
 	<p class="text-color-primary-dark weight-600">
-		On-chain Pixel Animations created by YOU!
+		On-chain NFT Pixel Animations created by YOU!
 	</p>
 {/if}

@@ -104,11 +104,11 @@
 		{#if $showModal.modalData.thingInfo}
 			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
 		{/if}
-		<input type="submit" class="button_text outlined" value="List Artwork!" form="sell" disabled="{price.isLessThanOrEqualTo(0) || price.isEqualTo(currentSellPrice)}"/>
+		<input type="submit" class="button_text outlined" value="List NFT!" form="sell" disabled="{price.isLessThanOrEqualTo(0) || price.isEqualTo(currentSellPrice)}"/>
 	</div>
 	<div class="flex-col">
 		<form id="sell" class="flex-col" on:submit|preventDefault={sell}>
-			<label for="price">How much does this art cost?</label>
+			<label for="price">How much does this NFT cost?</label>
 			<input id="price" type="number" step="0.1" required bind:this={inputElm} on:input={handleInput}/>
 
 

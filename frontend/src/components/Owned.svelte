@@ -66,7 +66,7 @@
 </style>
 
 <h2 class="text-color-primary-dark">
-	All artwork owned by
+	All NFTs owned by
 	{#if isLamdenKey(account)}
 		<a href="{`${config.blockExplorer}/addresses/${account}`}" >{formatAccountAddress(account, 8, 5)}</a>
 	{:else}

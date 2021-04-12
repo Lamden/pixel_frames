@@ -143,7 +143,7 @@
 <div class="modal-form flex-row">
 	<div class="preview-row">
 		<Preview frames={$frames} pixelSize={15} showWatermark={false}/>
-		<input type="submit" class="button_text outlined" value="Mint Artwork!" form="create" disabled={name === "" ||  desc === ""} />
+		<input type="submit" class="button_text outlined" value="Mint NFT!" form="create" disabled={name === "" ||  desc === ""} />
 	</div>
 	<form id="create" class="flex-col" on:submit|preventDefault={upload} bind:this={formElm}>
 		<label for="name">Create a unique name</label>

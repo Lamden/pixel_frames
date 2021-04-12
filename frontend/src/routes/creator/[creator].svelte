@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>{`Artwork created by ${formatAccountAddress(creator)}`}</title>
+	<title>{`NFTs created by ${formatAccountAddress(creator)}`}</title>
 </svelte:head>
 
 <Creator {created} {creator}/>

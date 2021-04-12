@@ -100,5 +100,5 @@
     {/each}
 {:else}
     <hr>
-    <h3 class="text-color-gray-5">This artwork as never been sold.</h3>
+    <h3 class="text-color-gray-5">This NFT has never been sold.</h3>
 {/if}

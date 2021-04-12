@@ -186,6 +186,7 @@
 			{/if}
 			<li><a rel=prefetch aria-current="{segment === 'recent' ? 'page' : undefined}" href="recent">recent</a></li>
 			<li><a rel=prefetch aria-current="{segment === 'forsale' ? 'page' : undefined}" href="forsale">for sale</a></li>
+			<!--<li><a href="https://docs.pixelwhale.io">docs</a></li>-->
 		</ul>
 	</div>
 	<div class="flex-col account desktop hide-mobile">

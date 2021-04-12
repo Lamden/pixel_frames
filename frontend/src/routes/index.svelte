@@ -67,7 +67,7 @@
 </style>
 
 <svelte:head>
-	<title>Pixel Whale: On-chain Animations!</title>
+	<title>Pixel Whale: On-chain NFT Animations!</title>
 </svelte:head>
 
 <p class="release-date">Official Release April 19th @ 22:00 UTC</p>
@@ -79,7 +79,7 @@
 <div class="mobile-message">
 	<strong>This site is not mobile optimized.</strong>>
 	Please visit us on a desktop for the full experience including integration with the Lamden Wallet to enable
-	<strong>buying, selling and creating custom artwork!</strong>
+	<strong>buying, selling and creating custom NFT pixel animations!</strong>
 </div>
 
 <PixelWall {mostLiked}/>

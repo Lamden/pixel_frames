@@ -71,7 +71,7 @@
 
 </style>
 <h2 class="text-color-primary-dark">
-	All Artwork Created by
+	All NFTs Created by
 	{#if isLamdenKey(creator)}
 		<a href="{`${config.blockExplorer}/addresses/${creator}`}" >{formatAccountAddress(creator, 8, 5)}</a>
 	{:else}

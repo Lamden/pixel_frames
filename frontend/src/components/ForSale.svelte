@@ -68,7 +68,7 @@
     }
 </style>
 
-<h2 class="text-color-primary-dark">Artwork For Sale!</h2>
+<h2 class="text-color-primary-dark">NFTs For Sale!</h2>
 <div class="flex-row display-card">
     {#each formatted as thingInfo, index}
 		<div class:owned={$userAccount ? thingInfo.owner === $userAccount : false}

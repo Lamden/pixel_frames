@@ -127,9 +127,9 @@
 			{@html info}
 		</div>
 		<div class="flex-col flex-justify-center info weight-600">
-			<p>As the owner of this art you can create a shareable link that has no watermark.</p>
+			<p>As the owner of this NFT you can create a shareable link that has no watermark.</p>
 			<p>Creating a new link always invalidates previous links so be sure to save the link after creation.</p>
-			<p>Share links are always invalidated after the art is sold.</p>
+			<p>Share links are always invalidated after the NFT is sold.</p>
 		</div>
 
 	</div>

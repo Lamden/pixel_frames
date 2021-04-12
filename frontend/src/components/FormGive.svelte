@@ -76,7 +76,7 @@
 
         	updateInfo(newThingInfo)
 			createSnack({
-				title: `Artwork Sent!`,
+				title: `NFT Sent!`,
 				body: `You gifted ${thingName} to another user.`,
 				type: "info"
 			})

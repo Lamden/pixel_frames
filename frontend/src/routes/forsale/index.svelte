@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-	<title>Pixel Frames For Sale!</title>
+	<title>Pixel Whale NFTs For Sale!</title>
 </svelte:head>
 
 <ForSale {forsale}/>

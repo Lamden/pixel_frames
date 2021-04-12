@@ -11,7 +11,7 @@
 	}
 
     const show = () => {
-		if (!$userAccount) alert('You must be signed into the Lamden Wallet to upload your art to the blockchain.')
+		if (!$userAccount) alert('You must be signed into the Lamden Wallet to upload your NFT to the blockchain.')
 		if ($released){
 			showModal.set({modalData: {modal: FormCreate, created}, show: true})
 		}else{
@@ -35,4 +35,4 @@
 	}
 </style>
 
-<button class="button" on:click={show} disabled={framesEmpty($frames)}>CREATE</button>
+<button class="button" on:click={show} disabled={framesEmpty($frames)}>MINT NFT</button>
