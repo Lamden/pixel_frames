@@ -146,7 +146,7 @@
 		<input type="submit" class="button_text outlined" value="Mint NFT!" form="create" disabled={name === "" ||  desc === ""} />
 	</div>
 	<form id="create" class="flex-col" on:submit|preventDefault={upload} bind:this={formElm}>
-		<label for="name">Create a unique name</label>
+		<label for="name">Name your Artwork</label>
 		<input id="name" type="text" placeholder="Name" required on:blur={checkName} bind:value={name}/>
 		<label for="desc">Describe your creation</label>
 		<textarea id="desc" type="textarea" rows="8" maxlength="128" placeholder="(max 128 chars)" required bind:value={desc}/>
