@@ -21,6 +21,7 @@
 	$: price = toBigNumber("0")
 	$: royaltyAmount = toBigNumber(price).multipliedBy(royalty_percent / 100)
 	$: netAmount = toBigNumber(price).minus(royaltyAmount)
+	$: isOwner = $showModal.modalData.thingInfo['owner'] === $showModal.modalData.thingInfo['creator']
 
 	onMount(() => {
 		console.log($showModal.modalData.thingInfo)
@@ -111,15 +112,14 @@
 			<label for="price">How much does this NFT cost?</label>
 			<input id="price" type="number" step="0.1" required bind:this={inputElm} on:input={handleInput}/>
 
-
-		<!--{#if $showModal.modalData.thingInfo.owner !== $showModal.modalData.thingInfo.creator}-->
+		{#if !isOwner}
 			<p>Royalty Percentage </p>
 			<strong>{royalty_percent}%</strong>
 			<p>Royalty Amount </p>
 			<strong>{`${stringToFixed(royaltyAmount, 8)} ${config.currencySymbol}`}</strong>
 			<p>You Get </p>
 			<strong>{`${stringToFixed(netAmount, 8)} ${config.currencySymbol}`}</strong>
-		<!--{/if}-->
+		{/if}
 		</form>
 	</div>
 </div>
