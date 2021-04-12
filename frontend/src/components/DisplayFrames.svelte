@@ -156,7 +156,7 @@
     <a href="{`./frames/${thingInfo.uid}`}" class="name">{thingInfo.name}</a>
     <div class="icons text-color-gray-5 flex-row">
         <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html artist}</a>
-        <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html owner}</a>
+        <a href="{`./owned/${thingInfo.owner}`}" class="icon">{@html owner}</a>
     </div>
 </div>
 
