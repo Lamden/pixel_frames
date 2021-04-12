@@ -49,7 +49,7 @@
 		text-align: center;
 	}
 	.release-date{
-		margin: 2rem 0 -4rem;
+		margin: 2rem 0 0;
 		font-size: 3rem;
     	font-weight: 200;
 		color: var(--primary-dark);
@@ -62,7 +62,9 @@
 		.mobile-message{
 			display: none;
 		}
-
+		.release-date{
+			margin: 2rem 0 -4rem;
+		}
 	}
 </style>
 

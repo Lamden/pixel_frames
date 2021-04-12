@@ -38,6 +38,7 @@
 	p{
 		margin: -2rem 0 0;
 	}
+
 </style>
 
 <div style={`font-size: ${fontSize}em`}>Pixel
