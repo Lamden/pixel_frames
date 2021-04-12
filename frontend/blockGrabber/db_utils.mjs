@@ -21,8 +21,9 @@ export const getDbUtils = (config) => {
     const create_new_thing = async (transactionInfo, blockNmber) => {
         const {hash, result, transaction, stamps_used, state } = transactionInfo
         const { metadata } = transaction
-        const uid = result.replaceAll("'", "")
-
+        console.log({result})
+        //const uid = result.replaceAll("'", "")
+        const uid = result.replace(/'/g, '');
         let stateValues = getStateValues(state, uid)
 
         await new models.PixelFrame({
