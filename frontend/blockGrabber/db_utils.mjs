@@ -163,7 +163,7 @@ export const getDbUtils = (config) => {
             seller,
             buyer: newOwner,
             wasHeld: wasHeld,
-            gift: payload.function === "give_thing"
+            gift: payload.function === "transfer" || payload.function === "transfer_from"
         }).save()
 
         pixel_frame.price_hold = ""
