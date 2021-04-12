@@ -39,7 +39,7 @@
         display: grid;
         width: fit-content;
         grid-template-columns: repeat(5, 30px);
-        grid-template-rows: repeat(10, 30px);
+        grid-template-rows: repeat(11, 30px);
         grid-gap: 4px;
     }
 
