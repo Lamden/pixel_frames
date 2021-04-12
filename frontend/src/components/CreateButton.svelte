@@ -11,7 +11,10 @@
 	}
 
     const show = () => {
-		if (!$userAccount) alert('You must be signed into the Lamden Wallet to upload your NFT to the blockchain.')
+		if (!$userAccount) {
+			alert('You must be signed into the Lamden Wallet to upload your NFT to the blockchain.')
+			return
+		}
 		if ($released){
 			showModal.set({modalData: {modal: FormCreate, created}, show: true})
 		}else{
@@ -20,7 +23,7 @@
 				.then(isWhitelisted => {
 					console.log(isWhitelisted)
 					if (isWhitelisted) showModal.set({modalData: {modal: FormCreate, created}, show: true})
-					else alert('Only whitelisted artists can upload creations before release.  Contact @PixelWhaleIO on twitter to apply.')
+					else alert('Only whitelisted artists can upload NFTs before release.  Email jeff@lamden.io to apply.')
 				})
 		}
 	}
