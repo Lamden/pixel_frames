@@ -5,7 +5,7 @@
     //MISC
 	import { frames, frameSpeed, showModal, frameStore, activeFrame } from '../js/stores.js'
 	import { serializeFrames, createSnack, nameTaken, closeModel } from '../js/utils.js'
-	import { config } from '../js/config.js';
+	import { config, stampLimits } from '../js/config.js';
 
     // Components
 	import Preview from './Preview.svelte'
@@ -35,7 +35,7 @@
 					royalty_percent: 5
 				}
 			},
-			stampLimit: 130 + (26 * $frames.length)
+			stampLimit: 130 + (stampLimits[config.masterContract].per_frame_stamps * $frames.length)
 		}
 
 		sendTransaction(transaction, handleCreateTx)
