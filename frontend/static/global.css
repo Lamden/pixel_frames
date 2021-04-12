@@ -280,6 +280,7 @@ form > label{
 	-webkit-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
 	-moz-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
 	background: #fdfffe;
+    background: linear-gradient(170deg, var(--color-white-primary-tint) 0%, rgb(241 241 241) 100%);
 	display: flex;
 	flex-direction: column;
 	border-radius: 5px;
