@@ -16,8 +16,7 @@ export const blockexplorer_api = (() => {
         let keysObj = {}
         data.map(kvPair => {
             try{
-                if (kvPair.value.__fixed__) kvPair.value = kvPair.value.__fixed__
-                else keysObj[kvPair.key] = kvPair.value
+                keysObj[kvPair.key] = kvPair.value.__fixed__
             }catch (e) {
                 keysObj[kvPair.key] = kvPair.value
             }

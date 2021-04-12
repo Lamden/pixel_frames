@@ -261,7 +261,6 @@ export const processTxResults = (results) => {
 }
 
 export const refreshTAUBalance = async () => {
-    console.log("refreshing TAU balance")
     if (!get(userAccount)) return
     let keyList = [
 		{
@@ -273,7 +272,6 @@ export const refreshTAUBalance = async () => {
     const res = await blockexplorer_api.getKeys(keyList)
     let data = valuesToBigNumber(res)
     let balance = data[`currency.balances:${keyList[0].key}`]
-    console.log({res, balance})
     if (balance) currency.set(balance)
 }
 
