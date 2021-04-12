@@ -81,7 +81,7 @@
 	const sendTransaction = (transaction, callback) => {
 		let usersStamps = determineUsersTotalStamps()
 		let stampsToSendTx = transaction.stampLimit;
-		if (!stampsToSendTx) stampsToSendTx = stampLimits[transaction.contractName][transaction.methodName]
+		if (!stampsToSendTx) stampsToSendTx = stampLimits[config.masterContract][transaction.methodName]
 		console.log({transaction, usersStamps, stampsToSendTx})
 		if (usersStamps < stampsToSendTx){
 			createSnack({
