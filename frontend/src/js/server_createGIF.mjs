@@ -91,9 +91,9 @@ function createAndSendGIF(res, thingInfo, shareLink = false) {
             ctx.strokeStyle = watermark.strokeColor;
             ctx.lineWidth = 1;
             ctx.miterLimit=2;
-            ctx.strokeText(config.domainName, canvas.width / 2, canvas.height - (canvas.height / 8));
+            ctx.strokeText(config.watermark, canvas.width / 2, canvas.height - (canvas.height / 8));
             ctx.fillStyle = watermark.fillColor;
-            ctx.fillText(config.domainName, canvas.width / 2, canvas.height - (canvas.height / 8));
+            ctx.fillText(config.watermark, canvas.width / 2, canvas.height - (canvas.height / 8));
         }
 
         encoder.addFrame(ctx);

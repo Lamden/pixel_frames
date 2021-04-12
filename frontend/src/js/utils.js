@@ -344,7 +344,7 @@ export const formatAccountAddress = (account, lsize = 8, rsize = 4) => {
 export const createWatermark = (thingInfo, account) => {
     if (account === thingInfo.owner) return
     return {
-        text: 'demoapp.lamden.io',
+        text: config.watermark,
         fillColor: "#21d6ab"
     }
 }
