@@ -38,6 +38,7 @@
     .price{
         align-items: center;
         justify-content: flex-end;
+        flex-wrap: wrap;
         margin: 0.25rem 0;
     }
     .button_text{
