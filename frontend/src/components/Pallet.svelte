@@ -7,7 +7,7 @@
     const makePallet = () => {
         let colors = JSON.parse(JSON.stringify(color_to_letter))
         delete colors['#ffffff00']
-        delete colors['white']
+        delete colors['#ffffff']
         return colors
     }
 
