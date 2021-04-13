@@ -31,6 +31,9 @@ export const getDbUtils = (config) => {
 
         let stateValues = getStateValues(state, uid)
 
+        let exists = await models.PixelFrame.findOne({uid})
+        if (exists) return
+
         await new models.PixelFrame({
             txCreationHash: hash,
             creationBlock: blockNmber,
