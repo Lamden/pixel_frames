@@ -73,7 +73,9 @@
 <h2 class="text-color-primary-dark">
 	All NFTs Created by
 	{#if isLamdenKey(creator)}
-		<a href="{`${config.blockExplorer}/addresses/${creator}`}" >{formatAccountAddress(creator, 8, 5)}</a>
+		<a href="{`${config.blockExplorer}/addresses/${creator}`}" target="_blank" rel="noopener noreferrer">
+            {formatAccountAddress(creator, 8, 5)}
+        </a>
 	{:else}
 		{creator.length > 15 && !creator.startsWith("con_") ? formatAccountAddress(creator, 8, 5) : creator}
 	{/if}

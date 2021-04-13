@@ -68,7 +68,9 @@
 <h2 class="text-color-primary-dark">
 	All NFTs owned by
 	{#if isLamdenKey(account)}
-		<a href="{`${config.blockExplorer}/addresses/${account}`}" >{formatAccountAddress(account, 8, 5)}</a>
+		<a href="{`${config.blockExplorer}/addresses/${account}`}" target="_blank" rel="noopener noreferrer">
+			{formatAccountAddress(account, 8, 5)}
+		</a>
 	{:else}
 		{account.length > 15 && !account.startsWith("con_") ? formatAccountAddress(account, 8, 5) : account}
 	{/if}

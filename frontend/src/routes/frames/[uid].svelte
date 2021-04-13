@@ -1,6 +1,5 @@
 <script context="module">
 	import { decodeFrames } from '../../js/utils.js'
-	import { goto } from '@sapper/app';
 
 	export async function preload({ params, query }) {
 		let thingInfo = null
@@ -12,7 +11,13 @@
 			thingInfo = data[0]
 			thingInfo.frames = decodeFrames(thingInfo.thing)
 		}catch(e){
-			goto("./404")
+			thingInfo = {
+				name: "Not Found",
+				owner: "",
+				uid: params.uid,
+				description: "",
+				notFound: true
+			}
 		}
 
 	    return {
@@ -51,29 +56,34 @@
 
 </style>
 
-<svelte:head>
-	<title>{thingInfo.name}</title>
 
-	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content="{thingInfo.name}" />
-	<meta name="twitter:description" content="{thingInfo.description}" />
-	<meta name="twitter:site" content="@framespixel" />
-	<meta name="twitter:creator" content="{thingInfo.owner}" />
-	<meta name="twitter:image" content="{gifURL}" />
-	<meta name="twitter:image:alt" content="{thingInfo.name}" />
+	<svelte:head>
+		<title>{thingInfo.name}</title>
 
-	<meta property="og:url" content="{gifURL}" />
-	<meta property="og:type" content="article" />
-	<meta property="og:title" content="Pixel Whale by Lamden" />
-	<meta property="og:image" content="{gifURL}" />
-	<meta property="og:description" content="{thingInfo.description}" />
-	<meta property="og:image:url" content="{gifURL}" />
-	<meta property="og:image:secure_url" content="{gifURL}" />
-	<meta property="og:image:width" content="150" />
-	<meta property="og:image:height" content="150" />
-	<meta property="og:image:type" content="image/gif" />
-</svelte:head>
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="{thingInfo.name}" />
+		<meta name="twitter:description" content="{thingInfo.description}" />
+		<meta name="twitter:site" content="@framespixel" />
+		<meta name="twitter:creator" content="{thingInfo.owner}" />
+		<meta name="twitter:image" content="{gifURL}" />
+		<meta name="twitter:image:alt" content="{thingInfo.name}" />
 
-<div class="display-one">
-	<DisplayFramesOne {thingInfo} {salesHistory} updateInfo={updateThingInfo}/>
-</div>
+		<meta property="og:url" content="{gifURL}" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="Pixel Whale by Lamden" />
+		<meta property="og:image" content="{gifURL}" />
+		<meta property="og:description" content="{thingInfo.description}" />
+		<meta property="og:image:url" content="{gifURL}" />
+		<meta property="og:image:secure_url" content="{gifURL}" />
+		<meta property="og:image:width" content="150" />
+		<meta property="og:image:height" content="150" />
+		<meta property="og:image:type" content="image/gif" />
+	</svelte:head>
+
+{#if typeof thingInfo.notFound === 'undefined'}
+	<div class="display-one">
+		<DisplayFramesOne {thingInfo} {salesHistory} updateInfo={updateThingInfo}/>
+	</div>
+{:else}
+	<p>{`${thingInfo.uid} doesn't exist.`}</p>
+{/if}

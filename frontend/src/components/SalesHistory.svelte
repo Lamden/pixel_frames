@@ -61,13 +61,13 @@
                 </div>
                 <p class="text-color-gray-6">
                     from:
-                    <a href="{`${config.blockExplorer}/addresses/${history.seller}`}">
+                    <a href="{`${config.blockExplorer}/addresses/${history.seller}`}" target="_blank" rel="noopener noreferrer">
                         {formatAccountAddress(history.seller, 8, 4)}
                     </a>
                 </p>
                 <p class="text-color-gray-6">
                     to:
-                    <a href="{`${config.blockExplorer}/addresses/${history.seller}`}">
+                    <a href="{`${config.blockExplorer}/addresses/${history.seller}`}" target="_blank" rel="noopener noreferrer">
                         {formatAccountAddress(history.seller, 8, 4)}
                     </a>
                 </p>
@@ -85,13 +85,13 @@
 
                 <p class="text-color-gray-6">
                     seller:
-                    <a href="{`${config.blockExplorer}/addresses/${history.seller}`}">
+                    <a href="{`${config.blockExplorer}/addresses/${history.seller}`}" target="_blank" rel="noopener noreferrer">
                         {formatAccountAddress(history.seller, 8, 4)}
                     </a>
                 </p>
                 <p class="text-color-gray-6">
                     buyer:
-                    <a href="{`${config.blockExplorer}/addresses/${history.buyer}`}">
+                    <a href="{`${config.blockExplorer}/addresses/${history.buyer}`}" target="_blank" rel="noopener noreferrer">
                         {formatAccountAddress(history.buyer, 8, 4) }
                     </a>
                 </p>
