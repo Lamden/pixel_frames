@@ -493,3 +493,13 @@ export const indexToPos = (index) => {
         x: index - (parseInt(index / config.frameWidth) * config.frameWidth)
     }
 }
+
+export const hasNulls = (array) => {
+    let hasNulls = false
+    array.forEach((frame) => {
+        if (frame.includes(null)){
+            hasNulls = true
+        }
+    })
+    return hasNulls
+}

@@ -31,9 +31,14 @@
     }
 
     const changeColor = (index, button) => {
+        let color = $currentColor[button]
+        if (!color) {
+            console.log({index, color})
+            return
+        }
         frameStore.update(currentValue => {
             let framesInfo = currentValue[$activeFrame].frames
-            framesInfo[$currentFrame][index] = $currentColor[button]
+            framesInfo[$currentFrame][index] = color
             return currentValue
         })
     }

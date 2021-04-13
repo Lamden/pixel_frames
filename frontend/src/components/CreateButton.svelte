@@ -2,7 +2,7 @@
 	import { createEventDispatcher} from 'svelte'
 	import { showModal, frames, released, userAccount } from '../js/stores.js'
 	import FormCreate from './FormCreate.svelte'
-	import { framesEmpty } from '../js/utils.js'
+	import { framesEmpty, hasNulls } from '../js/utils.js'
 
 	const dispatch = createEventDispatcher();
 
@@ -11,6 +11,10 @@
 	}
 
     const show = () => {
+		if (hasNulls($frames)){
+			alert('Your art has bad data. Please check all pixels and replace any "E" values.')
+			return
+		}
 		if (!$userAccount) {
 			alert('You must be signed into the Lamden Wallet to upload your NFT to the blockchain.')
 			return

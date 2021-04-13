@@ -36,6 +36,10 @@
     .pixel:hover{
         border: 1px dotted var(--primary);
     }
+    .errorPixel{
+        background: #7fff5b!important;
+        color: red!important;
+    }
     .noselect {
       -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none; /* Safari */
@@ -49,10 +53,12 @@
 
 <div class="pixel pixel__border noselect"
      style={`background: ${letter_to_color[pixel]}`}
+     class:errorPixel={pixel === null}
      on:mousedown={colorChange}
      on:mouseover={colorChangeOver}
      on:drag|preventDefault
      title={index}>
     {#if pixel === "A"} x {/if}
+    {#if pixel === null} E {/if}
 </div>
 
