@@ -7,27 +7,34 @@ export const update_tau_price = (models) => {
     let coinName = "lamden"
 
     const updatePrice = async  () => {
-        let res = await CoinGeckoClient.coins.fetchTickers(coinName).catch(() => checkAgain());
+        await CoinGeckoClient.coins.fetchTickers(coinName)
+            .then(async res => {
+                if (!res || !res.data){
+                    checkAgain()
+                    return
+                }
+                let txBitData = res.data.tickers.find(f => f.market.name === "Txbit")
+                if (!txBitData) checkAgain()
+                let prices = await models.Prices.findOne({symbol: 'TAU'})
 
-        let txBitData = res.data.tickers.find(f => f.market.name === "Txbit")
-        if (!txBitData) checkAgain()
+                if (!prices){
+                    prices = await new models.Prices({
+                        symbol: 'TAU',
+                    })
+                }
 
-        let prices = await models.Prices.findOne({symbol: 'TAU'})
+                prices.currentPrice = txBitData.converted_last.usd
+                prices.lastUpdated = new Date()
 
-        if (!prices){
-            prices = await new models.Prices({
-                symbol: 'TAU',
+                await prices.save()
+                checkAgain()
             })
-        }
+            .catch(() => checkAgain());
 
-        prices.currentPrice = txBitData.converted_last.usd
-        prices.lastUpdated = new Date()
 
-        await prices.save()
-        checkAgain()
     }
 
-    const checkAgain = () => setTimeout(updatePrice, 60000)
+    const checkAgain = () => setTimeout(updatePrice, 120000)
 
     return { updatePrice }
 }
