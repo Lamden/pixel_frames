@@ -1,5 +1,5 @@
 <script>
-    import { userAccount, showModal, released } from '../js/stores.js'
+    import { userAccount, showModal, released, tauPrice } from '../js/stores.js'
     import { stringToFixed, toBigNumber } from '../js/utils.js'
 
     // Pictures
@@ -13,6 +13,7 @@
     export let updateInfo
 
     $: price = toBigNumber(thingInfo.price_amount)
+    $: usdPrice = price.isGreaterThan(0) ? price.multipliedBy($tauPrice) : false
 
     const openModal = (modal) => {
         showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
@@ -37,6 +38,7 @@
     .price{
         align-items: center;
         justify-content: flex-end;
+        margin: 0.25rem 0;
     }
     .button_text{
         padding: 0 0 0 5px;
@@ -51,6 +53,10 @@
             display: block;
         }
 	}
+    span{
+        color: var(--gray-5);
+        margin-left: 4px;
+    }
 </style>
 
 <div class="flex-row price">
@@ -58,7 +64,7 @@
         <div class="icon">
             {@html lamden_logo}
         </div>
-        {stringToFixed(price, 8)}
+        {stringToFixed(price, 8)} {#if usdPrice && !usdPrice.isNaN()}<span>{` ($${stringToFixed(usdPrice, 2)})`}</span>{/if}
         {#if $userAccount}
             {#if thingInfo.owner !== $userAccount}
                 <button class="button_text" on:click={handleBuy}>buy!</button>

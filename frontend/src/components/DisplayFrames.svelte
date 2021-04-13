@@ -123,28 +123,24 @@
     a{
         text-decoration: underline;
     }
-    a.name{
-        align-self: center;
-
-    }
     .title{
         justify-content: space-between;
+        align-items: center;
+        margin: -0.5rem 0 0.25rem;
     }
     .title > a {
-        align-self: end;
-        color: var(--primary);
+        align-self: center;
+        color: var(--primary-dark);
         font-weight: bold;
         font-size: 0.8em;
-        margin: 0;
+        margin: -0.5rem 0 0;
         cursor: pointer;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     .icons{
-        margin: 0 0 0.5rem 8px;
-        align-items: center;
-        justify-content: flex-end;
+        margin: 0 0 0.5rem;
     }
     .icon{
         width: 20px;
@@ -154,10 +150,13 @@
 </style>
 <div class="title flex-row">
     <a href="{`./frames/${thingInfo.uid}`}" class="name">{thingInfo.name}</a>
-    <div class="icons text-color-gray-5 flex-row">
-        <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html artist}</a>
-        <a href="{`./owned/${thingInfo.owner}`}" class="icon">{@html owner}</a>
+    <div>
+        <Likes {thingInfo} />
     </div>
+</div>
+<div class="icons text-color-gray-5 flex-row">
+    <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html artist}</a>
+    <a href="{`./owned/${thingInfo.owner}`}" class="icon">{@html owner}</a>
 </div>
 
 <a href="{`./frames/${thingInfo.uid}`}">
@@ -166,9 +165,7 @@
     {/if}
 </a>
 <div class="flex-row buy-like">
-    <div>
-        <Likes {thingInfo} />
-    </div>
+
     <div>
         <Price {thingInfo} updateInfo={updateThingInfo}/>
     </div>

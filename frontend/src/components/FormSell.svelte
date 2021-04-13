@@ -17,11 +17,12 @@
 	const currentSellPrice = $showModal.modalData.thingInfo['price_amount']
     const thingName = $showModal.modalData.thingInfo['name']
 	const royalty_percent = $showModal.modalData.thingInfo['royalty_percent']
+	const thingInfo = $showModal.modalData.thingInfo
 
 	$: price = toBigNumber("0")
 	$: royaltyAmount = toBigNumber(price).multipliedBy(royalty_percent / 100)
 	$: netAmount = toBigNumber(price).minus(royaltyAmount)
-	$: isOwner = $showModal.modalData.thingInfo['owner'] === $showModal.modalData.thingInfo['creator']
+	$: isOwner = thingInfo.owner === thingInfo.creator
 
 	onMount(() => {
 		console.log($showModal.modalData.thingInfo)
