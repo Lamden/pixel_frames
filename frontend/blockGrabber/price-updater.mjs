@@ -1,11 +1,13 @@
 import CoinGecko from 'coingecko-api';
 const CoinGeckoClient = new CoinGecko();
 
+
+
 export const update_tau_price = (models) => {
     let coinName = "lamden"
 
     const updatePrice = async  () => {
-        let res = await CoinGeckoClient.coins.fetchTickers(coinName);
+        let res = await CoinGeckoClient.coins.fetchTickers(coinName).catch(() => checkAgain());
 
         let txBitData = res.data.tickers.find(f => f.market.name === "Txbit")
         if (!txBitData) checkAgain()

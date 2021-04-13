@@ -10,13 +10,13 @@ let API = new Lamden.Masternode_API({hosts: [config.masternode]})
 export const color_to_letter = {
     //BTW
     '#ffffff00': 'A',
-    'white': 'B',
+    '#ffffff': 'B',
     //Greys
     '#F5F5F5':'C',
     '#D4D4D4': 'D',
     '#A3A3A3': 'E',
     '#525252': 'F',
-    'black': 'G',
+    '#000000': 'G',
     //Reds
     '#FEE2E2':'H',
     '#FCA5A5':'I',
@@ -77,19 +77,18 @@ export const color_to_letter = {
     '#EC4899': 'x',
     '#BE185D': 'y',
     '#831843': 'z'
-
 }
 
 export const letter_to_color = {
     //BTW
     'A':'#ffffff00',
-    'B':'white',
+    'B':'#ffffff',
     //Greys
     'C':'#F5F5F5',
     'D':'#D4D4D4',
     'E' :'#A3A3A3',
     'F' :'#525252',
-    'G' :'black',
+    'G' :'#000000',
     //Reds
     'H' :'#FEE2E2',
     'I' :'#FCA5A5',
