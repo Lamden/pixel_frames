@@ -33,7 +33,7 @@
 	export let thingInfo
 	export let salesHistory
 
-	let gifURL = `${config.domainName}/dynamic/${thingInfo.uid}.gif`
+	let gifURL = `${config.domainName}/gif/${thingInfo.uid}.gif`
 	let pageURL = `${config.domainName}/frames/${thingInfo.uid}`
 
 	const updateThingInfo = (updates) => {

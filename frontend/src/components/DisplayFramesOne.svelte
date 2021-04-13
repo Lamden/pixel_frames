@@ -143,7 +143,7 @@
 <h1>{thingInfo.name}</h1>
 <div class="flex-row container">
     <div>
-        <a rel="prefetch noopener noreferrer" href="{'dynamic/'+ thingInfo.uid + '.gif'}" target="_blank">
+        <a rel="prefetch noopener noreferrer" href="{'gif/'+ thingInfo.uid + '.gif'}" target="_blank">
             {#if frames.length >= show}
                 <FrameCanvas {pixelSize} pixels={frames[show - 1]} id={thingInfo.id} watermark={createWatermark(thingInfo, $userAccount)} />
             {/if}

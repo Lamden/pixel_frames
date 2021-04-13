@@ -79,12 +79,12 @@
         {:else}
             <h3>Share Link:</h3>
             <div class="flex-row link-row">
-                <input value={`${window.location.origin}/dynamic/${ownerShareLink}.gif`} />
-                <CopyButton width="20px" textToCopy={`${window.location.origin}/dynamic/${ownerShareLink}.gif`}/>
+                <input value={`${window.location.origin}/gif/${ownerShareLink}.gif`} />
+                <CopyButton width="20px" textToCopy={`${window.location.origin}/gif/${ownerShareLink}.gif`}/>
             </div>
             <div class="flex-row flex-justify-end">
                 <a class="button_text small"
-                   href="{`${window.location.origin}/dynamic/${ownerShareLink}.gif`}"
+                   href="{`${window.location.origin}/gif/${ownerShareLink}.gif`}"
                    download="{`${thingInfo.name}.gif`}">
                     download file
                 </a>

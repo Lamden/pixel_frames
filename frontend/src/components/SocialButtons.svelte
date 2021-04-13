@@ -6,9 +6,9 @@
 
     let twitter_url = `${config.domainName}/frames/${thingInfo.uid}`
     let facebook_url = `${config.domainName}/frames/${thingInfo.uid}`
-    let telegram_url = `${config.domainName}/dynamic/${thingInfo.uid}.gif`
+    let telegram_url = `${config.domainName}/gif/${thingInfo.uid}.gif`
     let whatsapp_url = `${config.domainName}/frames/${thingInfo.uid}`
-    let reddit_url = `${config.domainName}/dynamic/${thingInfo.uid}.gif`
+    let reddit_url = `${config.domainName}/gif/${thingInfo.uid}.gif`
     let description = thingInfo.description
     let title = thingInfo.name
 

@@ -1,7 +1,7 @@
 import polka from 'polka';
 import crypto from 'crypto'
 import sirv from 'sirv';
-let dynamic = sirv('dynamic');
+let dynamicGIF = sirv('gif');
 import * as sapper from '@sapper/server';
 import Lamden from 'lamden-js'
 

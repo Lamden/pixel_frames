@@ -7,7 +7,7 @@ process.env.FONTCONFIG_PATH = '/etc/fonts'
 registerFont('../frontend/src/fonts/Roboto-Medium.ttf', { family: 'Roboto' })
 import { config } from './config'
 
-const dynamicRequest = /\/dynamic\/(\w+.gif)$/
+const dynamicRequest = /\/gif\/(\w+.gif)$/
 
 export const createGIF = async  (req, res, next) => {
   	let pathMatch = req.path.match(dynamicRequest)
