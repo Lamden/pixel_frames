@@ -19,20 +19,8 @@
 			alert('You must be signed into the Lamden Wallet to upload your NFT to the blockchain.')
 			return
 		}
-		if ($released){
-			showModal.set({modalData: {modal: FormCreate, created}, show: true})
-		}else{
-			fetch(`./checkWhitelistArtists.json?artist=${$userAccount}`)
-				.then(res => res.json())
-				.then(isWhitelisted => {
-					console.log(isWhitelisted)
-					if (isWhitelisted) showModal.set({modalData: {modal: FormCreate, created}, show: true})
-					else alert('Only whitelisted artists can upload NFTs before release.  Email jeff@lamden.io to apply.')
-				})
-		}
+		showModal.set({modalData: {modal: FormCreate, created}, show: true})
 	}
-
-
 
 </script>
 

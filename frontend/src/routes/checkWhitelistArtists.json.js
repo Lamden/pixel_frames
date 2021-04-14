@@ -5,7 +5,6 @@ export async function get(req, res) {
 
     console.log(__dirname)
     var whitelist = JSON.parse(fs.readFileSync('./src/js/whitelist.json', 'utf8'));
-    console.log(whitelist)
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(whitelist.artists.includes(artist)));
