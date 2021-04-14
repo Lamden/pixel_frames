@@ -67,7 +67,6 @@
 
             frameStore.update(currentValue => {
                 currentValue.splice(oldIndex, 1)
-                console.log({currentValue})
                 return currentValue
             })
 			let stateChange = txResults.data.txBlockResult.state.find(f => f.key.includes(':names:'))

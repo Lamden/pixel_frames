@@ -97,14 +97,11 @@ export const activeFrame = (() => {
         }
         store.set(activeFrame)
 
-        console.log({activeFrame})
-
         store.subscribe(current => {
             let currentLsValue = localStorage.getItem('active_frame')
             if (!currentLsValue) currentLsValue = null
             else currentLsValue = JSON.parse(currentLsValue)
 
-            console.log({current, currentLsValue})
             if (current !== currentLsValue) {
                 localStorage.setItem('active_frame',current)
             }
@@ -126,13 +123,10 @@ export const currentTool = (() => {
         let lsToolValue = localStorage.getItem('current_tool')
         if (lsToolValue) store.set(lsToolValue)
 
-        console.log({lsToolValue})
-
         store.subscribe(current => {
             let currentLsValue = localStorage.getItem('current_tool')
             if (!currentLsValue) currentLsValue = null
 
-            console.log({current, currentLsValue})
             if (current !== currentLsValue) {
                 localStorage.setItem('current_tool', current)
             }
@@ -155,13 +149,10 @@ export const brushSize = (() => {
         if (!lsValue) lsValue = 1
         if (lsValue) store.set(parseInt(lsValue))
 
-        console.log({lsValue})
-
         store.subscribe(current => {
             let currentLsValue = localStorage.getItem('brush_size')
             if (!currentLsValue) currentLsValue = null
 
-            console.log({current, currentLsValue})
             if (current !== currentLsValue) {
                 localStorage.setItem('brush_size', current)
             }

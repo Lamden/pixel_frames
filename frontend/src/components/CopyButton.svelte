@@ -8,7 +8,6 @@
 
     const handleClick = () => {
         copyToClipboard(textToCopy, () => {
-            console.log("COPIED")
             color = "var(--color-success)"
             setTimeout(() => color = "var(--primary)", 3000)
         })

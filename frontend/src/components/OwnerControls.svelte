@@ -16,12 +16,9 @@
 
     const openModal = (modal) => {
         showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
-        console.log(window.location)
     }
 
     const updateInfo = (update) => {
-        console.log("UPDATE INFO")
-        console.log(update)
         storeLinkInLS(update.shareLink)
         ownerShareLink = getShareLink(thingInfo)
     }

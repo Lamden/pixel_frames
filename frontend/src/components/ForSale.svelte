@@ -38,10 +38,7 @@
 		sending = true;
 		const res = await fetch(`./forsale.json?limit=25&offset=${formatted.length}`)
 		let things = await res.json()
-
-		console.log({res, things})
-
-		if (!things) return
+		
 		if (!things.data) return
 
 		sending = false;

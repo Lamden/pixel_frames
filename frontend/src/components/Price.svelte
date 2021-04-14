@@ -20,7 +20,6 @@
     }
 
     const handleBuy = () => {
-        console.log($released)
         if ($released){
             openModal(FormBuy)
         }else{

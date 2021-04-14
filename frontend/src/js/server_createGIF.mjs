@@ -43,7 +43,6 @@ export const createGIF = async  (req, res, next) => {
 }
 
 function createAndSendGIF2(res, thingInfo, shareLink = false) {
-    console.log("CREATING NEW")
     res.setHeader('Content-Type', 'image/gif')
     //if (req.headers['user-agent'].includes('facebookexternalhit')) res.setHeader('Content-Encoding', 'gzip')
 

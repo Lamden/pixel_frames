@@ -33,7 +33,6 @@
     const changeColor = (index, button) => {
         let color = $currentColor[button]
         if (!color) {
-            console.log({index, color})
             return
         }
         frameStore.update(currentValue => {

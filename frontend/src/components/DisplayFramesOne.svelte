@@ -31,7 +31,6 @@
     $: show = 1
 
     onMount(() => {
-        console.log(salesHistory)
         checkAlreadyLiked()
         switcher = setInterval(switchFrames, thingInfo.speed)
         return (() => clearInterval((switcher)))

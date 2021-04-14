@@ -25,8 +25,6 @@
 	$: isOwner = thingInfo.owner === thingInfo.creator
 
 	onMount(() => {
-		console.log($showModal.modalData.thingInfo)
-		console.log(currentSellPrice)
 		inputElm.value = toBigNumber(stringToFixed(currentSellPrice, 8))
 		price = toBigNumber(inputElm.value)
 	})

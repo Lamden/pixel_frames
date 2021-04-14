@@ -6,8 +6,6 @@
     const handleClick = () => {
         frameStore.update(currentValue => {
             let newList = currentValue.unshift(newPixelFrame())
-            console.log(newList)
-            console.log({currentValue})
             activeFrame.set(0)
             return currentValue
         })

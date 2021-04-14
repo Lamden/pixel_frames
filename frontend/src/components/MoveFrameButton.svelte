@@ -10,14 +10,12 @@
 
 
     const handleClick = () => {
-        console.log(index)
         if (direction === "left" && !firstFrame) moveArrayItemToNewIndex(index, index - 1)
         if (direction === "right" && !lastFrame) moveArrayItemToNewIndex(index, index + 1)
     }
 
     const moveArrayItemToNewIndex = async (old_index, new_index) => {
         frameStore.update(currentValue => {
-            console.log({currentValue, currentActiveFrame: currentValue[$activeFrame], old_index, new_index, currLength: currentValue[$activeFrame].frames.length})
             if (new_index >= currentValue[$activeFrame].frames.length) {
                 var k = new_index - currentValue[$activeFrame].frames.length + 1;
                 while (k--) {

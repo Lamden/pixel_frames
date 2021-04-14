@@ -19,8 +19,6 @@ export async function get(req, res, next) {
 		.aggregate([facet])
 		.collation(collation)
 
-	console.log({data: things[0].data, count: things[0].count.length, limit, offset})
-
 	res.setHeader('Content-Type', 'application/json');
 	res.end(JSON.stringify({data: things[0].data, count: things[0].count.length}));
 }

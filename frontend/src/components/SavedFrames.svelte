@@ -1,19 +1,10 @@
 <script>
-    import { onMount } from 'svelte'
-
     // Components
     import Preview from './Preview.svelte'
     // MISC
     import { frameStore, activeFrame } from '../js/stores'
 
-    onMount(() => {
-        console.log(activeFrame)
-        console.log({activeFrame: $activeFrame})
-        console.log({frameStore: $frameStore})
-    })
-
     const handleLoad = (index) => {
-        console.log(index)
         activeFrame.set(index)
     }
 
@@ -26,7 +17,6 @@
 
             frameStore.update(currentValue => {
                 currentValue.splice(index, 1)
-                console.log({currentValue})
                 return currentValue
             })
         }

@@ -51,9 +51,6 @@
     			let new_thing_info = await fetch(`./frames/${txResults.data.txInfo.kwargs.uid}.json`)
 					.then(res => res.json())
 					.catch(() => resolve(false))
-				console.log(new_thing_info)
-				console.log(new_thing_info.lastUpdate)
-				console.log(new_thing_info.lastUpdate > sendTime)
 				if (new_thing_info.lastUpdate > sendTime) resolve(new_thing_info)
 				else {
 					tries = tries + 1
@@ -71,7 +68,6 @@
 				"owner": recipient.trim()
 			})
         	let newThingInfo = await checkForUpdate()
-			console.log(newThingInfo)
 			if (!newThingInfo) return
 
         	updateInfo(newThingInfo)

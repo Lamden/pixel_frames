@@ -20,7 +20,6 @@
 
     const proveOwnership = async () => {
 		let authCodeInfo = await fetch(`./get-code.json?uid=${$showModal.modalData.thingInfo.uid}`).then(res => res.json())
-		console.log({authCodeInfo_proveOwnership: authCodeInfo})
 		if (!authCodeInfo || !authCodeInfo.code) {
 			createSnack({
 				title: `Error`,
@@ -48,8 +47,6 @@
     	console.log(txResults)
 		if (txResults.data.txBlockResult.status === 0) {
 			let authResponse = await checkForValidAuth()
-			console.log("DONE AWAITING")
-			console.log({authResponse})
 			if (authResponse.error){
 				createSnack({
 					title: `Cannot delete share link!`,
@@ -71,17 +68,14 @@
     	const maxChecks = 15;
     	let checks = 0;
     	const check = async () => {
-    		console.log("CHECKING!")
     		checks = checks + 1
     		let res = await fetch(`./delete_share_link.json?uid=${uid}&challenge=${challenge}`).then(res => res.json())
-			console.log({res, checks, maxChecks, doneChecking: checks === maxChecks })
 			if (res.deleted) return resolver(res)
 			if (res.error === "Challenge not accepted.") return resolver(res)
 			if (res.error === "Unknown Error. Code was not deleted!") return resolver(res)
 			if (res.error === "Auth Code not valid." && checks === maxChecks) return resolver(res)
 			if (checks === maxChecks) return resolver({error: "Unknown Error."})
 			else {
-				console.log("CHECKING AGAIN!")
 				setTimeout(check, 2000)
 			}
 		}

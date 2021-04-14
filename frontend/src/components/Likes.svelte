@@ -27,7 +27,6 @@
     })
 
     const checkAlreadyLiked = () => {
-        console.log({liked, $userAccount})
         if (liked === null && $userAccount)  alreadyLiked(thingInfo.uid).then(res => liked = res)
     }
 
