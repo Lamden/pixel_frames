@@ -38,9 +38,16 @@
 		sending = true;
 		const res = await fetch(`./forsale.json?limit=25&offset=${formatted.length}`)
 		let things = await res.json()
-		if (!things.data) things.data = []
+
+		console.log({res, things})
+
+		if (!things) return
+		if (!things.data) return
+
 		sending = false;
-		formatted = dedupArray([...formatted, ...formatThings(data.data)])
+
+		formatted = dedupArray([...formatted, ...formatThings(things.data)])
+
 		if (things.count) count = things.count
 	}
 
