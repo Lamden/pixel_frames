@@ -30,7 +30,7 @@
 
     const give = () => {
 		const transaction = {
-			methodName: 'give_thing',
+			methodName: 'transfer',
 			networkType: config.networkType,
 			kwargs: {
 				uid: $showModal.modalData.thingInfo.uid,
