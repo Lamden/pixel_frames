@@ -126,9 +126,9 @@
              X
         </div>
         <div class="color"
-             style={`background: white`}
-             on:click={e => changePrimary(e, color_to_letter['white'])}
-             on:contextmenu|preventDefault={e => changeSecondary(e, color_to_letter['white'])}>
+             style={`background: #ffffff`}
+             on:click={e => changePrimary(e, color_to_letter['#ffffff'])}
+             on:contextmenu|preventDefault={e => changeSecondary(e, color_to_letter['#ffffff'])}>
         </div>
     </div>
 
