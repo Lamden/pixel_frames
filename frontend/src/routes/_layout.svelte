@@ -20,7 +20,7 @@
 
 	// Misc
 	import { config, stampLimits } from '../js/config.js';
-	import { walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice, released, approvalAmount, timeToRelease } from '../js/stores.js';
+	import { walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice, approvalAmount } from '../js/stores.js';
 	import {processTxResults, createSnack, refreshTAUBalance, checkForApproval, stringToFixed, toBigNumber} from '../js/utils.js';
 
 
@@ -29,7 +29,6 @@
 	let lastCurrencyCheck = new Date()
 
 	onMount(() => {
-		checkRelease()
 		lwc = new WalletController(approvalRequest)
 		lwc.events.on('newInfo', handleWalletInfo)
 		lwc.events.on('txStatus', handleTxResults)
@@ -58,23 +57,6 @@
 		}
 		if (!$stampRatio) fetchStampRatio();
 	})
-
-	const checkRelease = () => {
-		let releaseDateTime = Date.UTC(2021, 3, 19, 22)
-		fetch('./checkRelease.json')
-			.then(res => res.json())
-			.then(isReleased => {
-				if (isReleased)
-				released.set(isReleased)
-				timeToRelease
-				if (isReleased) return
-				else {
-					timeToRelease.set(releaseDateTime - new Date())
-					setTimeout(checkRelease, 1000)
-				}
-			})
-	}
-
 
 	const fetchStampRatio = () => {
 		fetch(`./stampRatio.json`)

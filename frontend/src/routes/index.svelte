@@ -24,27 +24,11 @@
 	import Recent from '../components/Recent.svelte';
 	import ForSale from '../components/ForSale.svelte';
 
-	// Misc
-	import { released, timeToRelease } from '../js/stores'
 
 	export let mostLiked;
 	export let recent;
 	export let forsale;
 
-	const formatTime = (timestamp) => {
-		const seconds = timestamp / 1000
-		const minutes = timestamp / 1000 / 60
-		const hours = timestamp / 1000 / 60 / 60
-
-		if (parseInt(hours) > 0) {
-			return `
-			${parseInt(hours)} ${parseInt(hours) > 1 ? 'hours' : 'hour'}!`
-		}
-		if (parseInt(minutes) > 0){
-			return `${parseInt(minutes)} ${parseInt(minutes) > 1 ? 'minutes' : 'minute'}!`
-		}
-		return `${parseInt(seconds)} ${parseInt(seconds) > 1 ? 'seconds' : 'second'}!`
-	}
 
 </script>
 
@@ -76,13 +60,9 @@
 	<title>Pixel Whale: On-chain NFT Animations!</title>
 </svelte:head>
 
-{#if !$released}
-	<p class="release-date">Official Release <strong>TODAY</strong> in {formatTime($timeToRelease)}</p>
-{/if}
 <div class="hide-mobile">
 	<Title fontSize={8} showFullLogo={true}/>
 </div>
-
 
 <div class="mobile-message">
 	<strong>This site is not mobile optimized.</strong>>
