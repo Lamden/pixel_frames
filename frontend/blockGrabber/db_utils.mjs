@@ -187,9 +187,11 @@ export const getDbUtils = (config) => {
         pixel_frame.lastSaleDate = new Date(metadata.timestamp * 1000)
         await pixel_frame.save()
 
-        try{
-            pusher.link("", `Sale - ${priceBN.toFixed(8)}`, `https://www.pixelwhale.io/frames/${uid}`);
-        }catch (e) {}
+        if (payload.function !== "transfer" && payload.function !== "transfer_from"){
+            try{
+                pusher.link("", `Sale - ${priceBN.toFixed(8)}`, `https://www.pixelwhale.io/frames/${uid}`);
+            }catch (e) {}
+        }
     }
 
     const update_auth_codes = async (transactionInfo) => {
