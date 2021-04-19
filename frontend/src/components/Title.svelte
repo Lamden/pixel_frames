@@ -57,6 +57,7 @@
 	img{
 		position: relative;
 		width: 13%;
+		height: 13$;
 	}
 
 
