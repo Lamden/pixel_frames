@@ -285,11 +285,11 @@ export const checkForApproval = async () => {
     ]
     const res = await blockexplorer_api.getKeys(keyList)
     let approval = res[`currency.balances:${keyList[0].key}`]
-    console.log({approval: JSON.parse(JSON.stringify(approval))})
+
     if (approval === null ) approval = toBigNumber(0)
     else approval = toBigNumber(approval)
     approvalAmount.set(approval)
-    console.log({approval: approval.toString()})
+
     return approval
 }
 
