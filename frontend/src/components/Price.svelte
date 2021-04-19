@@ -27,7 +27,7 @@
             if ($released){
                 openModal(FormBuy)
             }else{
-                alert('Buying will be enabled when Pixel Whale releases, April 19th @ 8pm UTC.')
+                alert('Buying will be enabled when Pixel Whale releases, April 19th @ 10pm UTC.')
             }
         }
 
