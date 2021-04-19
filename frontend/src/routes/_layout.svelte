@@ -11,26 +11,25 @@
 	import Nav from '../components/Nav.svelte';
 	import {onMount, beforeUpdate, setContext} from 'svelte';
 	import WalletController from 'lamden_wallet_controller';
-	import {walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice, released} from '../js/stores.js';
-	import {processTxResults, createSnack, refreshTAUBalance, checkForApproval} from '../js/utils.js';
-	import { config, stampLimits } from '../js/config.js';
+
+
 	import {approvalRequest} from '../js/wallet_approval';
 	import Snackbar from "../components/Snackbar.svelte";
 	import Modal from "../components/Modal.svelte";
 	import CreatedWithLove from "../components/CreatedWithLove.svelte";
 
+	// Misc
+	import { config, stampLimits } from '../js/config.js';
+	import { walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice, released, approvalAmount, timeToRelease } from '../js/stores.js';
+	import {processTxResults, createSnack, refreshTAUBalance, checkForApproval, stringToFixed, toBigNumber} from '../js/utils.js';
+
+
 	export let segment;
 	let lwc;
 	let lastCurrencyCheck = new Date()
-	let fetchingStamps = false;
 
 	onMount(() => {
-		fetch('./checkRelease.json')
-			.then(res => res.json())
-			.then(isReleased => {
-				released.set(isReleased)
-			})
-
+		checkRelease()
 		lwc = new WalletController(approvalRequest)
 		lwc.events.on('newInfo', handleWalletInfo)
 		lwc.events.on('txStatus', handleTxResults)
@@ -57,18 +56,30 @@
 		if (lwc) {
 			if (!$userAccount && lwc.walletAddress) userAccount.set(lwc.walletAddress)
 		}
-		if (!$stampRatio) fetchStamps();
+		if (!$stampRatio) fetchStampRatio();
 	})
 
-	const fetchStamps = () => {
-		if (fetchingStamps) return
-		fetchingStamps = true;
-		fetch(`${config.blockExplorer}/api/lamden/stamps`)
+	const checkRelease = () => {
+		let releaseDateTime = Date.UTC(2021, 3, 19, 22)
+		fetch('./checkRelease.json')
+			.then(res => res.json())
+			.then(isReleased => {
+				if (isReleased)
+				released.set(isReleased)
+				timeToRelease
+				if (isReleased) return
+				else {
+					timeToRelease.set(releaseDateTime - new Date())
+					setTimeout(checkRelease, 1000)
+				}
+			})
+	}
+
+
+	const fetchStampRatio = () => {
+		fetch(`./stampRatio.json`)
 				.then(res => res.json())
-				.then(res => {
-					if (res.value) stampRatio.set(parseInt(res.value))
-					fetchingStamps = false;
-				})
+				.then(res => stampRatio.set(res.currentRatio))
 	}
 
 	setContext('app_functions', {
@@ -80,14 +91,19 @@
 
 	const sendTransaction = (transaction, callback) => {
 		let usersStamps = determineUsersTotalStamps()
+		let contractName = transaction.contractName || config.masterContract
 		let stampsToSendTx = transaction.stampLimit;
-		if (!stampsToSendTx) stampsToSendTx = stampLimits[config.masterContract][transaction.methodName]
-		console.log({transaction, usersStamps, stampsToSendTx})
+		if (!stampsToSendTx) stampsToSendTx = stampLimits[contractName][transaction.methodName]
+		console.log({transaction, contractName, usersStamps, stampsToSendTx})
 		if (usersStamps < stampsToSendTx){
 			createSnack({
                 title: `Insufficient ${config.currencySymbol}`,
-                body: `You do not have enough ${config.currencySymbol} to send this transaction. Send more ${config.currencySymbol} to your Pixel Whale account.`,
-                type: "error"
+                body: `
+					It will cost ${stringToFixed(toBigNumber(stampsToSendTx / $stampRatio), 4)} ${config.currencySymbol} to send this transaction.
+					Please transfer more ${config.currencySymbol} to your Pixel Whale account using the Lamden Wallet.
+                `,
+                type: "error",
+				delay: 7000
             })
 		}else{
 			transaction.stampLimit = stampsToSendTx

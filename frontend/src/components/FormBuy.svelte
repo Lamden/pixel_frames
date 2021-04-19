@@ -2,9 +2,9 @@
     import { getContext } from 'svelte'
 
 	// Misc
-	import { frames, showModal, currency, userAccount, approvalAmount } from '../js/stores.js'
-	import { createSnack, checkForApproval, closeModel } from '../js/utils.js'
-	import { config } from '../js/config.js'
+	import { frames, showModal, currency, userAccount, approvalAmount, stampRatio } from '../js/stores.js'
+	import { createSnack, checkForApproval, closeModel, toBigNumber, stringToFixed } from '../js/utils.js'
+	import { config, stampLimits } from '../js/config.js'
 
 	// Components
 	import Preview from './Preview.svelte'
@@ -14,8 +14,20 @@
 	const updateInfo = $showModal.modalData.updateInfo
 
 	const uid = $showModal.modalData.thingInfo.uid
-	const price = parseFloat($showModal.modalData.thingInfo['price_amount'])
+	const price = toBigNumber($showModal.modalData.thingInfo['price_amount'])
+	const approvalTxStamps_to_tau = price.isGreaterThan(toBigNumber($approvalAmount)) ? toBigNumber(stampLimits.currency.approve).dividedBy($stampRatio) : toBigNumber(0)
+	const buyTxStamps_to_tau = toBigNumber(stampLimits[config.masterContract].buy_thing).dividedBy($stampRatio)
+	const total_tx_fees = approvalTxStamps_to_tau.plus(buyTxStamps_to_tau)
+	const total_tau_to_buy = price.plus(total_tx_fees)
 	const thingName = $showModal.modalData.thingInfo['name']
+
+	console.log({
+		price: price.toString(),
+		approvalTxStamps_to_tau: approvalTxStamps_to_tau.toString(),
+		buyTxStamps_to_tau: buyTxStamps_to_tau.toString(),
+		total_tx_fees: total_tx_fees.toString(),
+		total_tau_to_buy: total_tau_to_buy.toString()
+	})
 
     const buy = () => {
 		const transaction = {
@@ -46,10 +58,12 @@
 	}
 
 	const checkPrice = () => {
-    	if ($currency <=  price){
+    	if (total_tau_to_buy.isGreaterThan($currency)){
 			createSnack({
-                title: `Insufficient Funds ${config.currencySymbol}`,
-                body: `You do not have enough ${config.currencySymbol} to complete this transfer.`,
+                title: `Insufficient ${config.currencySymbol}`,
+                body: `
+                	You need ${stringToFixed(total_tau_to_buy, 4)} ${config.currencySymbol} to buy this.
+                	 ${stringToFixed(price, 4)} ${config.currencySymbol} plus ${stringToFixed(total_tau_to_buy, 4)} ${config.currencySymbol} for tx fees.`,
                 type: "error"
             })
 		}else{
@@ -59,12 +73,12 @@
 
 	const approveAndSend = async () => {
 		checkForApproval().then((value) => {
-			console.log(value)/*
+			console.log(value)
 			if (value.isLessThan(price)){
 				approveBuy();
 			}else{
 				buy();
-			}*/
+			}
 		})
 	}
 
@@ -113,23 +127,34 @@
 
 	}
 </style>
+
 {#if $showModal.modalData.thingInfo}
-<div class="flex-row">
-	<div class="flex-col preview-row">
-		{#if $showModal.modalData.thingInfo}
-			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
-		{/if}
-		{#if $currency > $showModal.modalData.thingInfo['price_amount']}
-			<input type="submit" class="button_text outlined" value={`Buy For ${$showModal.modalData.thingInfo['price_amount']} ${config.currencySymbol}`} form="buy" />
-		{:else}
-			<p class="button_text outlined insufficient">Insufficient {config.currencySymbol}</p>
-		{/if}
+	<div class="flex-row">
+		<div class="flex-col preview-row">
+			{#if $showModal.modalData.thingInfo}
+				<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
+			{/if}
+			<input
+				type="submit"
+				class="button_text outlined"
+				disabled={total_tau_to_buy.isGreaterThan($currency)}
+				value={total_tau_to_buy.isGreaterThan($currency) ?
+					`Insufficient ${config.currencySymbol}` :
+					`Buy For ${stringToFixed(total_tau_to_buy, 4)} ${config.currencySymbol}`
+				} form="buy" />
+		</div>
+		<form id="buy" class="flex-col" on:submit|preventDefault={checkPrice}>
+			<label for="name">Name</label>
+			<input id="name" type="text" readonly value={$showModal.modalData.thingInfo.name}/>
+			<label for="desc">Description</label>
+			<textarea id="desc" type="textarea" rows="8" readonly value={$showModal.modalData.thingInfo.description}/>
+			<div class="tx-costs">
+				<p>Transaction Cost</p>
+				<strong>{`${stringToFixed(total_tx_fees, 4)} ${config.currencySymbol}`}</strong>
+				<p>Total Cost</p>
+				<strong>{`${stringToFixed(total_tau_to_buy, 4)} ${config.currencySymbol}`}</strong>
+			</div>
+
+		</form>
 	</div>
-	<form id="buy" class="flex-col" on:submit|preventDefault={checkPrice}>
-		<label for="name">Name</label>
-		<input id="name" type="text" readonly value={$showModal.modalData.thingInfo.name}/>
-		<label for="desc">Description</label>
-		<textarea id="desc" type="textarea" rows="8" readonly value={$showModal.modalData.thingInfo.description}/>
-	</form>
-</div>
 {/if}

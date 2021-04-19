@@ -2,9 +2,9 @@
     import { getContext } from 'svelte'
 
 	// Misc
-	import { frames, showModal } from '../js/stores.js'
-	import { createSnack, closeModel, isLamdenKey } from '../js/utils.js'
-	import { config } from '../js/config.js';
+	import { frames, showModal, stampRatio, currency } from '../js/stores.js'
+	import { createSnack, closeModel, isLamdenKey, toBigNumber, stringToFixed } from '../js/utils.js'
+	import { config, stampLimits } from '../js/config.js';
 
     // Components
 	import Preview from './Preview.svelte'
@@ -13,12 +13,15 @@
 
 	const updateInfo = $showModal.modalData.updateInfo
     const thingName = $showModal.modalData.thingInfo['name']
+	const transferTxStamps_to_tau = toBigNumber(stampLimits[config.masterContract].transfer).dividedBy($stampRatio)
 
 	let recipient = ""
 	let inputElm
 	let sendTime
 
-	const checkRecipient = () => {
+	const checkRecipient = (e) => {
+		console.log(e.target)
+		console.log(!isLamdenKey(recipient.trim()))
 		if (!isLamdenKey(recipient.trim())) inputElm.setCustomValidity("Not a proper Lamden Address")
 		else {
 			inputElm.setCustomValidity("")
@@ -78,6 +81,11 @@
 			})
 		}
     }
+    const clearValidity = () => {
+		console.log("clear")
+		inputElm.setCustomValidity("")
+		inputElm.reportValidity("")
+	}
 </script>
 
 <style>
@@ -91,7 +99,9 @@
 		background: var(--primary-dark);
 		color: var(--gray-2);
 	}
-
+	input[type="text"]{
+		margin-bottom: 1rem;
+	}
 </style>
 
 <div class="flex-row">
@@ -99,10 +109,16 @@
 		{#if $showModal.modalData.thingInfo}
 			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
 		{/if}
-		<input type="submit" class="button_text outlined" value="Gift Item" form="give" />
+		<input type="submit" class="button_text outlined" disabled={transferTxStamps_to_tau.isGreaterThan($currency)}
+			   value={transferTxStamps_to_tau.isGreaterThan($currency) ? `Insufficient ${config.currencySymbol}`: "Gift Item"}
+			   form="give" />
 	</div>
 	<form id="give" class="flex-col" on:submit|preventDefault={checkRecipient}>
 		<label for="recipient">Who would you like to Gift this to?</label>
-		<input id="recipient" type="text" required bind:value={recipient} bind:this={inputElm}/>
+		<input id="recipient" type="text" required bind:value={recipient} bind:this={inputElm} on:input={clearValidity}/>
+		<div class="tx-costs">
+			<p>Transaction Cost</p>
+			<strong>{`${stringToFixed(transferTxStamps_to_tau, 4)} ${config.currencySymbol}`}</strong>
+		</div>
 	</form>
 </div>

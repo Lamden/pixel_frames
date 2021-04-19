@@ -2,9 +2,9 @@
     import { getContext, onMount } from 'svelte'
 
 	// Misc
-	import { frames, showModal } from '../js/stores.js'
+	import { frames, showModal, stampRatio, currency } from '../js/stores.js'
 	import { createSnack, closeModel, toBigNumber, stringToFixed } from '../js/utils.js'
-	import { config } from '../js/config.js';
+	import { config, stampLimits } from '../js/config.js';
 
 	// Components
 	import Preview from './Preview.svelte'
@@ -18,6 +18,9 @@
     const thingName = $showModal.modalData.thingInfo['name']
 	const royalty_percent = $showModal.modalData.thingInfo['royalty_percent']
 	const thingInfo = $showModal.modalData.thingInfo
+
+	const sellTxStamps_to_tau = toBigNumber(stampLimits[config.masterContract].sell_thing).dividedBy($stampRatio)
+
 
 	$: price = toBigNumber("0")
 	$: royaltyAmount = toBigNumber(price).multipliedBy(royalty_percent / 100)
@@ -75,6 +78,9 @@
 	label{
 		font-weight: 600;
 	}
+	input[type="number"]{
+		margin-bottom: 1rem;
+	}
 	.preview-row{
 		text-align: center;
 	}
@@ -85,16 +91,14 @@
 		background: var(--primary-dark);
 		color: var(--gray-2);
 	}
-	p{
+	.royalty-calcs > p{
 		color: var(--color-white-primary-tint);
 		margin: 1rem 0 0 ;
 		font-weight: 600;
 	}
-	strong {
+	.royalty-calcs > strong {
 		color: var(--primary-dark);
 		font-weight: 600;
-		font-size: 1.3em;
-		margin-left: 8px;
 	}
 
 </style>
@@ -104,20 +108,32 @@
 		{#if $showModal.modalData.thingInfo}
 			<Preview frames={$showModal.modalData.thingInfo.frames} pixelSize={15} thingInfo={$showModal.modalData.thingInfo} />
 		{/if}
-		<input type="submit" class="button_text outlined" value="List NFT!" form="sell" disabled="{price.isLessThanOrEqualTo(0) || price.isEqualTo(currentSellPrice)}"/>
+		<input
+			type="submit"
+			form="sell"
+			class="button_text outlined"
+			disabled={sellTxStamps_to_tau.isGreaterThan($currency) && (price.isLessThanOrEqualTo(0) || price.isEqualTo(currentSellPrice))}
+			value={sellTxStamps_to_tau.isGreaterThan($currency) ? `Insufficient ${config.currencySymbol}`: "List NFT!"}
+		/>
 	</div>
 	<div class="flex-col">
 		<form id="sell" class="flex-col" on:submit|preventDefault={sell}>
 			<label for="price">How much does this NFT cost?</label>
 			<input id="price" type="number" step="0.1" required bind:this={inputElm} on:input={handleInput}/>
+			<div class="tx-costs">
+				<p>Transaction Cost</p>
+				<strong>{`${stringToFixed(sellTxStamps_to_tau, 4)} ${config.currencySymbol}`}</strong>
+			</div>
 
-		{#if !isOwner}
-			<p>Royalty Percentage </p>
-			<strong>{royalty_percent}%</strong>
-			<p>Royalty Amount </p>
-			<strong>{`${stringToFixed(royaltyAmount, 8)} ${config.currencySymbol}`}</strong>
-			<p>You Get </p>
-			<strong>{`${stringToFixed(netAmount, 8)} ${config.currencySymbol}`}</strong>
+		{#if isOwner}
+			<div class="royalty-calcs">
+				<p>Royalty Percentage </p>
+				<strong>{royalty_percent}%</strong>
+				<p>Royalty Amount </p>
+				<strong>{`${stringToFixed(royaltyAmount, 8)} ${config.currencySymbol}`}</strong>
+				<p>You Get </p>
+				<strong>{`${stringToFixed(netAmount, 8)} ${config.currencySymbol}`}</strong>
+			</div>
 		{/if}
 		</form>
 	</div>

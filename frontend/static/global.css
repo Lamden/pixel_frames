@@ -366,6 +366,17 @@ input[type="range"]:focus::-ms-fill-upper {
   background:  var(--primary);
 }
 
+.tx-costs > p{
+	color: var(--color-white-primary-tint);
+	margin: 0;
+	font-weight: 600;
+}
+.tx-costs > strong {
+	color: var(--primary-dark);
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
 @media (min-width: 400px) {
 	body {
 		font-size: 16px;

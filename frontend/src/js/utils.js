@@ -237,9 +237,9 @@ export const framesEmpty = (frames) => {
 }
 
 export const createSnack = (snackInfo) => {
-    const { type, title, body } = snackInfo;
+    const { type, title, body, delay } = snackInfo;
     snackbars.update(curr => {
-        let snack = { type, time: new Date().getTime(), title, body }
+        let snack = { type, time: new Date().getTime(), title, body, delay: delay || 5000 }
         return [...curr, snack]
     })
 }
@@ -284,17 +284,17 @@ export const checkForApproval = async () => {
         }
     ]
     const res = await blockexplorer_api.getKeys(keyList)
-    let data = valuesToBigNumber(res)
-    let approval = data[`currency.balances:${keyList[0].key}`]
+    let approval = res[`currency.balances:${keyList[0].key}`]
+    console.log({approval: JSON.parse(JSON.stringify(approval))})
     if (approval === null ) approval = toBigNumber(0)
+    else approval = toBigNumber(approval)
     approvalAmount.set(approval)
+    console.log({approval: approval.toString()})
     return approval
 }
 
 export const needsApproval = async () => {
     let approval = await checkForApproval()
-
-
 }
 
 export const sha256 = async (message) => {

@@ -84,6 +84,12 @@ var prices = new mongoose.Schema({
     lastUpdated: Date
 })
 
+var stampRatio = new mongoose.Schema({
+    symbol: String,
+    currentRatio: Number,
+    lastUpdated: Date
+})
+
 var Blocks = mongoose.model('Blocks', blocks, 'blocks');
 var Stamps = mongoose.model('Stamps', stamps, 'stamps');
 var PixelFrame = mongoose.model('PixelFrame', pixelFrame, 'pixelFrame');
@@ -93,6 +99,7 @@ var SalesHistory = mongoose.model('SalesHistory', salesHistory, 'salesHistory');
 var ShareLinks = mongoose.model('ShareLinks', shareLinks, 'shareLinks');
 var AuthCodes = mongoose.model('AuthCodes', authCodes, 'authCodes');
 var Prices = mongoose.model('Prices', prices, 'prices');
+var StampRatio = mongoose.model('StampRatio', stampRatio, 'stampRatio');
 
 export default {
     Blocks,
@@ -101,5 +108,6 @@ export default {
     Likes, LikedByUser,
     SalesHistory,
     ShareLinks, AuthCodes,
-    Prices
+    Prices,
+    StampRatio
 };

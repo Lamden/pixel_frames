@@ -17,30 +17,38 @@
 
 <script>
 	import { onMount } from 'svelte'
-	//Components
+
+	// Components
 	import Title from "../components/Title.svelte";
 	import PixelWall from '../components/PixelWall.svelte';
 	import Recent from '../components/Recent.svelte';
 	import ForSale from '../components/ForSale.svelte';
 
+	// Misc
+	import { released, timeToRelease } from '../js/stores'
+
 	export let mostLiked;
 	export let recent;
 	export let forsale;
 
-	onMount(() => {
-		/*
-		fetch(`./frames/3cb59ca68fd7b0e80bae79bc59ce073b4d969888586e0a76be96bc6949cf2a7c.json`)
-		.then(res => res.json()).then(res => console.log(res))
-		fetch(`./recent_things.json?limit=15`)
-		.then(res => res.json()).then(res => console.log(res))
-		fetch(`./liked.json?limit=54`)
-		.then(res => res.json()).then(res => console.log(res))
-		fetch(`./forsale.json`)
-		.then(res => res.json()).then(res => console.log(res))
-		fetch(`./owned/bc73cd44616b734a89bf44ab81fa580b9cc5b29ef9640b828e8bce919d48fb79.json/`)
-		.then(res => res.json()).then(res => console.log(res))
-		*/
-	})
+	const formatTime = (timestamp) => {
+		const seconds = timestamp / 1000
+		const minutes = timestamp / 1000 / 60
+		const hours = timestamp / 1000 / 60 / 60
+
+		console.log({seconds, minutes, hours})
+
+		if (hours > 0) {
+			return `
+			${parseInt(hours)} ${parseInt(hours) > 1 ? 'hours' : 'hour'}!`
+		}
+		if (minutes > 0){
+			return `${parseInt(minutes)} ${parseInt(minutes) > 1 ? 'minutes' : 'minute'}!`
+		}
+		if (seconds > 0){
+			return `${parseInt(seconds)} ${parseInt(seconds) > 1 ? 'seconds' : 'second'}!`
+		}
+	}
 
 </script>
 
@@ -72,9 +80,11 @@
 	<title>Pixel Whale: On-chain NFT Animations!</title>
 </svelte:head>
 
-<p class="release-date">Official Release April 19th @ 22:00 UTC</p>
+{#if !$released}
+	<p class="release-date">Official Release <strong>TODAY</strong> in {formatTime($timeToRelease)}</p>
+{/if}
 <div class="hide-mobile">
-	<Title fontSize={8}/>
+	<Title fontSize={8} showFullLogo={true}/>
 </div>
 
 

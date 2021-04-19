@@ -3,11 +3,17 @@ config()
 import { getDatabase, mongoose_models} from "../database/database.mjs";
 import { runBlockGrabber } from './blockgrabber.mjs'
 import { update_tau_price } from './price-updater.mjs'
+import { update_stamp_ratio } from './updateStampRatio.mjs'
 import {getUtils} from './bg-utils.mjs'
 
 const MASTERNODE_URLS = {
     'testnet': "https://testnet-master-1.lamden.io",
     'mainnet' : "https://masternode-01.lamden.io"
+}
+
+const BLOCKEXPLORER_URLS = {
+    'testnet': "https://testnet.lamden.io",
+    'mainnet' : "https://mainnet.lamden.io"
 }
 
 /******* MONGO DB CONNECTION INFO **/
@@ -17,6 +23,7 @@ const START_AT_BLOCK_NUMBER = parseInt(process.env.START_AT_BLOCK_NUMBER) || 0
 const RE_PARSE_BLOCKS = process.env.RE_PARSE_BLOCKS || false
 const WIPE = process.env.WIPE || false
 const MASTERNODE_URL = process.env.MASTERNODE_URL || MASTERNODE_URLS[NETWORK]
+const BLOCKEXPLORER_URL = process.env.BLOCKEXPLORER_URL || BLOCKEXPLORER_URLS[NETWORK]
 const INFO_CONTRACT = process.env.INFO_CONTRACT || null
 const MASTER_CONTRACT = process.env.MASTER_CONTRACT || null
 
@@ -24,7 +31,7 @@ if (!INFO_CONTRACT ) throw Error("Must pass INFO_CONTRACT via .env file")
 if (!MASTER_CONTRACT ) throw Error("Must pass MASTER_CONTRACT via .env file")
 
 let grabberConfig = {
-    DEBUG_ON, START_AT_BLOCK_NUMBER, MASTERNODE_URL, WIPE, RE_PARSE_BLOCKS, INFO_CONTRACT, MASTER_CONTRACT
+    DEBUG_ON, START_AT_BLOCK_NUMBER, MASTERNODE_URL, WIPE, RE_PARSE_BLOCKS, INFO_CONTRACT, MASTER_CONTRACT, BLOCKEXPLORER_URL
 }
 grabberConfig.models = mongoose_models
 grabberConfig.utils = getUtils(grabberConfig)
@@ -33,7 +40,10 @@ const start = async () => {
     grabberConfig.db = await getDatabase()
 
     let tauUpdater = update_tau_price(grabberConfig.models)
+    let stampRatioUpdater = update_stamp_ratio(grabberConfig.models, BLOCKEXPLORER_URL)
+
     tauUpdater.updatePrice()
+    stampRatioUpdater.updateStampRatio()
 
     let blockGrabber = runBlockGrabber(grabberConfig)
     let nextCheck = 15000

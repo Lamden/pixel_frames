@@ -1,6 +1,7 @@
 <script>
     import { userAccount, showModal, released, tauPrice } from '../js/stores.js'
     import { stringToFixed, toBigNumber } from '../js/utils.js'
+    import { config } from '../js/config.js'
 
     // Pictures
     import lamden_logo from '../../static/img/lamden_logo_new.svg'
@@ -20,11 +21,16 @@
     }
 
     const handleBuy = () => {
-        if ($released){
+        if (config.networkType === 'testnet'){
             openModal(FormBuy)
         }else{
-            alert('Buying will be enabled when Pixel Whale releases, April 19th @ 8pm UTC.')
+            if ($released){
+                openModal(FormBuy)
+            }else{
+                alert('Buying will be enabled when Pixel Whale releases, April 19th @ 8pm UTC.')
+            }
         }
+
     }
 </script>
 

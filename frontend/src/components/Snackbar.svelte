@@ -21,13 +21,13 @@
     let screenHeight;
 
     onMount(() => {
-        let remover = setInterval(autoClose, 2000)
+        let remover = setInterval(autoClose, 1000)
         return(() => clearInterval(remover))
     })
 
     const autoClose = () => {
         snackbars.update( curr => {
-             return curr.filter((snack ) => {return (new Date().getTime() - snack.time) < 5000})
+             return curr.filter((snack ) => {return (new Date().getTime() - snack.time) < snack.delay})
         })
     }
 </script>

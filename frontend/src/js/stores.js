@@ -3,6 +3,7 @@ import { config } from './config.js'
 import { newPixelFrame } from './defaults'
 
 export const released = writable(false);
+export const timeToRelease = writable(Date.UTC(2021, 4, 19, 22) - new Date());
 
 export const totalPixels = writable(256)
 export const currentColor = writable(['A','B'])

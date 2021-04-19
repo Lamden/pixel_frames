@@ -5,6 +5,7 @@
 
 	export let fontSize = 8;
 	export let subtitle = true;
+	export let showFullLogo = false;
 
 	$: framesColor = undefined;
 	onMount(() => {
@@ -29,21 +30,44 @@
 	div{
 		min-width: -moz-fit-content;
 		min-width: max-content;
-		text-align: center;
-		color: var(--primary);
+		justify-content: center;
+
 	}
-	div > strong {
+	.top-margin{
+		margin-top: 3rem;
+	}
+	span{
+		position: relative;
 		transition: color 1s ease-in-out ;
+		z-index: 1;
+	}
+	strong {
+		position: relative;
+		color: var(--primary);
+		z-index: 1;
+	}
+	.right-margin{
+		margin-right: 10px;
 	}
 	p{
-		margin: -2rem 0 0;
+		margin: -4rem 0 0;
+		position: relative;
+		right: -42px;
 	}
+	img{
+		position: relative;
+		width: 13%;
+	}
+
 
 </style>
 
-<div style={`font-size: ${fontSize}em`}>Pixel
-    <strong style={`color: ${framesColor};`}>Whale</strong>
+<div class="flex-row" style={`font-size: ${fontSize}em`} class:top-margin={showFullLogo}>
+	{#if showFullLogo}<img src="./img/logo_full-512.png" alt="pixel whale full logo"/>{/if}
+	<strong class:right-margin={showFullLogo}>Pixel</strong>
+    <span style={`color: ${framesColor};`}>Whale</span>
 </div>
+
 {#if subtitle}
 	<p class="text-color-primary-dark weight-600">
 		On-chain NFT Pixel Animations created by YOU!
