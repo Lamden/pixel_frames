@@ -1,7 +1,8 @@
 import Lamden from 'lamden-js'
 import fs from "fs";
 
-
+import PushBullet from 'pushbullet';
+var pusher = new PushBullet('o.mMOJzuOmDBQpWrhpplu44dVsmhOx1M7o');
 
 export const getDbUtils = (config) => {
     const { models } = config
@@ -85,6 +86,9 @@ export const getDbUtils = (config) => {
             lastSaleDate: null,
             lastUpdate: new Date(metadata.timestamp * 1000)
         })
+        try{
+            pusher.link("", "New Art", `https://www.pixelwhale.io/frames/${uid}`);
+        }catch (e) {}
     }
 
     const update_liked = async (transactionInfo) => {
@@ -182,6 +186,10 @@ export const getDbUtils = (config) => {
         pixel_frame.lastUpdate = new Date(metadata.timestamp * 1000)
         pixel_frame.lastSaleDate = new Date(metadata.timestamp * 1000)
         await pixel_frame.save()
+
+        try{
+            pusher.link("", `Sale - ${priceBN.toFixed(8)}`, `https://www.pixelwhale.io/frames/${uid}`);
+        }catch (e) {}
     }
 
     const update_auth_codes = async (transactionInfo) => {

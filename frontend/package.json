@@ -28,6 +28,7 @@
     "mongoose": "^5.12.2",
     "node-fetch": "^2.6.1",
     "polka": "next",
+    "pushbullet": "^2.4.0",
     "sirv": "^0.4.0"
   },
   "devDependencies": {
