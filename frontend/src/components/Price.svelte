@@ -70,7 +70,7 @@
         <div class="icon">
             {@html lamden_logo}
         </div>
-        {stringToFixed(price, 8)} {#if usdPrice && !usdPrice.isNaN()}<span>{` ($${stringToFixed(usdPrice, 2)})`}</span>{/if}
+        {stringToFixed(price, 8)} {#if usdPrice && !usdPrice.isNaN()}<span>{` ($${usdPrice.toFixed(2)})`}</span>{/if}
         {#if $userAccount}
             {#if thingInfo.owner !== $userAccount}
                 <button class="button_text" on:click={handleBuy}>buy!</button>
