@@ -189,7 +189,15 @@ export const getDbUtils = (config) => {
 
         if (payload.function !== "transfer" && payload.function !== "transfer_from"){
             try{
-                pusher.link("", `Sale - ${priceBN.toFixed(8)}`, `https://www.pixelwhale.io/frames/${uid}`);
+                let priceData = await models.Prices.findOne({symbol: 'TAU'})
+                if (priceData){
+                    pusher.link(
+                        "",
+                        `Sale: ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)})`,
+                        `https://www.pixelwhale.io/frames/${uid}`
+                    );
+                }
+
             }catch (e) {}
         }
     }
