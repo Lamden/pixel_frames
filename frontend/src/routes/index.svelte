@@ -36,18 +36,14 @@
 		const minutes = timestamp / 1000 / 60
 		const hours = timestamp / 1000 / 60 / 60
 
-		console.log({seconds, minutes, hours})
-
-		if (hours > 0) {
+		if (parseInt(hours) > 0) {
 			return `
 			${parseInt(hours)} ${parseInt(hours) > 1 ? 'hours' : 'hour'}!`
 		}
-		if (minutes > 0){
+		if (parseInt(minutes) > 0){
 			return `${parseInt(minutes)} ${parseInt(minutes) > 1 ? 'minutes' : 'minute'}!`
 		}
-		if (seconds > 0){
-			return `${parseInt(seconds)} ${parseInt(seconds) > 1 ? 'seconds' : 'second'}!`
-		}
+		return `${parseInt(seconds)} ${parseInt(seconds) > 1 ? 'seconds' : 'second'}!`
 	}
 
 </script>
