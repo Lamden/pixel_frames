@@ -22,8 +22,8 @@
 
 	$: formatted = !forsale.data ? [] : formatThings(forsale.data)
 	$: elements = []
-	$: lastElementTop = elements.length > 0 ? elements[elements.length -1].offsetTop: null
-	$: lastElementOffsetHeight = elements.length > 0 ? elements[elements.length -1].offsetHeight: null
+	$: lastElementTop = elements.length > 0 ? elements[elements.length -1] === null ? null : elements[elements.length -1].offsetTop : null
+	$: lastElementOffsetHeight = elements.length > 0 ? elements[elements.length -1] === null ? null : elements[elements.length -1].offsetHeight: null
 	$: visibleHeight = scrollHeight + innerHeight
 	$: checker = checkGetMore(elements)
 
@@ -38,7 +38,7 @@
 		sending = true;
 		const res = await fetch(`./forsale.json?limit=25&offset=${formatted.length}`)
 		let things = await res.json()
-		
+
 		if (!things.data) return
 
 		sending = false;
