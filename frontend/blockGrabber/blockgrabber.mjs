@@ -22,7 +22,7 @@ const runBlockGrabber = (config ) => {
 
 	const wipeDB = async (force = false) => {
 		console.log("-----WIPING DATABASE-----");
-		const toWipe = ['PixelFrame', 'Likes', 'LikedByUser', 'SalesHistory', 'AuthCodes', 'ShareLinks', 'AuthCodes']
+		const toWipe = ['PixelFrame', 'Likes', 'LikedByUser', 'SalesHistory', 'AuthCodes']
 
 		if (wipeOnStartup || force){
 			await db.models.Blocks.deleteMany({}).then((res) => {
