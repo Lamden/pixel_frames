@@ -21,16 +21,7 @@
     }
 
     const handleBuy = () => {
-        if (config.networkType === 'testnet'){
-            openModal(FormBuy)
-        }else{
-            if ($released){
-                openModal(FormBuy)
-            }else{
-                alert('Buying will be enabled when Pixel Whale releases, April 19th @ 10pm UTC.')
-            }
-        }
-
+        openModal(FormBuy)
     }
 </script>
 
