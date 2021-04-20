@@ -32,12 +32,11 @@
 				meta: {
 					speed: parseInt($frameSpeed),
 					num_of_frames: $frames.length,
-					royalty_percent: 5
+					royalty_percent: royaltyPercent
 				}
 			},
 			stampLimit: 130 + (stampLimits[config.masterContract].per_frame_stamps * $frames.length)
 		}
-
 		sendTransaction(transaction, handleCreateTx)
 		closeModel()
     }
