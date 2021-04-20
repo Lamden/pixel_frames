@@ -167,7 +167,9 @@ export const getDbUtils = (config) => {
                 pixel_frame.royalties_earned = currentRoyalties.plus(royaltyPaid)
             }
         }
+        let isGift = payload.function === "transfer" || payload.function === "transfer_from"
 
+        if ((priceBN.isEqualTo(0) &&  !isGift) && (seller === newOwner)) return
 
         await new models.SalesHistory({
             uid,
@@ -177,7 +179,7 @@ export const getDbUtils = (config) => {
             seller,
             buyer: newOwner,
             wasHeld: wasHeld,
-            gift: payload.function === "transfer" || payload.function === "transfer_from"
+            gift: isGift
         }).save()
 
         pixel_frame.price_hold = ""

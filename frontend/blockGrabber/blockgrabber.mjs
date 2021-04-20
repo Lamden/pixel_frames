@@ -100,22 +100,22 @@ const runBlockGrabber = (config ) => {
 							console.log(tx.result.length)
 							if (!tx.result.startsWith('AssertionError(') && tx.status === 0){
 								if (tx.transaction.payload.function === 'create_thing' && tx.result.length === 66) {
-									utils.create_new_thing(tx, blockNum)
+									await utils.create_new_thing(tx, blockNum)
 								}
 								if (tx.result === "None"){
 									if (tx.transaction.payload.function === 'like_thing') {
-										utils.update_liked(tx)
+										await utils.update_liked(tx)
 									}
 									if (tx.transaction.payload.function === 'sell_thing' || tx.transaction.payload.function === 'sell_thing_to') {
-										utils.update_price_info(tx)
+										await utils.update_price_info(tx)
 									}
 									if (tx.transaction.payload.function === 'buy_thing' ||
 										tx.transaction.payload.function === 'transfer' ||
 										tx.transaction.payload.function === 'transfer_from') {
-										utils.update_change_ownership(tx)
+										await utils.update_change_ownership(tx)
 									}
 									if (tx.transaction.payload.function === 'prove_ownership') {
-										utils.update_auth_codes(tx)
+										await utils.update_auth_codes(tx)
 									}
 								}
 							}
