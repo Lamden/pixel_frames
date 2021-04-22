@@ -62,7 +62,7 @@ def enforce_thing_standards(thing_string: str, name: str, description: str, meta
 
 def custom_string_validations(thing_string: str, num_of_frames: int):
     #Validate num_of_frames
-    assert num_of_frames >= 1 and num_of_frames <= 8, "num_of_frames value " + str(num_of_frames) + " is out of range (1-4)."
+    assert num_of_frames >= 1 and num_of_frames <= 8, "num_of_frames value " + str(num_of_frames) + " is out of range (1-8)."
     assert len(thing_string) % num_of_frames == 0, "num_of_frames value is invalid."
 
     #Validate Frames Data
