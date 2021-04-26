@@ -175,7 +175,7 @@ export const getDbUtils = (config) => {
                 if (priceData){
                     pusher.link(
                         "",
-                        `Sale: ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)})`,
+                        `Sale: ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
                         `https://www.pixelwhale.io/frames/${uid}`
                     );
                 }
