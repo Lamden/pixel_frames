@@ -25,7 +25,7 @@ export const getDbUtils = (config) => {
     const create_new_thing = async (transactionInfo, blockNmber) => {
         const {hash, result, transaction, stamps_used, state } = transactionInfo
         const { metadata } = transaction
-        console.log({result})
+        //console.log({result})
 
         const uid = result.replace(/'/g, '');
         var blacklist = JSON.parse(fs.readFileSync('./blockGrabber/blacklist.json', 'utf8'));
@@ -61,30 +61,10 @@ export const getDbUtils = (config) => {
             blacklist: blacklist.art.includes(uid) || blacklist.creators.includes(stateValues.creator)
         }).save()
 
+        console.log("\nCreated New")
         console.log({
             txCreationHash: hash,
-            creationBlock: blockNmber,
-            lastUpdateBlock: blockNmber,
-            datetimeCreated: new Date(metadata.timestamp * 1000),
             uid,
-            thing: stateValues.thing,
-            type: stateValues.type,
-            name: stateValues.name,
-            name_uid: getNameUID(state),
-            description: stateValues.description,
-            owner: stateValues.owner,
-            creator: stateValues.creator,
-            likes: 0,
-            price_amount: "0",
-            price_hold: "",
-            speed: stateValues.speed,
-            num_of_frames: stateValues.num_of_frames,
-            royalty_percent: stateValues.royalty_percent,
-            royalties_earned: "0",
-            num_of_owners: 1,
-            stamps_used,
-            lastSaleDate: null,
-            lastUpdate: new Date(metadata.timestamp * 1000)
         })
         try{
             pusher.link("", "New Art", `https://www.pixelwhale.io/frames/${uid}`);
@@ -199,7 +179,6 @@ export const getDbUtils = (config) => {
                         `https://www.pixelwhale.io/frames/${uid}`
                     );
                 }
-
             }catch (e) {}
         }
     }
@@ -208,7 +187,7 @@ export const getDbUtils = (config) => {
         const { transaction, state } = transactionInfo
         const {  payload, metadata } = transaction
         const { uid } = payload.kwargs
-        console.log('!!!!!  FOUND AUTH CODE !!!!')
+        //console.log('!!!!!  FOUND AUTH CODE !!!!')
         let authCodeInfo = await models.AuthCodes.findOne({uid})
         //console.log({authCodeInfo_UpdateAuthCodes: authCodeInfo, payload, state})
         if (!authCodeInfo) return

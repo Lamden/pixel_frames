@@ -8,6 +8,7 @@ const runBlockGrabber = (config ) => {
 	var wipeOnStartup = WIPE;
 	var reParseBlocks = RE_PARSE_BLOCKS;
 
+	let stop = false;
 	let currBlockNum = START_AT_BLOCK_NUMBER;
 	let checkNextIn = 0;
 	let maxCheckCount = 10;
@@ -19,6 +20,7 @@ const runBlockGrabber = (config ) => {
 	let batchAmount = 25;
 	let timerId;
 	let lastCheckTime = new Date();
+	let runID = Math.floor(Math.random() * 1000)
 
 	const wipeDB = async (force = false) => {
 		console.log("-----WIPING DATABASE-----");
@@ -78,27 +80,27 @@ const runBlockGrabber = (config ) => {
 			let blockNum = blockInfo.number.__fixed__ ? parseInt(blockInfo.number.__fixed__) : blockInfo.number;
 			let block = await models.Blocks.findOne({blockNum})
 			if (!block){
-				console.log("Block doesn't exists, adding new BLOCK model")
+				//console.log("Block doesn't exists, adding new BLOCK model")
 				block = new models.Blocks({
 					rawBlock: JSON.stringify(blockInfo),
 					blockNum,
 					hash: blockInfo.hash
 				}).save();
 			}else{
-				console.log("Block already exists, not adding BLOCK model")
+				//console.log("Block already exists, not adding BLOCK model")
 			}
-
+			/*
 			console.log(
 				"processing block " + blockNum + " - ",
-				block.hash
+				blockInfo.hash
 			);
-
+			*/
 			if (typeof blockInfo.subblocks !== "undefined") {
 				blockInfo.subblocks.forEach((sb) => {
                     sb.transactions.forEach( async (tx) => {
 						if (utils.isPixelFramesContract(tx.transaction.payload.contract)) {
-							console.log(tx.result.length)
-							if (!tx.result.startsWith('AssertionError(') && tx.status === 0){
+							//console.log(tx.result.length)
+							if (!tx.result.includes('AssertionError(') && tx.status === 0){
 								if (tx.transaction.payload.function === 'create_thing' && tx.result.length === 66) {
 									await utils.create_new_thing(tx, blockNum)
 								}
@@ -153,9 +155,10 @@ const runBlockGrabber = (config ) => {
 	};
 
 	const checkForBlocks = async () => {
+		if (stop) return
 		lastCheckTime = new Date()
         if(DEBUG_ON){
-            console.log("checking")
+            console.log(runID + ": checking")
         }
 		let response = await getLatestBlock_MN();
 
@@ -169,8 +172,8 @@ const runBlockGrabber = (config ) => {
 				reParseBlocks = false;
 			} else {
                 if (DEBUG_ON){
-                    console.log("lastestBlockNum: " + lastestBlockNum);
-                    console.log("currBlockNum: " + currBlockNum);
+                    //console.log("lastestBlockNum: " + lastestBlockNum);
+                    //console.log("currBlockNum: " + currBlockNum);
                 }
 				if (lastestBlockNum === currBlockNum) {
 					if (alreadyCheckedCount < maxCheckCount)
@@ -194,7 +197,7 @@ const runBlockGrabber = (config ) => {
 						}else{
                             const timedelay = blocksToGetCount * 500;
                             if (DEBUG_ON){
-                                console.log("getting block: " + i + " with delay of " + timedelay + "ms");
+                                //console.log("getting block: " + i + " with delay of " + timedelay + "ms");
                             }
 
 							blockData = getBlock_MN(i, timedelay)
@@ -214,7 +217,7 @@ const runBlockGrabber = (config ) => {
 				}
 			}
 		} else {
-			console.log("Could not contact masternode, trying again in 10 seconds");
+			console.log(runID + ": Could not contact masternode, trying again in 10 seconds");
 			timerId = setTimeout(checkForBlocks, 10000);
 		}
 	};
@@ -232,6 +235,7 @@ const runBlockGrabber = (config ) => {
 		stop: () => {
 			clearInterval(timerId)
 			timerId = null
+			stop = true
 		}
 	}
 };
