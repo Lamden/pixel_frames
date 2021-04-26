@@ -122,6 +122,7 @@ export const getDbUtils = (config) => {
         const {  payload, metadata } = transaction
         const uid =  payload.kwargs.uid
         let pixel_frame = await models.PixelFrame.findOne({uid})
+        if (!pixel_frame) return
         pixel_frame.price_amount =  getStateValue(state, makeThingKey(uid, 'price:amount'))
         pixel_frame.price_hold = getStateValue(state, makeThingKey(uid, 'price:hold')) || ""
         pixel_frame.lastUpdate = new Date(metadata.timestamp * 1000)
@@ -134,6 +135,8 @@ export const getDbUtils = (config) => {
         const uid =  payload.kwargs.uid
 
         let pixel_frame = await models.PixelFrame.findOne({uid})
+        if (!pixel_frame) return
+
         let newOwner = getStateValue(state, makeThingKey(uid, 'owner'))
         let seller = pixel_frame.owner
         let wasHeld = pixel_frame.price_hold !== ""
