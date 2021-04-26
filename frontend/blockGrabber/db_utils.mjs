@@ -72,7 +72,7 @@ export const getDbUtils = (config) => {
     }
 
     const update_liked = async (transactionInfo) => {
-        //console.log({})
+        console.log("Liked!")
         const { transaction, state } = transactionInfo
         const {  payload, metadata } = transaction
         const uid =  payload.kwargs.uid
@@ -88,7 +88,7 @@ export const getDbUtils = (config) => {
 
     }
     const update_uid_likes = async (uid, vk) => {
-        //console.log({vk, uid})
+        console.log({vk, uid})
         let likes = await models.Likes.findOne({vk})
         if (!likes) {
             likes = await new models.Likes({
@@ -103,7 +103,7 @@ export const getDbUtils = (config) => {
     }
 
     const update_user_likes = async (vk, uid) => {
-        //console.log({vk, uid})
+        console.log({vk, uid})
         let likedByUser = await models.LikedByUser.findOne({vk})
         if (!likedByUser) {
             likedByUser = await new models.LikedByUser({
