@@ -17,7 +17,7 @@ const runBlockGrabber = (config ) => {
 	const route_getLastestBlock = "/latest_block";
 	let lastestBlockNum = 0;
 	let currBatchMax = 0;
-	let batchAmount = 25;
+	let batchAmount = 49;
 	let timerId;
 	let lastCheckTime = new Date();
 	let runID = Math.floor(Math.random() * 1000)
@@ -172,8 +172,8 @@ const runBlockGrabber = (config ) => {
 				reParseBlocks = false;
 			} else {
                 if (DEBUG_ON){
-                    //console.log("lastestBlockNum: " + lastestBlockNum);
-                    //console.log("currBlockNum: " + currBlockNum);
+                    console.log("lastestBlockNum: " + lastestBlockNum);
+                    console.log("currBlockNum: " + currBlockNum);
                 }
 				if (lastestBlockNum === currBlockNum) {
 					if (alreadyCheckedCount < maxCheckCount)
@@ -195,9 +195,9 @@ const runBlockGrabber = (config ) => {
 						if(blockInfo) {
 							blockData = JSON.parse(blockInfo.rawBlock)
 						}else{
-                            const timedelay = blocksToGetCount * 500;
+                            const timedelay = blocksToGetCount * 250;
                             if (DEBUG_ON){
-                                //console.log("getting block: " + i + " with delay of " + timedelay + "ms");
+                                console.log("getting block: " + i + " with delay of " + timedelay + "ms");
                             }
 
 							blockData = getBlock_MN(i, timedelay)

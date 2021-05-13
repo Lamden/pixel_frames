@@ -16,13 +16,14 @@
 </script>
 
 <script>
-	import { onMount } from 'svelte'
+	import {onMount} from 'svelte'
 
 	// Components
 	import Title from "../components/Title.svelte";
 	import PixelWall from '../components/PixelWall.svelte';
 	import Recent from '../components/Recent.svelte';
 	import ForSale from '../components/ForSale.svelte';
+	import ArtistEvent from "../components/ArtistEvent.svelte";
 
 
 	export let mostLiked;
@@ -69,7 +70,7 @@
 	Please visit us on a desktop for the full experience including integration with the Lamden Wallet to enable
 	<strong>buying, selling and creating custom NFT pixel animations!</strong>
 </div>
-
+<ArtistEvent />
 <PixelWall {mostLiked}/>
 <Recent {recent} preview={true}/>
 <ForSale {forsale} preview={true}/>
