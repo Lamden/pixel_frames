@@ -50,7 +50,7 @@
 		display: block;
 		width: 100%;
 		max-width: 750px;
-		margin: 2rem ​auto 1rem;
+		margin: 2rem auto 1rem;
 	}
 	p{
 		text-align: center;
