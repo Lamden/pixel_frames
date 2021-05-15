@@ -21,10 +21,10 @@
 	})
 
 	const removeSold = (artList) => {
-		return artList.filter(f => f.owner !== eventInfo.artist)
+		return artList.filter(f => f.owner !== eventInfo.artistVk)
 	}
 	const soldList = (artList) => {
-		return artList.filter(f => f.owner === eventInfo.artist)
+		return artList.filter(f => f.owner === eventInfo.artistVk)
 	}
 </script>
 
