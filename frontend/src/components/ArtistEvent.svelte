@@ -89,7 +89,7 @@
 		{:else}
 			<p>Buy these collectables starting on {new Date(eventInfo.startDate).toLocaleString()} (your local time)</p>
 		{/if}
-		<p class="subtitle">Prices reduced by 500 TAU every hour until the collection is SOLD!</p>
+		<p class="subtitle">Prices reduced by HALF every hour until the collection is SOLD!</p>
 		<div>
 			<PixelWall mostLiked={removeSold(eventInfo.artList)} />
 		</div>
