@@ -68,8 +68,11 @@
 		font-weight: 200;
 		color: var(--primary-dark);
 	}
-	.gallery{
-
+	.sold{
+		color: var(--primary);
+		font-size: 2em;
+		font-weight: bold;
+		margin-bottom: 0rem;
 	}
 </style>
 
@@ -87,12 +90,14 @@
 			<p>Buy these collectables starting on {new Date(eventInfo.startDate).toLocaleString()} (your local time)</p>
 		{/if}
 		<p class="subtitle">Prices reduced by 500 TAU every hour until the collection is SOLD!</p>
-		<div class="gallery">
+		<div>
 			<PixelWall mostLiked={removeSold(eventInfo.artList)} />
 		</div>
-		<p>SOLD!</p>
-		<div class="gallery">
-			<PixelWall mostLiked={soldList(eventInfo.artList)} />
-		</div>
+		{#if eventStarted}
+			<p class="sold">SOLD!</p>
+			<div class="gallery">
+				<PixelWall mostLiked={soldList(eventInfo.artList)} />
+			</div>
+		{/if}
 	</div>
 {/if}
