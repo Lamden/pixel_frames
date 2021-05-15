@@ -82,7 +82,7 @@
 		<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
 		<p>ALL WHALES WELCOME!</p>
 		{#if eventStarted}
-			<p>ON SALE NOW!</p>
+			<p>ON SALE NOW! Select NFT for price!</p>
 		{:else}
 			<p>Buy these collectables starting on {new Date(eventInfo.startDate).toLocaleString()} (your local time)</p>
 		{/if}
