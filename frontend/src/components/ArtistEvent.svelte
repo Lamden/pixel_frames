@@ -20,8 +20,11 @@
 		}catch (e){}
 	})
 
-	const getThingInfoFromList = async () => {
-
+	const removeSold = (artList) => {
+		return artList.filter(f => f.owner !== eventInfo.artist)
+	}
+	const soldList = (artList) => {
+		return artList.filter(f => f.owner === eventInfo.artist)
 	}
 </script>
 
@@ -85,7 +88,11 @@
 		<p class="subtitle">Prices reduced by 500 TAU every hour until the collection is SOLD!</p>
 		<p>ALL WHALES WELCOME!</p>
 		<div class="gallery">
-			<PixelWall mostLiked={eventInfo.artList} />
+			<PixelWall mostLiked={removeSold(eventInfo.artList)} />
+		</div>
+		<p>SOLD!</p>
+		<div class="gallery">
+			<PixelWall mostLiked={soldList(eventInfo.artList)} />
 		</div>
 	</div>
 {/if}
