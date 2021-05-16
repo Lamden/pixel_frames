@@ -84,17 +84,23 @@
 		<h3><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
 		<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
 		<p>ALL WHALES WELCOME!</p>
-		{#if eventStarted}
-			<p>ON SALE NOW! Select NFT for price!</p>
+		{#if eventStarted && removeSold(eventInfo.artList).length > 0}
+				<p>ON SALE NOW! Select NFT for price!</p>
 		{:else}
 			<p>Buy these collectables starting on {new Date(eventInfo.startDate).toLocaleString()} (your local time)</p>
 		{/if}
-		<p class="subtitle">Prices reduced by HALF every hour until the collection is SOLD!</p>
+		{#if eventStarted && removeSold(eventInfo.artList).length > 0}
+			<p class="subtitle">Prices reduced by HALF every hour until the collection is SOLD!</p>
+		{/if}
 		<div>
 			<PixelWall mostLiked={removeSold(eventInfo.artList)} />
 		</div>
 		{#if eventStarted}
-			<p class="sold">SOLD!</p>
+			{#if removeSold(eventInfo.artList).length > 0}
+				<p class="sold">SOLD!</p>
+			{:else}
+				<p>SOLD OUT!</p>
+			{/if}
 			<div class="gallery">
 				<PixelWall mostLiked={soldList(eventInfo.artList)} />
 			</div>
