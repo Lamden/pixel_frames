@@ -96,11 +96,7 @@
 			<PixelWall mostLiked={removeSold(eventInfo.artList)} />
 		</div>
 		{#if eventStarted}
-			{#if removeSold(eventInfo.artList).length > 0}
-				<p class="sold">SOLD!</p>
-			{:else}
-				<p>SOLD OUT!</p>
-			{/if}
+			<p class="sold">{removeSold(eventInfo.artList).length > 0 ? "SOLD!" : "SOLD OUT!" }</p>
 			<div class="gallery">
 				<PixelWall mostLiked={soldList(eventInfo.artList)} />
 			</div>
