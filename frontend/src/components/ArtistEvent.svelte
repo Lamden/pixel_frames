@@ -85,12 +85,10 @@
 		<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
 		<p>ALL WHALES WELCOME!</p>
 		{#if eventStarted && removeSold(eventInfo.artList).length > 0}
-				<p>ON SALE NOW! Select NFT for price!</p>
+			<p>ON SALE NOW! Select NFT for price!</p>
+			<p class="subtitle">Prices reduced by HALF every hour until the collection is SOLD!</p>
 		{:else}
 			<p>Buy these collectables starting on {new Date(eventInfo.startDate).toLocaleString()} (your local time)</p>
-		{/if}
-		{#if eventStarted && removeSold(eventInfo.artList).length > 0}
-			<p class="subtitle">Prices reduced by HALF every hour until the collection is SOLD!</p>
 		{/if}
 		<div>
 			<PixelWall mostLiked={removeSold(eventInfo.artList)} />
