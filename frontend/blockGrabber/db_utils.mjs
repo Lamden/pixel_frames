@@ -2,11 +2,31 @@ import Lamden from 'lamden-js'
 import fs from "fs";
 
 import PushBullet from 'pushbullet';
-var pusher = new PushBullet('o.mMOJzuOmDBQpWrhpplu44dVsmhOx1M7o');
+import { TwitterClient } from 'twitter-api-client';
 
 export const getDbUtils = (config) => {
     const { models } = config
-    const { INFO_CONTRACT, MASTER_CONTRACT } = config
+    const { INFO_CONTRACT, MASTER_CONTRACT, RE_PARSE_BLOCKS,
+            TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN,
+            TWITTER_ACCESS_TOKEN_SECRET, PUSHBULLET_TOKEN} = config
+
+    if (!TWITTER_API_KEY || !TWITTER_API_SECRET || !TWITTER_ACCESS_TOKEN || !TWITTER_ACCESS_TOKEN_SECRET){
+        throw new Error("Error in db_utils.js: Missing twitter API keys in .env file.")
+    }
+
+    if (!PUSHBULLET_TOKEN){
+        throw new Error("Error in db_utils.js: Missing pushbullet API key in .env file.")
+    }
+
+    const twitterClient = new TwitterClient({
+      apiKey: process.env.TWITTER_API_KEY,
+      apiSecret: process.env.TWITTER_API_SECRET,
+      accessToken: process.env.TWITTER_ACCESS_TOKEN,
+      accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+    });
+
+    const pusher = new PushBullet(PUSHBULLET_TOKEN);
+
     const PIXEL_FRAMES_META = {
         thing: "thing",
         type: "type",
@@ -67,7 +87,15 @@ export const getDbUtils = (config) => {
             uid,
         })
         try{
-            pusher.link("", "New Art", `https://www.pixelwhale.io/frames/${uid}`);
+            if (!RE_PARSE_BLOCKS){
+                pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
+                let res = await twitterClient.tweets.statusesUpdate({
+                    status: `New #NFT Art! \r\n https://www.pixelwhale.io/frames/${uid}\r\n \r\n
+                            #NFTartist #digitalartist #pixelart`
+                })
+                .catch(err => console.log(err))
+                console.log(res)
+            }
         }catch (e) {}
     }
 
@@ -174,13 +202,22 @@ export const getDbUtils = (config) => {
 
         if (payload.function !== "transfer" && payload.function !== "transfer_from"){
             try{
-                let priceData = await models.Prices.findOne({symbol: 'TAU'})
-                if (priceData){
-                    pusher.link(
-                        "",
-                        `Sale: ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
-                        `https://www.pixelwhale.io/frames/${uid}`
-                    );
+                if (!RE_PARSE_BLOCKS){
+                    let priceData = await models.Prices.findOne({symbol: 'TAU'})
+                    if (priceData){
+                        pusher.link(
+                            "",
+                            `#NFT Art Sold! ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
+                            `https://www.pixelwhale.io/frames/${uid}`
+                        );
+                        twitterClient.tweets.statusesUpdate({
+                            status: `#NFT Art Sold! \r\n 
+                            ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD) \r\n \r\n
+                            https://www.pixelwhale.io/frames/${uid} \r\n \r\n
+                            #NFTartist #digitalartist #pixelart`
+
+                        })
+                    }
                 }
             }catch (e) {}
         }

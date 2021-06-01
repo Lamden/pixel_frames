@@ -29,7 +29,8 @@
     "node-fetch": "^2.6.1",
     "polka": "next",
     "pushbullet": "^2.4.0",
-    "sirv": "^0.4.0"
+    "sirv": "^0.4.0",
+    "twitter-api-client": "^1.3.8"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
