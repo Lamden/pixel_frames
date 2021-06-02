@@ -90,8 +90,7 @@ export const getDbUtils = (config) => {
             if (!RE_PARSE_BLOCKS){
                 pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
                 let res = await twitterClient.tweets.statusesUpdate({
-                    status: `New #NFT Art! \r\n https://www.pixelwhale.io/frames/${uid}\r\n \r\n
-                            #NFTartist #digitalartist #pixelart`
+                    status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
                 })
                 .catch(err => console.log(err))
                 console.log(res)
@@ -211,11 +210,7 @@ export const getDbUtils = (config) => {
                             `https://www.pixelwhale.io/frames/${uid}`
                         );
                         twitterClient.tweets.statusesUpdate({
-                            status: `#NFT Art Sold! \r\n 
-                            ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD) \r\n \r\n
-                            https://www.pixelwhale.io/frames/${uid} \r\n \r\n
-                            #NFTartist #digitalartist #pixelart`
-
+                            status: `#NFT Art Sold!\r\n${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)\r\n\r\nhttps://www.pixelwhale.io/frames/${uid} \r\n\r\n#NFTartist #digitalartist #pixelart`
                         })
                     }
                 }
