@@ -95,6 +95,7 @@ const runBlockGrabber = (config ) => {
 				blockInfo.hash
 			);
 			*/
+
 			if (typeof blockInfo.subblocks !== "undefined") {
 				blockInfo.subblocks.forEach((sb) => {
                     sb.transactions.forEach( async (tx) => {
@@ -121,10 +122,15 @@ const runBlockGrabber = (config ) => {
 									}
 								}
 							}
+						}else{
+							await utils.process_auction_transaction(tx)
 						}
                     })
 				});
 			}
+
+
+
 			if (blockNum === currBatchMax) {
 				currBlockNum = currBatchMax;
 				timerId = setTimeout(checkForBlocks, 200);

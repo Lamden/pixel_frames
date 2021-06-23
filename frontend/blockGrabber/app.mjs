@@ -4,7 +4,7 @@ import { getDatabase, mongoose_models} from "../database/database.mjs";
 import { runBlockGrabber } from './blockgrabber.mjs'
 import { update_tau_price } from './price-updater.mjs'
 import { update_stamp_ratio } from './updateStampRatio.mjs'
-import {getUtils} from './bg-utils.mjs'
+import { getUtils } from './bg-utils.mjs'
 
 const MASTERNODE_URLS = {
     'testnet': "https://testnet-master-1.lamden.io",

@@ -59,7 +59,41 @@ var salesHistory = new mongoose.Schema({
     seller: String,
     buyer: String,
     wasHeld: Boolean,
-    gift: Boolean
+    gift: Boolean,
+    auction: Boolean
+})
+
+var blocksProcessed = {
+    contractType: String,
+    blockNum: Number
+}
+
+var currentAuctions = new mongoose.Schema({
+    uid: String,
+    end_date: Date,
+    current_owner: String,
+    reserve_price: String,
+    current_bid: String,
+    current_winner: String,
+    royalty_percent: Number,
+    creator: String,
+    lastUpdate: Date
+})
+
+var auctionHistory = new mongoose.Schema({
+    uid: String,
+    scheduled_end_date: Date,
+    end_triggered: Date,
+    old_owner: String,
+    new_owner: String,
+    reserve_price: String,
+    reserve_met: Boolean,
+    winning_bid: String,
+    winner: String,
+    paid_to_owner: String,
+    paid_to_creator: String,
+    royalty_percent: Number,
+    creator: String
 })
 
 var shareLinks = new mongoose.Schema({
@@ -91,11 +125,14 @@ var stampRatio = new mongoose.Schema({
 })
 
 var Blocks = mongoose.model('Blocks', blocks, 'blocks');
+var BlocksProcessed = mongoose.model('BlocksProcessed', blocksProcessed, 'blocksProcessed');
 var Stamps = mongoose.model('Stamps', stamps, 'stamps');
 var PixelFrame = mongoose.model('PixelFrame', pixelFrame, 'pixelFrame');
 var Likes = mongoose.model('Likes', likes, 'likes');
 var LikedByUser = mongoose.model('LikedByUser', likedByUser, 'likedByUser');
 var SalesHistory = mongoose.model('SalesHistory', salesHistory, 'salesHistory');
+var CurrentAuctions = mongoose.model('CurrentAuctions', currentAuctions, 'currentAuctions');
+var AuctionHistory = mongoose.model('AuctionHistory', auctionHistory, 'auctionHistory');
 var ShareLinks = mongoose.model('ShareLinks', shareLinks, 'shareLinks');
 var AuthCodes = mongoose.model('AuthCodes', authCodes, 'authCodes');
 var Prices = mongoose.model('Prices', prices, 'prices');
@@ -109,5 +146,8 @@ export default {
     SalesHistory,
     ShareLinks, AuthCodes,
     Prices,
-    StampRatio
+    StampRatio,
+    CurrentAuctions,
+    AuctionHistory,
+    BlocksProcessed
 };

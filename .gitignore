@@ -13,3 +13,5 @@
 .DS_Store
 /tests/logs/test/Seneca.Parser.log
 /tests/logs/test/Seneca.Parser.log_color
+.python-version
+venv

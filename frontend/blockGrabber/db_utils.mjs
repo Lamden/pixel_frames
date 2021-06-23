@@ -3,10 +3,11 @@ import fs from "fs";
 
 import PushBullet from 'pushbullet';
 import { TwitterClient } from 'twitter-api-client';
+import mongoose from "mongoose";
 
 export const getDbUtils = (config) => {
     const { models } = config
-    const { INFO_CONTRACT, MASTER_CONTRACT, RE_PARSE_BLOCKS,
+    const { INFO_CONTRACT, MASTER_CONTRACT, AUCTION_CONTRACT, RE_PARSE_BLOCKS,
             TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN,
             TWITTER_ACCESS_TOKEN_SECRET, PUSHBULLET_TOKEN} = config
 
@@ -237,12 +238,146 @@ export const getDbUtils = (config) => {
         await authCodeInfo.save()
     }
 
+    async function process_auction_block(block_info){
+        for (const subblock of block_info.subblocks) {
+            for (const transaction of subblock.transactions) {
+                await process_auction_transaction(transaction)
+            }
+        }
+    }
+
+    async function process_auction_transaction(transaction){
+        const { state } = transaction
+
+        let has_auction_state_changes = false
+        let is_auction_start = false
+        let is_auction_stop = false
+        let is_current_bid_update = false
+        let uid;
+
+        for (const change of state) {
+            const { key, value } = change
+            if (key.startsWith(`${AUCTION_CONTRACT}.S:`)){
+                has_auction_state_changes = true
+                let keySplit = key.split(':')
+                if (keySplit[1].length === 64){
+                    uid = keySplit[1]
+                    if (value === true) is_auction_start = true
+                    if (value === false) is_auction_stop = true
+                }else if (keySplit[1].length > 64){
+                    if (keySplit[1].includes("current_bid")) is_current_bid_update = true
+                }
+            }
+        }
+        if (has_auction_state_changes){
+            if (is_auction_start && uid) {
+                await process_auction_start(transaction, uid)
+                return
+            }
+            if (is_auction_stop && uid) {
+                await process_auction_stop(transaction, uid)
+                return
+            }
+
+            if (is_current_bid_update){
+                await process_auction_new_bid(transaction)
+            }
+        }
+    }
+
+    async function process_auction_start(transactionInfo, uid){
+        console.log("START AUCTION")
+        console.log(transactionInfo)
+
+        const { state, transaction } = transactionInfo
+        const { metadata } = transaction
+
+        let update = {
+            end_date: getAuctionStateValues(state, makeAuctionKey(uid, 'end_date')),
+            current_owner: getAuctionStateValues(state, makeAuctionKey(uid, 'current_owner')),
+            reserve_price: getAuctionStateValues(state, makeAuctionKey(uid, 'reserve_price')),
+            current_bid: getAuctionStateValues(state, makeAuctionKey(uid, 'current_bid')),
+            current_winner: getAuctionStateValues(state, makeAuctionKey(uid, 'current_winner')),
+            royalty_percent: getAuctionStateValues(state, makeAuctionKey(uid, 'royalty_percent')),
+            creator: getAuctionStateValues(state, makeAuctionKey(uid, 'creator')),
+            lastUpdate: new Date(metadata.timestamp * 1000),
+            running: true
+        }
+
+        if (await models.CurrentAuctions.findOne({uid})){
+            await models.CurrentAuctions.findOneAndUpdate({uid}, update);
+        }else{
+            update.uid = uid
+            await new models.CurrentAuctions(update).save()
+        }
+    }
+
+    async function process_auction_new_bid(transactionInfo){
+        console.log("AUCTION BID")
+        console.log(transactionInfo)
+
+        const { state, transaction } = transactionInfo
+        const { metadata } = transaction
+
+        // TODO THIS SHOULD RETURN A LIST OF BID STATE CHANGES
+        let bid_info = getBidInfoFromState(state)
+
+        await models.CurrentAuctions.findOneAndUpdate({uid}, {
+            current_bid: getAuctionStateValues(state, makeAuctionKey(uid, 'current_bid')),
+            current_winner: getAuctionStateValues(state, makeAuctionKey(uid, 'current_winner')),
+            lastUpdate: new Date(metadata.timestamp * 1000)
+        });
+    }
+
+    async function process_auction_stop(transactionInfo, uid){
+        console.log("STOP AUCTION")
+        console.log(transactionInfo)
+
+        const { state, transaction } = transactionInfo
+        const { metadata } = transaction
+
+        let auction_info = await models.CurrentAuctions.findOne({uid})
+        if (!auction_info) return
+
+        await models.CurrentAuctions.findOneAndUpdate({uid}, {
+            running: false,
+            lastUpdate: new Date(metadata.timestamp * 1000)
+
+        });
+
+        await new models.AuctionHistory({
+            uid: uid,
+            scheduled_end_date: Date,
+            end_triggered: Date,
+            old_owner: String,
+            new_owner: String,
+            reserve_price: String,
+            reserve_met: Boolean,
+            winning_bid: String,
+            winner: String,
+            paid_to_owner: String,
+            paid_to_creator: String,
+            royalty_percent: Boolean,
+            creator: Boolean
+        }).save()
+    }
+
     function getStateValues(state, uid) {
         let stateValues = {}
         Object.keys(PIXEL_FRAMES_META).map(meta_item => {
             stateValues[PIXEL_FRAMES_META[meta_item]] = getStateValue(state, `${INFO_CONTRACT}.S:${uid}:${meta_item}`)
         })
         return stateValues;
+    }
+
+    function getAuctionStateValues(state, key) {
+        let state_change = state.find(s => s.key === key)
+        return state_change.value
+    }
+
+    function getBidInfoFromState(state, key) {
+        let state_change = state.find(s => s.key === key)
+        return state_change.value
     }
 
     function getStateValue(state, key) {
@@ -253,6 +388,11 @@ export const getDbUtils = (config) => {
         return stateChange.value
     }
 
+    function getAuctionUID(state){
+        let auction_uid = state.find(s => s.value === true || s.value === false).key
+        return auction_uid.split(":")[1]
+    }
+
     function getNameUID(state){
         let names_uid_state_change = state.find(s => s.key.includes(`${INFO_CONTRACT}.S:names:`)).key
         return names_uid_state_change.split(":")[2]
@@ -260,6 +400,10 @@ export const getDbUtils = (config) => {
 
     function makeThingKey(uid, metaitem){
         return `${INFO_CONTRACT}.S:${uid}:${metaitem}`
+    }
+
+    function makeAuctionKey(uid, key = undefined){
+        return `${AUCTION_CONTRACT}.S:${uid}${key ? ":" + key : ""}`
     }
 
     function toBigNumber (value) {
@@ -273,7 +417,12 @@ export const getDbUtils = (config) => {
         update_price_info,
         update_change_ownership,
         update_auth_codes,
-        toBigNumber
+        process_auction_start,
+        process_auction_stop,
+        process_auction_new_bid,
+        toBigNumber,
+        process_auction_block,
+        process_auction_transaction
     }
 }
 
