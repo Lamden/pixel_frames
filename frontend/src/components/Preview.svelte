@@ -10,7 +10,7 @@
     export let showWatermark = true;
     export let border = true;
     export let solidBorder = false;
-    export let solidBorderColor = false;
+    export let solidBorderColor = "";
     export let speed = null
 
     let switcher;
@@ -41,6 +41,7 @@
 <style>
     .preview-frame{
         line-height: 0;
+        width: max-content;
     }
     .preview-frame.border{
         border: 2px dashed var(--primary);
@@ -51,5 +52,5 @@
 </style>
 
 <div class="preview-frame" class:border={border} class:solid-border={solidBorder} style={solidBorderColor !== "" ? `border-color: ${solidBorderColor};`: ""}>
-    <FrameCanvas {pixelSize} pixels={frames[show - 1]} {thingInfo} watermark={showWatermark ? createWatermark(thingInfo, $userAccount) : undefined}/>
+    <FrameCanvas {pixelSize} pixels={frames[show - 1]}  watermark={showWatermark ? createWatermark(thingInfo, $userAccount) : undefined}/>
 </div>

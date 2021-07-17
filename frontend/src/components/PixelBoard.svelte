@@ -13,7 +13,7 @@
     import Pixel from './Pixel.svelte'
 
     // Pictures
-    import check_circle from '../../static/img/check-circle.svg'
+    import CheckCircleIcon from '../../static/img/check-circle.svg'
 
     export let itemCreated;
 
@@ -149,7 +149,7 @@
              out:blur="{{duration: 1000, delay: 0, opacity: 0.0, amount: 20, easing: quintOut}}"
              class="checkmark"
              style={`width: ${config.totalPixels}px`}>
-            {@html check_circle}
+            <CheckCircleIcon width="20" />
         </div>
     {/if}
 </div>

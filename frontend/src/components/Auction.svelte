@@ -1,0 +1,191 @@
+<script>
+    import { onMount, getContext } from 'svelte'
+
+    // Misc
+    import { toBigNumber, stringToFixed, formatAccountAddress, getTimeAgo } from '../js/utils'
+    import {showModal, userAccount} from "../js/stores";
+    import { config } from "../js/config"
+
+    // Components
+    import Preview from './Preview.svelte';
+    import Likes from "./Likes.svelte";
+    import AuctionEndDate from './AuctionEndDate.svelte'
+    import FormBid from './FormBid.svelte'
+    import FormAuctionClaim from './FormAuctionClaim.svelte'
+    import FormAuctionCancel from './FormAuctionCancel.svelte'
+
+    // Icons
+    import CheckIcon from '../../static/img/check-filled.svg'
+
+    export let auctionInfo
+    export let thingInfo
+    export let showInfo = true
+    export let id
+
+    let pixelSize = 2
+
+    $: hasEnded = auctionHasEnded(auctionInfo)
+    $: timesUp = new Date() > new Date(auctionInfo.scheduled_end_date)
+    $: notClaimed = auctionInfo.winner === ""
+    $: reserveMet = auctionInfo.reserve_met
+    $: bid_history = auctionInfo.bid_history
+    $: winning_bid_info = bid_history.length > 0 ? bid_history[0] : null
+    $: winning_bid = winning_bid_info ? toBigNumber(winning_bid_info.bid) : toBigNumber("0")
+    $: winning_bidder = winning_bid_info ? winning_bid_info.bidder : ""
+    $: winning_timestamp = winning_bid_info ? new Date(winning_bid_info.timestamp) : null
+    $: timeAgo = getTimeAgo(winning_timestamp, hasEnded)
+
+    function auctionHasEnded(info){
+        // console.log(auctionInfo)
+        if (info.ended) return true
+        if (new Date() > new Date(info.scheduled_end_date)) return true
+        return false
+    }
+
+
+
+    const handleBid = () => {
+        showModal.set({modalData:{auctionInfo, thingInfo: auctionInfo.thingInfo, winning_bid, modal: FormBid}, show: true})
+    }
+
+    const handleEnd = (modal) => {
+        showModal.set({
+            modalData:{
+                auctionInfo,
+                thingInfo: auctionInfo.thingInfo,
+                end_info: {
+                    bid: winning_bid,
+                    bidder: winning_bidder,
+                    hasEnded,
+                    winning_timestamp
+                },
+                modal
+            },
+            show: true
+        })
+    }
+
+
+
+</script>
+
+<style>
+    .auction-container{
+        margin:  1rem;
+        box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
+        -webkit-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
+        -moz-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
+        background: #fdfffe;
+        background: linear-gradient(170deg, var(--color-white-primary-tint) 0%, rgb(241 241 241) 100%);
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        width: 350px;
+    }
+    .top-content{
+        padding: 20px 20px 0.5rem 20px;
+    }
+    .title{
+        font-size: 18px;
+        margin-bottom: 1rem;
+    }
+    .title > a{
+        font-weight: 600;
+        color: var(--primary-dark);
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .description{
+        margin-top: 0.5rem;
+        color: var(--primary-dark);
+        max-height: 85px;
+        overflow-y: auto;
+    }
+    p{
+        margin: 0;
+    }
+    p > strong {
+        color: var(--primary-dark);
+        font-size: 22px;
+    }
+    .bid-details{
+        margin-left: 20px;
+    }
+    button{
+        width: 116px;
+        align-self: center;
+        letter-spacing: 1px;
+    }
+    .buttons{
+        padding: 1rem 0;
+    }
+    .current-winner{
+        background: var(--primary);
+        padding: 5px 17px;
+        border-radius: 10px;
+    }
+    .current-winner > span {
+        width: max-content;
+    }
+    :global(.auction-check-icon){
+        margin-left: 8px;
+    }
+</style>
+<div class="auction-container" {id}>
+    <div class="top-content flex-grow">
+        {#if showInfo}
+            <div class="title flex-row">
+                <a href="{`./frames/${thingInfo.uid}`}" class="name">{thingInfo.name}</a>
+            </div>
+        {/if}
+        <!--
+        <div class="icons text-color-gray-5 flex-row flex-align-center">
+            <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html artist}</a>
+            <a href="{`./owned/${thingInfo.owner}`}" class="icon">{@html owner}</a>
+            <Likes {thingInfo} width={25}/>
+        </div>
+        -->
+        <div class="flex-row">
+            <a href="{`./frames/${thingInfo.uid}`}">
+                <Preview solidBorder={true} solidBorderColor="#00d6a22b" frames={thingInfo.frames} pixelSize={4} {thingInfo} showWatermark={true} border={false}/>
+            </a>
+            <div class="bid-details">
+                {#if winning_bidder}
+                    <p class="text-color-gray-6">{hasEnded ? "Winning Bid" : "Current Bid" }</p>
+                    <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
+
+                    <p class="text-color-gray-5">{hasEnded ? `Won ${getTimeAgo(winning_timestamp)}by` : `${getTimeAgo(winning_timestamp)}by` }</p>
+                    <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">{formatAccountAddress(winning_bidder, 8, 4)}</a>
+                {:else}
+                    <p><strong>no bids</strong></p>
+                {/if}
+            </div>
+
+        </div>
+        {#if showInfo}
+            <p class="description">{thingInfo.description}</p>
+        {/if}
+    </div>
+    <div class="buttons flex-row flex-justify-spaceevenly">
+        {#if !hasEnded}
+            {#if $userAccount === winning_bidder}
+                <div class="flex-row flex-center-center current-winner">
+                    <span>You are winning this auction!</span>
+                    <CheckIcon class="auction-check-icon" width="17" />
+                </div>
+            {:else}
+                <button class="button" on:click={handleBid} > BID </button>
+            {/if}
+        {/if}
+        {#if $userAccount === winning_bidder && notClaimed && timesUp}
+            <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>CLAIM</button>
+        {:else}
+            {#if $userAccount === auctionInfo.old_owner && !reserveMet && !hasEnded}
+                <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
+            {/if}
+        {/if}
+    </div>
+    <AuctionEndDate {auctionInfo}/>
+</div>

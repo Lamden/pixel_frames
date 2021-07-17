@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 config()
 
 import { getDatabase, mongoose_models } from "./database.mjs";
-import { getDbUtils } from "../blockGrabber/db_utils.mjs";
+import { getDbUtils } from "./db_utils.mjs";
 
 const { AUCTION_CONTRACT, INFO_CONTRACT, MASTER_CONTRACT, TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, PUSHBULLET_TOKEN } = process.env
 

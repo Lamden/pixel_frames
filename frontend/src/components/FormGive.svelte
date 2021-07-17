@@ -20,8 +20,8 @@
 	let sendTime
 
 	const checkRecipient = (e) => {
-		console.log(e.target)
-		console.log(!isLamdenKey(recipient.trim()))
+		//console.log(e.target)
+		//console.log(!isLamdenKey(recipient.trim()))
 		if (!isLamdenKey(recipient.trim())) inputElm.setCustomValidity("Not a proper Lamden Address")
 		else {
 			inputElm.setCustomValidity("")
@@ -82,7 +82,6 @@
 		}
     }
     const clearValidity = () => {
-		console.log("clear")
 		inputElm.setCustomValidity("")
 		inputElm.reportValidity("")
 	}

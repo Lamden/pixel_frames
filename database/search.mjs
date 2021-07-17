@@ -1,4 +1,4 @@
-import { getDatabase, mongoose_models} from "../database/database.mjs";
+import { getDatabase, mongoose_models} from "./database.mjs";
 
 var myArgs = process.argv.slice(2);
 var searchItem = myArgs[0]

@@ -1,5 +1,6 @@
 import Lamden from 'lamden-js'
 import fs from "fs";
+import { validateTypes } from 'types-validate-assert'
 
 import PushBullet from 'pushbullet';
 import { TwitterClient } from 'twitter-api-client';
@@ -41,6 +42,24 @@ export const getDbUtils = (config) => {
         "meta:speed": "speed",
         "meta:num_of_frames": "num_of_frames",
         "meta:royalty_percent": "royalty_percent"
+    }
+
+    const deconstructKey = (rawKey) => {
+        let contractName = rawKey.split(".")[0]
+        let keys = rawKey.split(".")[1].split(":")
+        let variableName = keys.shift()
+
+        return {
+            contractName,
+            variableName,
+            keys,
+            rootKey: keys[0]
+        }
+    }
+
+    const isLamdenKey = ( key ) => {
+        if (validateTypes.isStringHex(key) && key.length === 64) return true;
+        return false;
     }
 
     const create_new_thing = async (transactionInfo, blockNmber) => {
@@ -241,9 +260,38 @@ export const getDbUtils = (config) => {
     async function process_auction_block(block_info){
         for (const subblock of block_info.subblocks) {
             for (const transaction of subblock.transactions) {
+                const { state } = transaction
+
+                const changes_per_uid = get_auction_changes_per_thing(AUCTION_CONTRACT, state)
+
                 await process_auction_transaction(transaction)
             }
         }
+    }
+
+    function get_auction_changes_per_thing(auction_contract, state){
+        let changesObj = {}
+        state.map(s => {
+            let contractName = s.key.split(".")[0]
+            let variableName = s.key.split(".")[1].split[":"][0]
+
+            if (contractName === auction_contract && variableName === "S"){
+
+                let keyString = s.key.split(".")[1].split[":"][1]
+                let keys = keyString.split(":")
+                let uid = keys[0]
+
+                if (!changesObj[uid]) changesObj[uid] = []
+                changesObj[uid].push(
+                    {
+                        contractName,
+                        variableName,
+                        keys,
+                        uid
+                    }
+                )
+            }
+        })
     }
 
     async function process_auction_transaction(transaction){
@@ -412,6 +460,8 @@ export const getDbUtils = (config) => {
     }
 
     return  {
+        deconstructKey,
+        isLamdenKey,
         create_new_thing,
         update_liked,
         update_price_info,

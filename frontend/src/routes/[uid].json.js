@@ -2,7 +2,8 @@ export async function get(req, res, next) {
 	const { uid } = req.params;
 	const { account } = req.query;
 
-	let likes = await global.models.Likes.findOne({uid})
+	let likes = await global.db.models.Likes.findOne({uid})
+
     res.setHeader('Content-Type', 'application/json');
 
 	if (!likes) {

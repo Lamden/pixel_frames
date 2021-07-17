@@ -23,7 +23,7 @@
 		timer = setTimeout(() => {
 			if ($userAccount && !balance) {
 				balance = refreshTAUBalance()
-				checkForApproval()
+				checkForApproval(config.masterContract)
 				timer = null;
 			}
 		}, 1000)

@@ -14,11 +14,8 @@
     import Likes from "./Likes.svelte";
 
     //Pictures
-    import like_filled from '../../static/img/like-filled.svg'
-    import like_unfilled from '../../static/img/like-unfilled.svg'
-    import lamden_logo from '../../static/img/lamden_logo_new.svg'
-    import artist from '../../static/img/artist.svg'
-    import owner from '../../static/img/owner.svg'
+    import ArtistIcon from '../../static/img/artist.svg'
+    import OwnerIcon from '../../static/img/owner.svg'
 
 
     const {sendTransaction} = getContext('app_functions')
@@ -155,13 +152,17 @@
     </div>
 </div>
 <div class="icons text-color-gray-5 flex-row">
-    <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html artist}</a>
-    <a href="{`./owned/${thingInfo.owner}`}" class="icon">{@html owner}</a>
+    <a href="{`./creator/${thingInfo.creator}`}" class="icon">
+        <ArtistIcon width="20"/>
+    </a>
+    <a href="{`./owned/${thingInfo.owner}`}" class="icon">
+        <OwnerIcon width="20"/>
+    </a>
 </div>
 
 <a href="{`./frames/${thingInfo.uid}`}">
     {#if frames.length >= show}
-        <FrameCanvas {pixelSize} pixels={frames[show - 1]} {thingInfo} watermark={createWatermark(thingInfo, $userAccount)} }/>
+        <FrameCanvas {pixelSize} pixels={frames[show - 1]} watermark={createWatermark(thingInfo, $userAccount)}/>
     {/if}
 </a>
 <div class="flex-row buy-like">

@@ -14,6 +14,7 @@
     import Price from './Price.svelte';
     import Likes from './Likes.svelte'
     import OwnerControls from './OwnerControls.svelte'
+    import Auction from './Auction.svelte';
 
     // Pictures
     import SocialButtons from "./SocialButtons.svelte";
@@ -21,6 +22,9 @@
     const {sendTransaction} = getContext('app_functions')
 
     export let thingInfo;
+    export let auctionInfo;
+
+    //console.log({thingInfo, auctionInfo})
     export let salesHistory;
     export let pixelSize = 17;
     export let updateInfo
@@ -137,6 +141,9 @@
         padding-top: 3rem;
         width: 100%;
     }
+    .auction-info{
+        margin-top: 3rem;
+    }
 </style>
 
 <h1>{thingInfo.name}</h1>
@@ -178,6 +185,13 @@
         <SocialButtons {thingInfo}/>
     </div>
 </div>
+{#if auctionInfo}
+    <div class="auction-info">
+        <h2>There is an active Auction!</h2>
+        <hr>
+        <Auction {auctionInfo} {thingInfo} showInfo={false}/>
+    </div>
+{/if}
 <div class="sales-history">
     <SalesHistory {salesHistory}/>
 </div>

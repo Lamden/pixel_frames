@@ -8,7 +8,9 @@
 /frontend/src/js/config.js
 /frontend/src/js/wallet_approval.js
 /frontend/src/js/whitelist.json
-/frontend/blockGrabber/blacklist.json
+/database/blacklist.json
+/database/node_modules/
+/database/.env
 /frontend/events/artist.json
 .DS_Store
 /tests/logs/test/Seneca.Parser.log

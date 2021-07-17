@@ -33,6 +33,10 @@ h1 {
 	font-size: 2em;
 }
 
+h2{
+	font-weight: 500;
+}
+
 a {
 	color: inherit;
 }
@@ -79,6 +83,19 @@ a:hover {
 	flex-direction: row;
 }
 
+.flex-wrap{
+	flex-wrap: wrap;
+}
+
+.flex-grow{
+	flex-grow: 1;
+}
+
+.flex-center-center{
+	align-items: center;
+	justify-content: center;
+}
+
 .flex-align-center{
 	align-items: center;
 }
@@ -89,6 +106,18 @@ a:hover {
 
 .flex-justify-center{
 	justify-content: center;
+}
+
+.flex-justify-spacebetween{
+	justify-content: space-between;
+}
+
+.flex-justify-spacearound{
+	justify-content: space-around;
+}
+
+.flex-justify-spaceevenly{
+	justify-content: space-evenly;
 }
 
 .text-center{

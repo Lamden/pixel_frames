@@ -2,8 +2,9 @@
     import { stringToFixed, timeDelta, formatAccountAddress} from '../js/utils'
     import { config } from '../js/config'
 
-    import lamden_logo from '../../static/img/lamden_logo_new.svg'
-    import gift from '../../static/img/gift.svg'
+    // Icons
+    import LamdenLogoIcon from '../../static/img/lamden_logo_new.svg'
+    import GiftIcon from '../../static/img/gift.svg'
 
     export let salesHistory
 
@@ -17,15 +18,9 @@
     .header{
         justify-content: space-between;
     }
-    .icon {
+
+    :global(.saleshistory-icon){
         margin: 0 0px 0 5px;
-        width: 15px;
-    }
-    .icon-gift {
-        margin: 0 0px 0 5px;
-        width: 20px;
-        position: relative;
-        top: -2px;
     }
     strong {
         margin-left: 5px;
@@ -47,17 +42,14 @@
 {#if salesHistory.data.length > 0}
     {#each salesHistory.data as history}
         <hr>
-        <div class="flex-col history ">
+        <div class="flex-col history">
             {#if history.gift}
-
                 <div class="header flex-row flex-align-center">
-                    <div class="flex-row">
-                        <h3 class="flex-row">Gifted</h3>
-                        <span class="icon-gift">
-                            {@html gift}
-                        </span>
+                    <div class="flex-row flex-align-center">
+                        <h3>Gifted</h3>
+                        <GiftIcon width="16" class="saleshistory-icon" />
                     </div>
-                <span class="timedelta text-color-gray-5">{timeDelta(history.saleDate)}</span>
+                    <span class="timedelta text-color-gray-5">{timeDelta(history.saleDate)}</span>
                 </div>
                 <p class="text-color-gray-6">
                     from:
@@ -73,12 +65,10 @@
                 </p>
             {:else}
                 <div class="header flex-row flex-align-center">
-                    <div class="flex-row">
+                    <div class="flex-row flex-align-center">
                         <h3 class="flex-row">Sold for</h3>
                         <strong>{stringToFixed(history.price, 8)}</strong>
-                        <span class="icon">
-                            {@html lamden_logo}
-                        </span>
+                        <LamdenLogoIcon width="18" class="saleshistory-icon" />
                     </div>
                     <span class="timedelta text-color-gray-5">{timeDelta(history.saleDate)}</span>
                 </div>

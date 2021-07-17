@@ -1,32 +1,30 @@
 <script>
     import { getContext, onMount } from 'svelte'
-    import { goto } from '@sapper/app';
-
-    // Components
-    import Frame from './Frame.svelte'
-    import FrameCanvas from './FrameCanvas.svelte'
-    import Price from './Price.svelte'
 
     // Misc
-    import { createSnack, alreadyLiked, createWatermark } from '../js/utils.js'
+    import { alreadyLiked } from '../js/utils.js'
     import { config } from '../js/config.js';
-    import { userAccount, autoTx } from '../js/stores.js'
+    import { userAccount } from '../js/stores.js'
 
     //Pictures
-    import like_filled from '../../static/img/like-filled.svg'
-    import like_unfilled from '../../static/img/like-unfilled.svg'
+    import LikeFilledIcon from '../../static/img/like-filled.svg'
+    import LikeUnfilledIcon from '../../static/img/like-unfilled.svg'
 
     const { sendTransaction } = getContext('app_functions')
 
     export let thingInfo;
+    export let width = 20;
 
     let liked = null;
+
+    $: height = width * 1.5
 
     onMount(() => {
         checkAlreadyLiked();
     })
 
     const checkAlreadyLiked = () => {
+        alreadyLiked(thingInfo.uid)
         if (liked === null && $userAccount)  alreadyLiked(thingInfo.uid).then(res => liked = res)
     }
 
@@ -63,10 +61,7 @@
         justify-content: space-between;
     }
     .icon {
-        margin-right: 5px;
-        width: 20px;
-        height: 30px;
-
+        margin-right: 8px;
     }
     .logged-in{
         cursor: pointer;
@@ -75,17 +70,25 @@
 </style>
 
 
-<div class="flex-row likes">
-    <div class="hide-mobile icon " class:logged-in={$userAccount} on:click={like}>
+<div class="flex-row flex-align-center likes">
+    <div class="hide-mobile icon"
+         class:logged-in={$userAccount}
+         on:click={like}
+         style={`width: ${width}px; height: ${height}px;`}>
+
         {#if liked !== null}
-            {@html liked ? like_filled : like_unfilled}
+            {#if liked}
+                <LikeFilledIcon width="22"/>
+            {:else}
+                <LikeUnfilledIcon width="22"/>
+            {/if}
         {:else}
-            {@html like_unfilled}
+            <LikeUnfilledIcon width="22"/>
         {/if}
     </div>
 
     <div class="show-mobile icon">
-        {@html like_unfilled}
+        <LikeUnfilledIcon width="22" />
     </div>
     {thingInfo.likes}
 </div>

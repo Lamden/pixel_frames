@@ -1,5 +1,3 @@
-
-
 <script>
 	import { onMount, beforeUpdate } from 'svelte'
 	import { scale } from 'svelte/transition';
@@ -33,6 +31,8 @@
 	}
 
     const getMore = async () => {
+		if (preview) return
+
 		if (count === formatted.length) return
     	if (sending) return;
 		sending = true;

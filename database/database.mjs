@@ -1,8 +1,10 @@
 import {config} from 'dotenv'
 config()
 import mongoose_models from './mongoose.models.mjs'
+import { getQueries } from './db_queries.mjs'
+import { getServices } from './db_services.mjs'
+
 import mongoose from 'mongoose';
-let db = mongoose;
 
 /******* MONGO DB CONNECTION INFO **/
 const NETWORK = process.env.NETWORK || 'testnet'
@@ -18,7 +20,9 @@ if (DBUSER) {
     connectionString = `mongodb://${DBUSER}:${DBPWD}@${DBURL}:${DBPORT}/${DBNAME}?authSource=admin`;
 }
 
-const getDatabase = () => new Promise(resolver => {
+export const getDatabase = () => new Promise(resolver => {
+    let db = mongoose;
+
     db.connect(
         connectionString,
         { useNewUrlParser: true, useUnifiedTopology: true },
@@ -28,14 +32,13 @@ const getDatabase = () => new Promise(resolver => {
                 throw new Error(error)
             }else {
                 console.log("connection successful");
+                db.models = mongoose_models
+                db.queries = getQueries(db)
+                //db.services = getServices()
                 resolver(db);
             }
         }
     );
 })
 
-export {
-    mongoose_models,
-    getDatabase
-}
 

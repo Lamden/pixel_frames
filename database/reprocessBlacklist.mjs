@@ -1,5 +1,5 @@
 import fs from "fs";
-import { getDatabase, mongoose_models} from "../database/database.mjs";
+import { getDatabase, mongoose_models} from "./database.mjs";
 
 const updateBlacklist = () => {
     const process = async () => {

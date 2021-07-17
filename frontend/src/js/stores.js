@@ -1,6 +1,7 @@
 import { writable, get, derived } from 'svelte/store';
 import { config } from './config.js'
 import { newPixelFrame } from './defaults'
+import {toBigNumber} from "./utils";
 
 export const released = writable(false);
 export const timeToRelease = writable(Date.UTC(2021, 3, 19, 22) - new Date());
@@ -19,7 +20,12 @@ export const stampRatio = writable();
 
 export const snackbars = writable([]);
 export const currency = writable(0);
-export const approvalAmount = writable(0);
+
+export const approvalAmount = writable({
+    [config.masterContract]: toBigNumber(0),
+    [config.auctionContract]: toBigNumber(0)
+});
+
 export const showModal = writable({data: {}, show: false});
 export const tabHidden = writable();
 
