@@ -10,6 +10,7 @@
 /frontend/src/js/whitelist.json
 /database/blacklist.json
 /database/node_modules/
+/blockserviceAPI/node_modules/
 /database/.env
 /frontend/events/artist.json
 .DS_Store
