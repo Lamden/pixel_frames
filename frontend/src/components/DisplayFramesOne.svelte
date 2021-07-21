@@ -1,5 +1,5 @@
 <script>
-    import {getContext, onMount} from 'svelte';
+    import {getContext, onMount, tick} from 'svelte';
     import {goto} from '@sapper/app';
 
     // Misc
@@ -35,10 +35,20 @@
     $: show = 1
 
     onMount(() => {
+        if (window.location.hash){
+            scrollToHash(window.location.hash.replace("#", "").toUpperCase())
+        }
+        console.log(window.location)
         checkAlreadyLiked()
         switcher = setInterval(switchFrames, thingInfo.speed)
         return (() => clearInterval((switcher)))
     })
+
+    async function scrollToHash(hash){
+        await tick()
+        let elm = document.getElementById(hash)
+        if (elm) setTimeout(() => elm.scrollIntoView(), 1);
+    }
 
     const openModal = (modal) => {
         showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
@@ -144,6 +154,9 @@
     .auction-info{
         margin-top: 3rem;
     }
+    .auction{
+        margin-top: 2rem;
+    }
 </style>
 
 <h1>{thingInfo.name}</h1>
@@ -185,13 +198,17 @@
         <SocialButtons {thingInfo}/>
     </div>
 </div>
-{#if auctionInfo}
-    <div class="auction-info">
-        <h2>There is an active Auction!</h2>
+
+<div class="auction-info" id="AUCTION" on:ready={() => console.log("READY")}>
+    {#if auctionInfo}
+        <h2 >There is an active Auction!</h2>
         <hr>
-        <Auction {auctionInfo} {thingInfo} showInfo={false}/>
-    </div>
-{/if}
+        <div class="flex flex-center-center auction">
+            <Auction {auctionInfo} {thingInfo} showInfo={false}/>
+        </div>
+    {/if}
+</div>
+
 <div class="sales-history">
     <SalesHistory {salesHistory}/>
 </div>

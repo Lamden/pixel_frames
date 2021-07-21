@@ -45,7 +45,7 @@
 
     const handleLikeTx = (txResults) => {
         console.log(txResults)
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
             liked = true;
             thingInfo.likes = thingInfo.likes + 1;
             localStorage.setItem(`${thingInfo.uid}:${$userAccount}:liked`, true)
@@ -61,7 +61,9 @@
         justify-content: space-between;
     }
     .icon {
-        margin-right: 8px;
+        margin-right: 6px;
+        position: relative;
+        top: 3.5px;
     }
     .logged-in{
         cursor: pointer;
@@ -78,12 +80,12 @@
 
         {#if liked !== null}
             {#if liked}
-                <LikeFilledIcon width="22"/>
+                <LikeFilledIcon width="21"/>
             {:else}
-                <LikeUnfilledIcon width="22"/>
+                <LikeUnfilledIcon width="21"/>
             {/if}
         {:else}
-            <LikeUnfilledIcon width="22"/>
+            <LikeUnfilledIcon width="21"/>
         {/if}
     </div>
 

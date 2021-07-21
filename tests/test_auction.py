@@ -44,6 +44,16 @@ class MyTestCase(unittest.TestCase):
         self.c = ContractingClient(signer='jeff', environment=self.environment_current_date)
         self.c.flush()
 
+        start_date = self.current_date + timedelta(seconds=-10)
+        self.start_date = Datetime(
+            start_date.year,
+            start_date.month,
+            start_date.day,
+            start_date.hour,
+            start_date.minute,
+            start_date.second
+        )
+
         end_date = self.current_date + timedelta(days=1)
         self.end_date = Datetime(
             end_date.year,
@@ -135,7 +145,19 @@ class MyTestCase(unittest.TestCase):
     def get_royalty_percent(self, uid):
         return self.con_pixel_frames.quick_read('S', f'{uid}:meta:royalty_percent')
 
-    def start_auction(self, uid, reserve_price, end_date=None, signer='jeff'):
+    def start_auction(self, uid, reserve_price, end_date=None, start_date=None, signer='jeff'):
+        if start_date is None:
+            start_date = self.start_date
+        else:
+            start_date = Datetime(
+                    start_date.year,
+                    start_date.month,
+                    start_date.day,
+                    start_date.hour,
+                    start_date.minute,
+                    start_date.second
+                )
+
         if end_date is None:
             end_date = self.end_date
         else:
@@ -152,6 +174,7 @@ class MyTestCase(unittest.TestCase):
         self.con_pixel_frames_auction.auction_thing(
             uid=uid,
             reserve_price=reserve_price,
+            start_date=start_date,
             end_date=end_date,
             signer=signer
         )
@@ -227,7 +250,7 @@ class MyTestCase(unittest.TestCase):
         )
         self.assertEqual(
             self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_bid'),
-            0
+            None
         )
         self.assertEqual(
             self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_winner'),
@@ -381,6 +404,48 @@ class MyTestCase(unittest.TestCase):
             self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_winner'),
             'ben'
         )
+    def test_bid_neg_auction_not_started(self):
+        print("TEST BID ON THING NEG AUCTION HAS ENDED")
+
+        self.start_auction(
+            uid=self.new_thing_1_uid,
+            reserve_price=5,
+            end_date=self.current_date + timedelta(seconds=5),
+            start_date=self.current_date + timedelta(seconds=2)
+        )
+
+        # Equal To
+        with self.assertRaises(AssertionError) as cm:
+            self.make_bid(
+                uid=self.new_thing_1_uid,
+                bid_amount=10,
+                signer='stu',
+                bid_datetime=self.current_date + timedelta(seconds=1)
+            )
+
+        self.assertEqual(
+            'Auction has not stared.',
+            str(cm.exception)
+        )
+
+        # GreaterThan
+        with self.assertRaises(AssertionError) as cm:
+            self.make_bid(
+                uid=self.new_thing_1_uid,
+                bid_amount=10,
+                signer='stu',
+                bid_datetime=self.current_date + timedelta(seconds=5.1)
+            )
+
+        self.assertEqual(
+            'Auction has ended.',
+            str(cm.exception)
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_bid'),
+            None
+        )
 
     def test_bid_neg_auction_ended(self):
         print("TEST BID ON THING NEG AUCTION HAS ENDED")
@@ -421,7 +486,7 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(
             self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_bid'),
-            0
+            None
         )
 
     def test_bid_neg_higher_bid(self):
@@ -457,6 +522,53 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(
             self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_bid'),
             high_bid
+        )
+    def test_bid_neg_bid_of_zero(self):
+        self.start_auction(
+            uid=self.new_thing_1_uid,
+            reserve_price=5
+        )
+
+        with self.assertRaises(AssertionError) as cm:
+            self.make_bid(
+                uid=self.new_thing_1_uid,
+                bid_amount=0,
+                signer='stu',
+                bid_datetime=self.current_date + timedelta(seconds=1)
+            )
+
+        self.assertEqual(
+            f'Bid must be greater than zero.',
+            str(cm.exception)
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_bid'),
+            None
+        )
+
+    def test_bid_neg_bid_of_less_than_zero(self):
+        self.start_auction(
+            uid=self.new_thing_1_uid,
+            reserve_price=5
+        )
+
+        with self.assertRaises(AssertionError) as cm:
+            self.make_bid(
+                uid=self.new_thing_1_uid,
+                bid_amount=-1,
+                signer='stu',
+                bid_datetime=self.current_date + timedelta(seconds=1)
+            )
+
+        self.assertEqual(
+            f'Bid must be greater than zero.',
+            str(cm.exception)
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', f'{self.new_thing_1_uid}:current_bid'),
+            None
         )
 
     def test_bid_neg_equal_bid(self):
@@ -758,7 +870,7 @@ class MyTestCase(unittest.TestCase):
             True
         )
 
-    def test_end_auction_early_with_flag_owner(self):
+    def test_end_auction_cannot_end_early_with_winning_bid_as_owner(self):
         self.start_auction(
             uid=self.new_thing_1_uid,
             reserve_price=5,
@@ -772,24 +884,31 @@ class MyTestCase(unittest.TestCase):
             bid_datetime=self.current_date + timedelta(seconds=1)
         )
 
-        self.end_auction(
-            uid=self.new_thing_1_uid,
-            signer='jeff',
-            end_early=True,
-            end_auction_datetime=self.current_date + timedelta(seconds=3)
-        )
+        with self.assertRaises(AssertionError) as cm:
+            self.end_auction(
+                uid=self.new_thing_1_uid,
+                signer='jeff',
+                end_early=True,
+                end_auction_datetime=self.current_date + timedelta(seconds=3)
+            )
 
         self.assertEqual(
-            'stu',
+            'Cannot end early. Auction started or reserve has been met.',
+            str(cm.exception)
+        )
+
+
+        self.assertEqual(
+            'con_pixel_frames_auction',
             self.con_pixel_frames.quick_read('S', f'{self.new_thing_1_uid}:owner'),
         )
 
         self.assertEqual(
             self.con_pixel_frames_auction.quick_read('S', self.new_thing_1_uid),
-            False
+            True
         )
 
-    def test_end_auction_early_with_flag_operator(self):
+    def test_end_auction_early_with_flag_as_operator_started_but_no_bids(self):
         self.start_auction(
             uid=self.new_thing_3_uid,
             reserve_price=5,
@@ -812,6 +931,225 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(
             self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
             False
+        )
+
+    def test_end_auction_early_with_flag_as_owner_started_but_no_bids(self):
+        self.start_auction(
+            uid=self.new_thing_3_uid,
+            reserve_price=5,
+            end_date=self.current_date + timedelta(seconds=5),
+            signer='stu'
+        )
+
+        self.end_auction(
+            uid=self.new_thing_3_uid,
+            signer='stu',
+            end_early=True,
+            end_auction_datetime=self.current_date + timedelta(seconds=3)
+        )
+
+        self.assertEqual(
+            'stu',
+            self.con_pixel_frames.quick_read('S', f'{self.new_thing_3_uid}:owner'),
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
+            False
+        )
+
+    def test_end_auction_early_with_flag_as_owner_started_has_bids_but_reserve_not_met(self):
+        self.start_auction(
+            uid=self.new_thing_3_uid,
+            reserve_price=2,
+            end_date=self.current_date + timedelta(seconds=5),
+            signer='stu'
+        )
+
+        self.make_bid(
+            uid=self.new_thing_3_uid,
+            bid_amount=1,
+            signer='ben',
+            bid_datetime=self.current_date + timedelta(seconds=2)
+        )
+
+        self.end_auction(
+            uid=self.new_thing_3_uid,
+            signer='stu',
+            end_early=True,
+            end_auction_datetime=self.current_date + timedelta(seconds=3)
+        )
+
+        self.assertEqual(
+            'stu',
+            self.con_pixel_frames.quick_read('S', f'{self.new_thing_3_uid}:owner'),
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
+            False
+        )
+
+    def test_end_auction_early_with_flag_as_operator_started_has_bids_but_reserve_not_met(self):
+        self.start_auction(
+            uid=self.new_thing_3_uid,
+            reserve_price=2,
+            end_date=self.current_date + timedelta(seconds=5),
+            signer='stu'
+        )
+
+        self.make_bid(
+            uid=self.new_thing_3_uid,
+            bid_amount=1,
+            signer='ben',
+            bid_datetime=self.current_date + timedelta(seconds=2)
+        )
+
+        self.end_auction(
+            uid=self.new_thing_3_uid,
+            signer='jeff',
+            end_early=True,
+            end_auction_datetime=self.current_date + timedelta(seconds=3)
+        )
+
+        self.assertEqual(
+            'stu',
+            self.con_pixel_frames.quick_read('S', f'{self.new_thing_3_uid}:owner'),
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
+            False
+        )
+
+    def test_end_auction_early_with_flag_as_owner_auction_not_started(self):
+        self.start_auction(
+            uid=self.new_thing_3_uid,
+            reserve_price=5,
+            end_date=self.current_date + timedelta(seconds=5),
+            start_date=self.current_date + timedelta(seconds=2),
+            signer='stu'
+        )
+
+        self.end_auction(
+            uid=self.new_thing_3_uid,
+            signer='stu',
+            end_early=True,
+            end_auction_datetime=self.current_date + timedelta(seconds=1)
+        )
+
+        self.assertEqual(
+            'stu',
+            self.con_pixel_frames.quick_read('S', f'{self.new_thing_3_uid}:owner'),
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
+            False
+        )
+
+
+    def test_end_auction_early_with_flag_as_operator_auction_not_started(self):
+        self.start_auction(
+            uid=self.new_thing_3_uid,
+            reserve_price=5,
+            end_date=self.current_date + timedelta(seconds=5),
+            start_date=self.current_date + timedelta(seconds=2),
+            signer='stu'
+        )
+
+        self.end_auction(
+            uid=self.new_thing_3_uid,
+            signer='jeff',
+            end_early=True,
+            end_auction_datetime=self.current_date + timedelta(seconds=1)
+        )
+
+        self.assertEqual(
+            'stu',
+            self.con_pixel_frames.quick_read('S', f'{self.new_thing_3_uid}:owner'),
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
+            False
+        )
+
+    def test_end_auction_early_with_flag_as_operator_neg_auction_has_started_reserve_met(self):
+        self.start_auction(
+            uid=self.new_thing_3_uid,
+            reserve_price=0,
+            end_date=self.current_date + timedelta(seconds=5),
+            start_date=self.current_date + timedelta(seconds=-5),
+            signer='stu'
+        )
+
+        self.make_bid(
+            uid=self.new_thing_3_uid,
+            bid_amount=1,
+            signer='ben',
+            bid_datetime=self.current_date + timedelta(seconds=2)
+        )
+
+        with self.assertRaises(AssertionError) as cm:
+            self.end_auction(
+                uid=self.new_thing_3_uid,
+                signer='jeff',
+                end_early=True,
+                end_auction_datetime=self.current_date + timedelta(seconds=3)
+            )
+
+        self.assertEqual(
+            'Cannot end early. Auction started or reserve has been met.',
+            str(cm.exception)
+        )
+
+        self.assertEqual(
+            'con_pixel_frames_auction',
+            self.con_pixel_frames.quick_read('S', f'{self.new_thing_3_uid}:owner'),
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
+            True
+        )
+
+    def test_end_auction_early_with_flag_as_owner_neg_auction_has_started_reserve_met(self):
+        self.start_auction(
+            uid=self.new_thing_3_uid,
+            reserve_price=0,
+            end_date=self.current_date + timedelta(seconds=5),
+            signer='stu'
+        )
+
+        self.make_bid(
+            uid=self.new_thing_3_uid,
+            bid_amount=1,
+            signer='ben',
+            bid_datetime=self.current_date + timedelta(seconds=2)
+        )
+
+        with self.assertRaises(AssertionError) as cm:
+            self.end_auction(
+                uid=self.new_thing_3_uid,
+                signer='stu',
+                end_early=True,
+                end_auction_datetime=self.current_date + timedelta(seconds=3)
+            )
+
+        self.assertEqual(
+            'Cannot end early. Auction started or reserve has been met.',
+            str(cm.exception)
+        )
+
+        self.assertEqual(
+            'con_pixel_frames_auction',
+            self.con_pixel_frames.quick_read('S', f'{self.new_thing_3_uid}:owner'),
+        )
+
+        self.assertEqual(
+            self.con_pixel_frames_auction.quick_read('S', self.new_thing_3_uid),
+            True
         )
 
     def test_end_auction_early_neg_with_flag_not_owner(self):

@@ -6,8 +6,6 @@ export async function get(req, res) {
 	let auctions = auctionsRes[0]
 	auctions.data = await global.db.queries.populateThingInfo(auctions.data)
 
-	console.log({data: auctions.data})
-
 	res.setHeader('Content-Type', 'application/json');
 	res.end(JSON.stringify({data: auctions.data, count: auctions.count.length}));
 }

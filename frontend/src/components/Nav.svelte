@@ -45,7 +45,7 @@
 		position: relative;
     	top: 0;
 		left: 0;
-		height: 92px;
+		min-height: fit-content;
 		box-sizing: border-box;
     	width: 100%;
 		padding: 1rem 3em;
@@ -85,7 +85,7 @@
 		line-height: 1.2;
 		text-align: right;
 		flex-grow: 1;
-		min-width: 20%
+		min-width: 20%;
 	}
 	.currency > strong {
 		margin-left: 4px;
@@ -94,6 +94,7 @@
 	.account >  p > strong.account-info{
 		color: var(--primary);
 		font-weight: 400;
+
 	}
 	.address{
 		width: 93%;
@@ -101,22 +102,26 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		align-self: flex-end;
-		margin: 0;
+		margin: 0.25rem 1rem 0 0 ;
 		color: var(--primary);
 	}
 	.address:hover{
 		color: var(--primary)
 	}
 	.currency{
-		color: #161454;
+		color: var(--primary-dark);
 		font-size: 1em;
 		margin: 0;
+		background: #dedede8c;
+		padding: 0.5rem 1rem;
+		border-radius: 10px;
 	}
 
 	.links{
 		display: none;
 		padding: 0 20px;
 		min-width: max-content;
+		color: var(--primary-dark);
 	}
 	ul {
 		margin: 0;
@@ -157,6 +162,21 @@
 	@media (min-width: 900px) {
 		.links {
 			display: block;
+			font-size: 1.3em;
+		}
+		li > a {
+			padding: 1em 0.25em 0.5em;
+			margin-bottom: 0.5em;
+		}
+		[aria-current]::after {
+			width: calc(100% - 0.5em);
+			height: 3px;
+		}
+		.currency{
+			font-size: 20px;
+		}
+		.account{
+			font-size: 20px;
 		}
 	}
 	@media (min-width: 450px) {
@@ -176,7 +196,7 @@
 <nav class="flex-row">
 	<a class="brand flex-row" rel=prefetch  href=".">
 		<img src="logo-64.png" alt="nav logo">
-		<Title fontSize={1} subtitle={false}/>
+		<Title fontSize={1.2} subtitle={false}/>
 	</a>
 	<div class="links desktop">
 		<ul>

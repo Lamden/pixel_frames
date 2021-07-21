@@ -75,13 +75,13 @@
 	}
 
 	const handleApproveTx = (txResults) => {
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	buy()
         }
     }
 
 	const handleBuyTx = (txResults) => {
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	updateInfo({
 				owner: $userAccount,
 				"price_amount": "0",

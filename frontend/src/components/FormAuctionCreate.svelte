@@ -2,7 +2,7 @@
     import { getContext, onMount } from 'svelte'
 
 	// Misc
-	import { frames, showModal, currency, userAccount, approvalAmount, stampRatio } from '../js/stores.js'
+	import {  showModal, currency, stampRatio } from '../js/stores.js'
 	import {
 		createSnack,
 		closeModel,
@@ -25,33 +25,39 @@
 	const uid = thingInfo.uid
 	const thingName = thingInfo.name
 
-	let hasApproval = false
 	let endDate = new Date()
 	let dateRange
 
+	$: hasApproval = false
 	$: endDate = new Date()
 	$: reserve_price = toBigNumber("0")
 	$: thingApprovalTxStamps_to_tau = toBigNumber(stampLimits[config.masterContract].approve).dividedBy($stampRatio)
 	$: createAuctionTxStamps_to_tau = toBigNumber(stampLimits[config.auctionContract].auction_thing).dividedBy($stampRatio)
 	$: total_tx_fees = hasApproval ? createAuctionTxStamps_to_tau : thingApprovalTxStamps_to_tau.plus(createAuctionTxStamps_to_tau)
-
-	$: buttonText = getButtonText(total_tx_fees, endDate)
+	$: buttonText = getButtonText(total_tx_fees, dateRange)
 
 	onMount(() => {
 		checkForAuctionApproval(uid).then((value) => hasApproval = value)
 	})
 
-	function getButtonText(amount, date){
-    	if (amount.isGreaterThan($currency)) return `Insufficient ${config.currencySymbol}`
-		if (date <= new Date()) return "Invalid End Date"
+	function getButtonText(amount, dateRange){
+		if (!dateRange) return 'Choose Auction Dates'
 
-		return `Create Action`
+		const { from, to } = dateRange
+    	if (new Date(to) < new Date() ) return `End Date has past`
+
+		return `Create Auction`
 	}
 
 	function setDateRange(e){
 		dateRange = e.detail
-		//console.log(dateRange)
-		//console.log(toDateTime(new Date()))
+		console.log(dateRange)
+	}
+
+	function fixMonth(datetime){
+		datetime.__time__[1] = datetime.__time__[1] + 1
+		console.log({datetime})
+		return datetime
 	}
 
     const auction_thing = () => {
@@ -62,7 +68,8 @@
 			kwargs: {
 				uid,
 				reserve_price: {__fixed__: reserve_price.toString()},
-				end_date: toDateTime(new Date())
+				start_date: fixMonth(toDateTime(dateRange.from)),
+				end_date: fixMonth(toDateTime(dateRange.to))
 			}
 		}
 
@@ -99,7 +106,7 @@
 
 	const approveAndSend = async () => {
 		checkForAuctionApproval(uid).then((value) => {
-			console.log(value)
+			console.log({value})
 			if (!value){
 				approveThing();
 			}else{
@@ -109,7 +116,7 @@
 	}
 
 	const handleApproveTx = (txResults) => {
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	auction_thing()
         }
     }
@@ -165,6 +172,17 @@
 		height: 379px;
 		justify-content: flex-start;
 	}
+	:global(.contents-wrapper){
+		top: 50px!important;
+		left: 50px!important;
+	}
+	:global(.time-container){
+		box-sizing: border-box;
+	}
+	:global(.datepicker){
+		--highlight-color: var(--primary)!important;
+		--passive-highlight-color: var(--primary-highlight)!important;
+	}
 
 </style>
 
@@ -180,14 +198,14 @@
 			<input id="name" type="text" readonly value={$showModal.modalData.thingInfo.name}/>
 
 			<label for="bid_amount">Reserve Amount</label>
-			<input id="bid_amount" type="number" step="0.1" autofocus required bind:this={inputElm} on:input={handleInput}/>
+			<input id="bid_amount" type="number" step="0.1" autofocus required bind:this={inputElm} on:input={handleInput} value={0}/>
 
 			<label for="bid_amount">Auction End Date</label>
-			<DatePicker range={true} on:range-selected={setDateRange}/>
+			<DatePicker range={true} time={true} on:range-selected={setDateRange}/>
 			<input
 				type="submit"
 				class="button_text outlined"
-				disabled={total_tx_fees.isGreaterThan($currency) || endDate <= new Date()}
+				disabled={buttonText !== "Create Auction"}
 				value={buttonText} form="bid" />
 		</form>
 	</div>

@@ -81,16 +81,18 @@ export const auctionContractProcessor = (database, socket_server) =>{
         if (determineUpdateType(update) !== "newAuction") return
         //console.log(util.inspect({newAuction: update}, false, null, true))
 
-        const { end_date, reserve_price} = update
+        const { end_date, start_date, reserve_price} = update
         const { __fixed__: reserve_price_fixed } = reserve_price
-        const [year, month, day, hour, minute, second, ms] = end_date.__time__
+        const [end_year, end_month, end_day, end_hour, end_minute, end_second, end_ms] = end_date.__time__
+        const [start_year, start_month, start_day, start_hour, start_minute, start_second, start_ms] = start_date.__time__
 
         let reserve_price_BN = new BN(reserve_price_fixed || reserve_price)
 
-        let auction = new db.models.AuctionHistory({
+        let auction = await new db.models.AuctionHistory({
             uid: update.uid,
-            start_date: new Date(timestamp * 1000),
-            scheduled_end_date: Date.UTC(year, month, day, hour, minute, second, ms),
+            created_date: new Date(timestamp * 1000),
+            start_date: Date.UTC(start_year, start_month-1, start_day, start_hour, start_minute, start_second, start_ms),
+            scheduled_end_date: Date.UTC(end_year, end_month-1, end_day, end_hour, end_minute, end_second, end_ms),
             ended: false,
             ended_early: false,
             old_owner: update.current_owner,
@@ -105,9 +107,14 @@ export const auctionContractProcessor = (database, socket_server) =>{
             royalty_percent: update.royalty_percent,
             creator: update.creator,
             last_tx_uid: tx_uid
-        }).save()
+        })
+        console.log({auction})
+        auction.save((err, doc) => {
+            console.log({err, doc})
+            if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'new-auction', auction: doc})
+        })
 
-        if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'new-auction', auction})
+
     }
 
     async function newBid(args){
@@ -187,6 +194,7 @@ export const auctionContractProcessor = (database, socket_server) =>{
 
         auction.ended = true
         auction.ended_early = ended_date < auction.scheduled_end_date
+        auction.ended_early_date = ended_date
         auction.new_owner = new_owner
         auction.last_tx_uid = tx_uid
 

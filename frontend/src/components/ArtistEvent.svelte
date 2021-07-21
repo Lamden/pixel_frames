@@ -10,15 +10,18 @@
 	import Auctions from './Auctions.svelte'
 
 	// Misc
-	import { getTimeAgo, getTimeTo } from "../js/utils";
+	import {getTimeAgo, getTimeTo} from "../js/utils";
+	import { auctions } from "../js/stores";
 
-	let eventInfo = null
-	let auctions = undefined
+	auctions.subscribe(curr => console.log(curr))
 
-	$:  eventHasEnded = true;
-	$:  shouldShowEvent = false;
-	$:  eventHasStarted = false;
-	$:  announceStarted = false;
+	$: eventInfo = null
+	$: eventInfoType = eventInfo ? eventInfo.eventType : null
+	$: eventAuctions = eventInfoType ? eventInfoType === "auction" ? getAuctions(eventInfo.artList, $auctions) : null : null
+	$: eventHasEnded = true;
+	$: shouldShowEvent = false;
+	$: eventHasStarted = false;
+	$: announceStarted = false;
 
 	onMount(async () => {
 		let res = await fetch(`./getArtistEvent.json?event=artist`).then(res => res.json())
@@ -31,13 +34,18 @@
 				announceStarted = new Date() > new Date(res.announceDate)
 				eventHasStarted = new Date() > new Date(res.startDate)
 				eventInfo = res
-				console.log({eventInfo})
-				if (eventInfo.eventType === "auction") auctions = eventInfo.auctions
 			}
 		}catch (e){
 			console.log(e)
 		}
 	})
+
+	function getAuctions(eventInfoAuctions, storeAuctions){
+		return storeAuctions.filter(f => {
+			let found = eventInfoAuctions.find(auction => auction === f.uid)
+			return found ? true : false
+		})
+	}
 
 	const removeSold = (artList) => {
 		return artList.filter(f => f.owner === eventInfo.artistVk)
@@ -55,10 +63,16 @@
 		padding: 3rem 0;
 		margin: 4rem 0;
 	}
+	.gallery{
+		margin: 3rem 0;
+	}
 	h1 > strong{
 		color: var(--primary-highlight);
 		font-weight: 600;
 		font-size: 1.5em;
+	}
+	h3.artist-info{
+		margin: 0 0 2rem;
 	}
 	img{
 		display: block;
@@ -72,18 +86,6 @@
 		font-size: 1.2em;
 		color: var(--primary-dark);
 	}
-	p.subtitle{
-		display: block;
-		margin: 1rem auto;
-		font-weight: 200;
-		color: var(--primary-dark);
-	}
-	.sold{
-		color: var(--primary);
-		font-size: 2em;
-		font-weight: bold;
-		margin-bottom: 0rem;
-	}
 	.time{
 		font-size: 25px;
 		font-weight: 500;
@@ -93,7 +95,6 @@
 {#if eventInfo && announceStarted}
 	<div class="container">
 		<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
-		<h3 class="text-color-primary-dark"><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
 		<div class="gallery">
 			<PixelWall mostLiked={soldList(eventInfo.artThingList)} />
 		</div>
@@ -113,9 +114,10 @@
 				</h3>
 			{/if}
 		{/if}
+		<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
 
-		{#if eventInfo.eventType === "auction" && auctions}
-			<Auctions {auctions} title={false}/>
+		{#if eventAuctions}
+			<Auctions auctions={eventAuctions} title={false} showMore={false} />
 		{/if}
 	</div>
 {/if}

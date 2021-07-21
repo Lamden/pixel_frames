@@ -21,6 +21,12 @@ body{
 	/* ffe5f1 */
 	--color-white-primary-tint: #f0fffb;
 	--box-shadow-primary-dark: #00523e3b;
+	--button-shading-dark: #00523e85;
+}
+
+.datepicker{
+	--highlight-color: var(--primary);
+    --passive-highlight-color: var(--primary-highlight);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -174,7 +180,7 @@ a:hover {
 
 .button {
 	box-shadow:inset 0px 1px 0px 0px var(--primary);
-	background:linear-gradient(to bottom, var(--primary) 5%, var(--primary-dark) 100%);
+	background:linear-gradient(to bottom, var(--primary) 5%, var(--button-shading-dark) 100%);
 	background-color: var(--primary);
 	border-radius:6px;
 	border:1px solid var(--primary-dark);

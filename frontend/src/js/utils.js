@@ -151,6 +151,20 @@ export const letter_to_color = {
     'z' :'#831843'
 }
 
+export const getCurrentKeyValue = async (contractName, variableName, key) => {
+    let value = null
+    const result = await fetch(`./getkey-${contractName}.${variableName}:${key}.json`)
+    try {
+        let json = await result.json();
+        value = json.value
+    }catch(e){
+        return null
+    }
+    if (value === null || typeof value === 'undefined') return value
+    if (typeof value.__fixed__ !== 'undefined') return toBigNumber(value.__fixed__)
+    return value
+}
+
 export const replaceAll = (string, char, replace) => {
   return string.split(char).join(replace);
 }
@@ -299,22 +313,17 @@ export const checkForApproval = async (contract) => {
 
 export const checkForAuctionApproval = async (uid) => {
     if (!get(userAccount)) return
-    let keyList = [
-        {
-            "contractName": config.masterContract,
-            "variableName": "balances",
-            "key": `${get(userAccount)}:${uid}:${config.auctionContract}`
-        }
-    ]
-    const res = await blockexplorer_api.getKeys(keyList)
-    let approval = res[`${config.masterContract}.balances:${keyList[0].key}`]
 
-    if (approval === null || approval === "None" ) return false
-    else return approval
+    let contractName = config.masterContract
+    let variableName = "balances"
+    let key = `${get(userAccount)}:${uid}:${config.auctionContract}`
 
+    let hasApproval =  await getCurrentKeyValue(contractName, variableName, key)
+        console.log({checkForAuctionApproval: {
+        contractName, variableName, key, hasApproval
+        }})
+    return hasApproval
 }
-
-
 
 export const needsApproval = async () => {
     let approval = await checkForApproval(config.masterContract)
@@ -353,7 +362,7 @@ export const alreadyLiked = async (uid) => {
     if (lsValue !== null) return true;
 
     const liked = await fetch(`./${uid}.json?account=${account}`).then(res => res.json())
-
+    console.log({liked})
     if (liked === true) localStorage.setItem(`${uid}:${account}:liked`, true)
 
     return liked
@@ -532,7 +541,6 @@ export const hasNulls = (array) => {
 }
 
 export const getTimeDelta = (timePresent, timeFuture) => {
-    console.log({timePresent, timeFuture})
      // get total seconds between the times
     var delta = Math.abs(timePresent - timeFuture) / 1000;
 
@@ -560,7 +568,7 @@ export const getTimeAgo = (date, hasEnded) => {
     if (!date) return ''
     try{
         let delta = hasEnded ? getTimeDelta(date, new Date()) : getTimeDelta(new Date(), date)
-        console.log({delta})
+
         if (isNaN(delta.days)) return ''
         if (delta.days > 0) return `${delta.days} days ago `
         if (delta.hours > 0 && delta.days === 0) return `${delta.hours} hours ago `

@@ -10,8 +10,10 @@
 
     $: endTime = new Date(auctionInfo.scheduled_end_date)
     $: ended = auctionInfo.ended
+    $: ended_early = auctionInfo.ended_early
+    $: ended_earlyTime = new Date(auctionInfo.ended_early_date)
     $: currentTime = new Date()
-    $: deltaTime = getTimeDelta(currentTime, endTime)
+    $: deltaTime = getTimeDelta(currentTime, ended_early ? ended_earlyTime : endTime)
     $: hasEnded = ended ? true : currentTime > endTime
 
 
@@ -42,7 +44,7 @@
     class:hasEnded={hasEnded}
     class:hasStarted={!hasEnded}>
     {#if hasEnded}
-        Auction has ended
+        Ended {deltaTime.hours} Hrs {deltaTime.minutes} Mins {deltaTime.seconds} Secs ago
     {:else}
         {#if deltaTime.days === 0}
             Ends in {deltaTime.hours} Hrs {deltaTime.minutes} Mins {deltaTime.seconds} Secs

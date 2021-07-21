@@ -89,7 +89,7 @@
 	}
 
 	const handleApproveTx = (txResults) => {
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	bid()
         }
     }

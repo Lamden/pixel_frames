@@ -7,18 +7,18 @@
 	// TODO - disclaimer when buying NFT
 	// TODO - disclaimer when selling NFT
 
-
-	import Nav from '../components/Nav.svelte';
 	import {onMount, beforeUpdate, setContext} from 'svelte';
+
+	// Components
+	import Nav from '../components/Nav.svelte';
 	import WalletController from 'lamden_wallet_controller';
-
-
-	import {approvalRequest} from '../js/wallet_approval';
 	import Snackbar from "../components/Snackbar.svelte";
 	import Modal from "../components/Modal.svelte";
 	import CreatedWithLove from "../components/CreatedWithLove.svelte";
+	import AuctionUpdates from "../components/AuctionUpdates.svelte";
 
 	// Misc
+	import {approvalRequest} from '../js/wallet_approval';
 	import { config, stampLimits } from '../js/config.js';
 	import { walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice, approvalAmount } from '../js/stores.js';
 	import {processTxResults, createSnack, refreshTAUBalance, checkForApproval, stringToFixed, toBigNumber} from '../js/utils.js';
@@ -48,6 +48,8 @@
 		refreshCurrencyBalance()
 		refreshTauPrice()
 		checkForApproval(config.masterContract)
+
+		socket.on('')
 
 		return () => {
 			lwc.events.removeListener(handleWalletInfo)
@@ -170,3 +172,4 @@
 	<slot></slot>
 </main>
 <CreatedWithLove />
+<AuctionUpdates />

@@ -22,9 +22,12 @@
     export let showInfo = true
     export let id
 
+    console.log({auctionInfo, thingInfo})
+
     let pixelSize = 2
 
     $: hasEnded = auctionHasEnded(auctionInfo)
+    $: hasStarted = new Date() >= new Date(auctionInfo.start_date)
     $: timesUp = new Date() > new Date(auctionInfo.scheduled_end_date)
     $: notClaimed = auctionInfo.winner === ""
     $: reserveMet = auctionInfo.reserve_met
@@ -34,6 +37,13 @@
     $: winning_bidder = winning_bid_info ? winning_bid_info.bidder : ""
     $: winning_timestamp = winning_bid_info ? new Date(winning_bid_info.timestamp) : null
     $: timeAgo = getTimeAgo(winning_timestamp, hasEnded)
+    $: canBeCancelled = determineCanBeCancelled(hasStarted, reserveMet)
+
+    function determineCanBeCancelled(hasStarted, reserveMet){
+        if (!hasStarted) return true
+        if (!reserveMet) return true
+        return false
+    }
 
     function auctionHasEnded(info){
         // console.log(auctionInfo)
@@ -42,22 +52,29 @@
         return false
     }
 
-
-
     const handleBid = () => {
-        showModal.set({modalData:{auctionInfo, thingInfo: auctionInfo.thingInfo, winning_bid, modal: FormBid}, show: true})
+        showModal.set({
+            modalData:{
+                auctionInfo,
+                thingInfo,
+                winning_bid,
+                modal: FormBid
+            },
+            show: true
+        })
     }
 
     const handleEnd = (modal) => {
         showModal.set({
             modalData:{
                 auctionInfo,
-                thingInfo: auctionInfo.thingInfo,
+                thingInfo,
                 end_info: {
                     bid: winning_bid,
                     bidder: winning_bidder,
                     hasEnded,
-                    winning_timestamp
+                    winning_timestamp,
+                    end_early: canBeCancelled
                 },
                 modal
             },
@@ -65,13 +82,12 @@
         })
     }
 
-
-
 </script>
 
 <style>
     .auction-container{
-        margin:  1rem;
+        position: relative;
+        margin:  1.1rem;
         box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
         -webkit-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
         -moz-box-shadow: 2px 6px 19px 0px var(--box-shadow-primary-dark);
@@ -114,7 +130,7 @@
         margin-left: 20px;
     }
     button{
-        width: 116px;
+        width: 130px;
         align-self: center;
         letter-spacing: 1px;
     }
@@ -129,12 +145,31 @@
     .current-winner > span {
         width: max-content;
     }
+    p.reserve-not-met{
+        position: absolute;
+        top: -10px;
+        right: 50%;
+        width: max-content;
+        background: var(--primary-dark);
+        color: var(--color-white-primary-tint);
+        padding: 3px 9px;
+        border-radius: 10px;
+        font-size: 12px;
+        transform: translate(50%, 0);
+    }
+    .no-bid{
+        font-size: 14px;
+        color: var(--gray-5);
+    }
     :global(.auction-check-icon){
         margin-left: 8px;
     }
 </style>
 <div class="auction-container" {id}>
     <div class="top-content flex-grow">
+        {#if !reserveMet}
+            <p class="reserve-not-met">Resereve Not Met</p>
+        {/if}
         {#if showInfo}
             <div class="title flex-row">
                 <a href="{`./frames/${thingInfo.uid}`}" class="name">{thingInfo.name}</a>
@@ -152,14 +187,13 @@
                 <Preview solidBorder={true} solidBorderColor="#00d6a22b" frames={thingInfo.frames} pixelSize={4} {thingInfo} showWatermark={true} border={false}/>
             </a>
             <div class="bid-details">
-                {#if winning_bidder}
                     <p class="text-color-gray-6">{hasEnded ? "Winning Bid" : "Current Bid" }</p>
                     <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
-
+                {#if winning_bidder}
                     <p class="text-color-gray-5">{hasEnded ? `Won ${getTimeAgo(winning_timestamp)}by` : `${getTimeAgo(winning_timestamp)}by` }</p>
                     <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">{formatAccountAddress(winning_bidder, 8, 4)}</a>
                 {:else}
-                    <p><strong>no bids</strong></p>
+                    <p><strong class="no-bid">Be the first to bid!</strong></p>
                 {/if}
             </div>
 
@@ -176,13 +210,15 @@
                     <CheckIcon class="auction-check-icon" width="17" />
                 </div>
             {:else}
-                <button class="button" on:click={handleBid} > BID </button>
+                {#if $userAccount !== auctionInfo.old_owner}
+                    <button class="button" on:click={handleBid} > BID </button>
+                {/if}
             {/if}
         {/if}
         {#if $userAccount === winning_bidder && notClaimed && timesUp}
             <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>CLAIM</button>
         {:else}
-            {#if $userAccount === auctionInfo.old_owner && !reserveMet && !hasEnded}
+            {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
                 <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
             {/if}
         {/if}

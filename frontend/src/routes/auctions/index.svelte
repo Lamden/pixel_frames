@@ -1,20 +1,15 @@
-<script context="module">
-	export async function preload() {
-		const res = await this.fetch(`./auctionsAll.json?limit=25`)
-		let data = await res.json()
-		if (!data) data = []
-	    return {auctions: data}
-	}
-</script>
 
 <script>
-    import Auctions from '../../components/Auctions.svelte'
+	// Components
+	import Auctions from '../../components/Auctions.svelte'
 
-    export let auctions;
+	// Misc
+    import { auctions } from '../../js/stores'
+
 </script>
 
 <svelte:head>
 	<title>Pixel Whale NFT Auctions!</title>
 </svelte:head>
 
-<Auctions {auctions} />
+<Auctions auctions={$auctions} />

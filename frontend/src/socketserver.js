@@ -13,13 +13,11 @@ export const start = (io_server, database_service_url='http://localhost', databa
     })
 
     databaseSocket.on('auction-update', (data) => {
-        //data = JSON.parse(data)
-        //console.log(data)
-        io_server.to('auction-updates').emit(data.type, data)
+        console.log(data)
+        io_server.to('auction-updates').emit(data.type, data.auction)
     })
 
     databaseSocket.on('market-update', (data) => {
-        //data = JSON.parse(data)
         //console.log(data)
         io_server.to('market-updates').emit(data.type, data)
     })
@@ -27,14 +25,16 @@ export const start = (io_server, database_service_url='http://localhost', databa
     databaseSocket.on('main-events', (data) => {
         //data = JSON.parse(data)
         //console.log(data)
-        io_server.to('thing-events').emit(data.type, data)
+        io_server.to('thing-events').emit(data.type, data.update)
     })
 
     io_server.on('connection', socket => {
         socket.on('join', (room) => {
+            console.log(`joining ${room}`)
             socket.join(room)
         })
         socket.on('leave', (room) => {
+            console.log(`leaving ${room}`)
             socket.leave(room)
         })
     })

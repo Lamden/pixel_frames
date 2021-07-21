@@ -15,12 +15,13 @@
     const { sendTransaction } = getContext('app_functions')
 
 	const auctionInfo = $showModal.modalData.auctionInfo
-	const thingInfo = auctionInfo.thingInfo
+	const thingInfo = $showModal.modalData.thingInfo
 
 	const uid = auctionInfo.uid
 	const thingName = thingInfo.name
 
 	const hasEnded  = $showModal.modalData.end_info.hasEnded
+	const end_early  = $showModal.modalData.end_info.end_early
 	const winning_bid = $showModal.modalData.end_info.bid
 	const bid_winner = $showModal.modalData.end_info.bidder
 
@@ -36,12 +37,14 @@
 	}
 
     const endAuction = () => {
+    	console.log({end_early})
 		const transaction = {
 			contractName: config.auctionContract,
 			methodName: 'end_auction',
 			networkType: config.networkType,
 			kwargs: {
-				uid
+				uid,
+				end_early
 			}
 		}
 
@@ -65,9 +68,10 @@
 
 	const handleEndAuctionTx = () => {
 		createSnack({
-			title: `NFT Claimed!`,
-			body: `You are now the owner of ${thingName}.`,
-			type: "info",
+			title: `NFT Cancelled!`,
+			body: `"${thingName}" has been returned to you.`,
+			type: "success",
+			delay: 8000,
 			thingInfo
 		})
     }
@@ -84,6 +88,17 @@
 		font-weight: 900;
 		letter-spacing: 1.5px;
 		margin-bottom: 1rem;
+	}
+	.name{
+		font-size: 20px;
+		font-weight: 600;
+		margin: 1rem auto;
+		padding: 0.5rem;
+		border: 1px dashed var(--gray-6);
+		width: 100%;
+		text-align: center;
+		box-sizing: border-box;
+		border-radius: 5px;
 	}
 	.subtitle{
 		margin: 0 0 0.5rem;
@@ -112,9 +127,6 @@
 		position: relative;
 		width: fit-content;
 	}
-	.preview{
-		margin: 1rem auto;
-	}
 
 </style>
 
@@ -125,15 +137,15 @@
 		</div>
 	</div>
 	<form id="end-auction" class="flex-col" on:submit|preventDefault={checkPrice}>
-		{#if userIsWinner }
-			<p class="title">Cancel Auction</p>
-			<p class="subtitle">
-				Your reserve price of
-				<strong>{stringToFixed(auctionInfo.reserve_price, 8)} {config.currencySymbol}</strong>
-				has not been met. Cancelling the auction will refund the highest bid and return the NFT to you.
-			</p>
-			<p><strong>Click the CANCEL</strong> button below to send the transaction.</p>
-		{/if}
+
+		<p class="title">Cancel Auction</p>
+		<p class="name text-color-primary-dark">{thingInfo.name}</p>
+		<p class="subtitle">
+			Your reserve price of
+			<strong>{stringToFixed(auctionInfo.reserve_price, 8)} {config.currencySymbol}</strong>
+			has not been met. Cancelling the auction will refund the highest bid and return the NFT to you.
+		</p>
+		<p><strong>Click the CANCEL</strong> button below to send the transaction.</p>
 
 		<input
 			type="submit"

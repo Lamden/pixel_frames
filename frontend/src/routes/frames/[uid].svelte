@@ -41,6 +41,8 @@
 	export let auctionInfo
 	export let salesHistory
 
+	console.log({thingInfo, auctionInfo})
+
 	let gifURL = `${config.domainName}/gif/${thingInfo.uid}.gif`
 
 	const updateThingInfo = (updates) => {

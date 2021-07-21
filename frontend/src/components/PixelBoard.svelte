@@ -144,12 +144,12 @@
         {/each}
     {/if}
 
-    {#if itemCreated}
+   {#if itemCreated}
         <div in:scale="{{duration: 1000, delay: 0, opacity: 0.0, start: 0.2, easing: quintOut}}"
              out:blur="{{duration: 1000, delay: 0, opacity: 0.0, amount: 20, easing: quintOut}}"
              class="checkmark"
              style={`width: ${config.totalPixels}px`}>
-            <CheckCircleIcon width="20" />
+            <CheckCircleIcon width={`${config.totalPixels}px`} />
         </div>
     {/if}
 </div>

@@ -17,6 +17,7 @@ export const walletInfo = writable({});
 export const userAccount = writable("");
 export const autoTx = writable(false);
 export const stampRatio = writable();
+export const auctions = writable([]);
 
 export const snackbars = writable([]);
 export const currency = writable(0);

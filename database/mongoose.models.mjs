@@ -96,6 +96,7 @@ var auctionHistory = new mongoose.Schema({
         required: true,
         index: true
     },
+    created_date: Date,
     start_date: Date,
     scheduled_end_date: Date,
     ended: Boolean,
@@ -104,6 +105,7 @@ var auctionHistory = new mongoose.Schema({
         required: false,
     },
     ended_early: Boolean,
+    ended_early_date: Date,
     old_owner: String,
     new_owner: String,
     reserve_price: String,

@@ -29,7 +29,7 @@ export const TransactionResultHandler = (createSnack) => {
 		if (Array.isArray(errors)){
 			errors.forEach(error => {
 				let toastType = 'info'
-				if (error.includes("AssertionError('")) {
+				if (String(error).includes("AssertionError('")) {
 					let match = error.match(/AssertionError\('(.*)',\)/)
 					if (match){
 						error = match[1]
