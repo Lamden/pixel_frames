@@ -13,7 +13,7 @@ export const start = (io_server, database_service_url='http://localhost', databa
     })
 
     databaseSocket.on('auction-update', (data) => {
-        console.log(data)
+        //console.log(data)
         io_server.to('auction-updates').emit(data.type, data.auction)
     })
 

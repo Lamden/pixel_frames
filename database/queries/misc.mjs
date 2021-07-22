@@ -5,8 +5,8 @@ export const getMiscQueries = (db) => {
         try{
             let res = await db.models[collectionName].deleteMany({})
             console.log(`${collectionName} DB wiped: ${util.inspect(res, false, null, true)}`);
-        }catch(e){
-            console.log(e)
+        }catch(err){
+            console.log({collectionName, err})
         }
     }
 

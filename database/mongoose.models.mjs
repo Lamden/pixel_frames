@@ -15,7 +15,6 @@ var pixelFrame = new mongoose.Schema({
     datetimeCreated: Date,
     uid: {
         type: String,
-        unique: true,
         required: true,
         index: true
     },
@@ -45,7 +44,6 @@ var pixelFrame = new mongoose.Schema({
 var likes = new mongoose.Schema({
     uid: {
         type: String,
-        unique: true,
         required: true,
         index: true
     },
@@ -56,7 +54,6 @@ var likes = new mongoose.Schema({
 var likedByUser = new mongoose.Schema({
     vk: {
         type: String,
-        unique: true,
         required: true,
         index: true
     },

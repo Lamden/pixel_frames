@@ -362,9 +362,7 @@ export const alreadyLiked = async (uid) => {
     if (lsValue !== null) return true;
 
     const liked = await fetch(`./${uid}.json?account=${account}`).then(res => res.json())
-    console.log({liked})
     if (liked === true) localStorage.setItem(`${uid}:${account}:liked`, true)
-
     return liked
 }
 

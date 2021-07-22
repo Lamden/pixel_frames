@@ -132,7 +132,6 @@ export const infoContractProcessor = (database, socket_server) =>{
         const { metadata } = transaction
 
         if (determineUpdateType(update) !== 'sellThing') return
-        console.log({update})
 
         let pixel_frame = await db.models.PixelFrame.findOne({uid})
         if (!pixel_frame) return
@@ -154,7 +153,9 @@ export const infoContractProcessor = (database, socket_server) =>{
         return true
     }
 
-    async function likeThing(uid, tx_uid, update, transactionInfo){
+    async function likeThing(args){
+        const { uid, tx_uid, update, transactionInfo } = args
+
         if (determineUpdateType(update) !== "likeThing") return
 
         const { transaction } = transactionInfo
@@ -163,6 +164,7 @@ export const infoContractProcessor = (database, socket_server) =>{
         const sender = payload.sender
 
         let pixel_frame = await db.models.PixelFrame.findOne({uid})
+
         if (!pixel_frame) {
             console.log("UID doesn't exist")
             return
@@ -175,10 +177,14 @@ export const infoContractProcessor = (database, socket_server) =>{
         pixel_frame.likes =  update.likes
         pixel_frame.lastUpdate = new Date(metadata.timestamp * 1000)
         pixel_frame.last_likes_tx_uid = tx_uid
-        await pixel_frame.save()
+
+        await pixel_frame.save((err, doc) => {
+            // console.log({liked: err})
+            // console.log({likedDoc: doc})
+        })
 
         await update_uid_likes(uid, sender, tx_uid)
-        await update_user_likes(sender, uid, tx_uid)
+        await update_user_likes(uid, sender, tx_uid)
     }
 
     const update_uid_likes = async (uid, vk, tx_uid) => {
@@ -196,11 +202,16 @@ export const infoContractProcessor = (database, socket_server) =>{
             }
             likes.liked_by.push(vk)
             likes.last_likes_tx_uid = tx_uid
+            likes.isNew = false
         }
-        await likes.save()
+
+        await likes.save((err, doc) => {
+            // console.log({"likes": err})
+            // console.log({likesDoc: doc})
+        })
     }
 
-    const update_user_likes = async (vk, uid, tx_uid) => {
+    const update_user_likes = async (uid, vk, tx_uid) => {
         let likedByUser = await db.models.LikedByUser.findOne({vk})
         if (!likedByUser) {
             likedByUser = await new db.models.LikedByUser({
@@ -215,7 +226,10 @@ export const infoContractProcessor = (database, socket_server) =>{
             }
             likedByUser.likes.push(uid)
         }
-        await likedByUser.save()
+        await likedByUser.save((err, doc) => {
+            // console.log({"likedByUser": err})
+            // console.log({likedByUserDoc: doc})
+        })
     }
 
     async function soldThing(args){

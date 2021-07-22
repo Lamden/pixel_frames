@@ -16,6 +16,9 @@ import {color_to_letter} from "../pixelwhale_utils.mjs";
 export async function drop_collections(){
     let db = await getDatabase()
     await db.queries.drop_collection('PixelFrame')
+    await db.queries.drop_collection('Likes')
+    await db.queries.drop_collection('LikedByUser')
+    await db.queries.drop_collection('SalesHistory')
     await db.queries.delete_processed('InfoContractUpdates')
 }
 
@@ -27,7 +30,7 @@ export const loadCollection = (starting_tx_uid = "000000000000.00000.00000", dro
     let done
 
     async function getUpdates(last_tx_uid){
-        return await blockService.getRootKeyChanges(INFO_CONTRACT, "S", 'names', last_tx_uid, 1)
+        return await blockService.getVariableChanges(INFO_CONTRACT, "S", last_tx_uid, 1)
     }
 
     async function processUpdates(updates){

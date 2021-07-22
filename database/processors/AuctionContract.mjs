@@ -108,9 +108,9 @@ export const auctionContractProcessor = (database, socket_server) =>{
             creator: update.creator,
             last_tx_uid: tx_uid
         })
-        console.log({auction})
+        //console.log({auction})
         auction.save((err, doc) => {
-            console.log({err, doc})
+            //console.log({err, doc})
             if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'new-auction', auction: doc})
         })
 
