@@ -28,16 +28,15 @@
 	$: userIsWinner = $userAccount === bid_winner
 	$: endAuctionTxStamps_to_tau = toBigNumber(stampLimits[config.auctionContract].end_auction).dividedBy($stampRatio)
 
-	$: buttonText = getButtonText(endAuctionTxStamps_to_tau)
+	$: buttonText = getButtonText(endAuctionTxStamps_to_tau, $currency, $userAccount)
 
 	function getButtonText(){
 		if (!endAuctionTxStamps_to_tau) return "Loading"
-    	if (endAuctionTxStamps_to_tau.isGreaterThan($currency)) return `Insufficient ${config.currencySymbol}`
-		return `Cancel Auction`
+    	if (endAuctionTxStamps_to_tau.isGreaterThan($currency)) return `INSUFFICIENT ${config.currencySymbol}`
+		return `CANCEL AUCTION`
 	}
 
     const endAuction = () => {
-    	console.log({end_early})
 		const transaction = {
 			contractName: config.auctionContract,
 			methodName: 'end_auction',
@@ -80,14 +79,15 @@
 <style>
 	form{
 		color: var(--color-white-primary-tint);
-		padding: 0;
-		max-width: 450px;
+		padding: 1rem;
+		max-width: 650px;
 	}
 	.title{
 		font-size: 25px;
 		font-weight: 900;
 		letter-spacing: 1.5px;
 		margin-bottom: 1rem;
+		margin-top: 0;
 	}
 	.name{
 		font-size: 20px;
@@ -127,6 +127,13 @@
 		position: relative;
 		width: fit-content;
 	}
+	input[type="submit"]{
+		padding: 1rem;
+		margin-bottom: 0;
+	}
+	.action{
+		margin-top: 2rem;
+	}
 
 </style>
 
@@ -138,14 +145,14 @@
 	</div>
 	<form id="end-auction" class="flex-col" on:submit|preventDefault={checkPrice}>
 
-		<p class="title">Cancel Auction</p>
+		<p class="title text-color-primary-dark">Cancel Auction</p>
 		<p class="name text-color-primary-dark">{thingInfo.name}</p>
 		<p class="subtitle">
 			Your reserve price of
 			<strong>{stringToFixed(auctionInfo.reserve_price, 8)} {config.currencySymbol}</strong>
-			has not been met. Cancelling the auction will refund the highest bid and return the NFT to you.
+			was not met. Cancelling the auction will refund the highest bid and return the NFT to you.
 		</p>
-		<p><strong>Click the CANCEL</strong> button below to send the transaction.</p>
+		<p class="text-color-primary-dark action"><strong>Click the CANCEL</strong> button below to send the transaction.</p>
 
 		<input
 			type="submit"

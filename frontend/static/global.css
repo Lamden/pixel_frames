@@ -319,6 +319,7 @@ form > label{
 	display: flex;
 	flex-direction: column;
 	border-radius: 5px;
+	border: 2px solid transparent;
 }
 
 input[type="range"] {

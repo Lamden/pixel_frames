@@ -63,7 +63,7 @@
 	}
     span{
         color: var(--gray-5);
-        margin-left: 4px;
+        margin: 0 4px;
     }
 </style>
 

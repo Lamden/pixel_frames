@@ -64,7 +64,7 @@
         })
     }
 
-    const handleEnd = (modal) => {
+    const handleEnd = (modal, claim=false) => {
         showModal.set({
             modalData:{
                 auctionInfo,
@@ -74,7 +74,9 @@
                     bidder: winning_bidder,
                     hasEnded,
                     winning_timestamp,
-                    end_early: canBeCancelled
+                    end_early: canBeCancelled,
+                    claim,
+                    reserveMet
                 },
                 modal
             },
@@ -187,16 +189,23 @@
                 <Preview solidBorder={true} solidBorderColor="#00d6a22b" frames={thingInfo.frames} pixelSize={4} {thingInfo} showWatermark={true} border={false}/>
             </a>
             <div class="bid-details">
-                    <p class="text-color-gray-6">{hasEnded ? "Winning Bid" : "Current Bid" }</p>
+                    <p class="text-color-gray-6">{hasEnded ? auctionInfo.reserve_met ? "Winning Bid" : "Last Bid" : "Current Bid" }</p>
                     <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
                 {#if winning_bidder}
                     <p class="text-color-gray-5">{hasEnded ? `Won ${getTimeAgo(winning_timestamp)}by` : `${getTimeAgo(winning_timestamp)}by` }</p>
-                    <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">{formatAccountAddress(winning_bidder, 8, 4)}</a>
+                    {#if $userAccount === winning_bidder}
+                        <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">
+                            {$userAccount === winning_bidder ? "YOU!" : formatAccountAddress(winning_bidder, 8, 4)}
+                        </a>
+                    {/if}
                 {:else}
-                    <p><strong class="no-bid">Be the first to bid!</strong></p>
+                    {#if hasEnded}
+                        <p><strong class="no-bid">Auction Expired</strong></p>
+                    {:else}
+                        <p><strong class="no-bid">Be the first to bid!</strong></p>
+                    {/if}
                 {/if}
             </div>
-
         </div>
         {#if showInfo}
             <p class="description">{thingInfo.description}</p>
@@ -215,12 +224,17 @@
                 {/if}
             {/if}
         {/if}
-        {#if $userAccount === winning_bidder && notClaimed && timesUp}
-            <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>CLAIM</button>
-        {:else}
-            {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
-                <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
+        {#if notClaimed && hasEnded}
+            {#if winning_bidder !== "" && $userAccount === winning_bidder}
+                <button class="button" on:click={() => {handleEnd(FormAuctionClaim, true)}}>CLAIM</button>
+            {:else}
+                {#if $userAccount === auctionInfo.old_owner}
+                    <button class="button" on:click={() => {handleEnd(FormAuctionClaim)}}>RESOLVE AUCTION</button>
+                {/if}
             {/if}
+        {/if}
+        {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
+                <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
         {/if}
     </div>
     <AuctionEndDate {auctionInfo}/>

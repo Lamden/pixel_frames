@@ -5,8 +5,10 @@
     // Icons
     import LamdenLogoIcon from '../../static/img/lamden_logo_new.svg'
     import GiftIcon from '../../static/img/gift.svg'
+    import AuctionIcon from '../../static/img/auction.svg'
 
     export let salesHistory
+    console.log(salesHistory)
 
 </script>
 
@@ -32,13 +34,18 @@
     }
     h3{
         margin: 0;
+        color: var(--primary);
+        font-weight: 600;
     }
     p{
         margin: 0;
     }
+    .winning-bid{
+        margin-left: 8px;
+    }
 </style>
 
-<h2>Ownership History</h2>
+<h2 class="text-color-primary-dark">Ownership History</h2>
 {#if salesHistory.data.length > 0}
     {#each salesHistory.data as history}
         <hr>
@@ -63,7 +70,34 @@
                         {formatAccountAddress(history.buyer, 8, 4)}
                     </a>
                 </p>
-            {:else}
+            {/if}
+            {#if history.auction}
+                <div class="header flex-row flex-align-center">
+                    <div class="flex-row flex-align-center">
+                        <h3 class="flex-row">Auction</h3>
+                        <AuctionIcon width="20" class="saleshistory-icon" />
+                        <span class="winning-bid">Winning Bid</span>
+                        <strong>{stringToFixed(history.price, 8)}</strong>
+                        <LamdenLogoIcon width="20" class="saleshistory-icon" />
+
+                    </div>
+                    <span class="timedelta text-color-gray-5">{timeDelta(history.saleDate)}</span>
+                </div>
+
+                <p class="text-color-gray-6">
+                    seller:
+                    <a href="{`${config.blockExplorer}/addresses/${history.seller}`}" target="_blank" rel="noopener noreferrer">
+                        {formatAccountAddress(history.seller, 8, 4)}
+                    </a>
+                </p>
+                <p class="text-color-gray-6">
+                    winner:
+                    <a href="{`${config.blockExplorer}/addresses/${history.buyer}`}" target="_blank" rel="noopener noreferrer">
+                        {formatAccountAddress(history.buyer, 8, 4) }
+                    </a>
+                </p>
+            {/if}
+            {#if !history.auction && !history.gift}
                 <div class="header flex-row flex-align-center">
                     <div class="flex-row flex-align-center">
                         <h3 class="flex-row">Sold for</h3>

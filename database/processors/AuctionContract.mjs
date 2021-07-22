@@ -135,9 +135,13 @@ export const auctionContractProcessor = (database, socket_server) =>{
         })
         auction.reserve_met = current_bid_BN.isGreaterThanOrEqualTo(new BN(auction.reserve_price))
         auction.last_tx_uid = tx_uid
-        auction.save()
 
-        if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'new-bid', auction})
+        auction.save((err, doc) => {
+            //console.log({err, doc})
+            if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'new-bid', auction: doc})
+        })
+
+
     }
 
     async function endAuction(args){
@@ -198,9 +202,11 @@ export const auctionContractProcessor = (database, socket_server) =>{
         auction.new_owner = new_owner
         auction.last_tx_uid = tx_uid
 
-        if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'auction-ended', auction})
+        auction.save((err, doc) => {
+            //console.log({err, doc})
+            if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'auction-ended', auction: doc})
+        })
 
-        await auction.save()
         await pixel_frame.save()
     }
 

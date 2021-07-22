@@ -7,6 +7,8 @@ if (!INFO_CONTRACT ) throw Error("Must pass INFO_CONTRACT via .env file")
 const AUCTION_CONTRACT = process.env.AUCTION_CONTRACT || null
 if (!AUCTION_CONTRACT ) throw Error("Must pass INFO_CONTRACT via .env file")
 
+const NETWORK = process.env.NETWORK || 'testnet'
+
 export const infoContractProcessor = (database, socket_server) =>{
     const processorName = 'Info Contract'
     let db = database
@@ -108,19 +110,19 @@ export const infoContractProcessor = (database, socket_server) =>{
             blacklist: blacklist.art.includes(uid) || blacklist.creators.includes(update.creator)
         })
 
-        await thing.save((err, doc) => {
+        await thing.save(async (err, doc) => {
             if (!loader) {
                 socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
-                /*
-                try{
-                    pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
-                    let res = await twitterClient.tweets.statusesUpdate({
-                        status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
-                    })
-                    .catch(err => console.log(err))
-                    console.log(res)
-                }catch (e) {}
-                */
+                if (NETWORK === 'mainnet'){
+                    try{
+                        pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
+                        let res = await twitterClient.tweets.statusesUpdate({
+                            status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
+                        })
+                        .catch(err => console.log(err))
+                        console.log(res)
+                    }catch (e) {}
+                }
             }
         })
     }
@@ -275,22 +277,22 @@ export const infoContractProcessor = (database, socket_server) =>{
         pixel_frame.lastUpdate = new Date(metadata.timestamp * 1000)
         pixel_frame.lastSaleDate = new Date(metadata.timestamp * 1000)
 
-
-        await pixel_frame.save((err, doc) => {
+        await pixel_frame.save(async (err, doc) => {
             if (!loader) {
                 socket_server.to(`market-updates`).emit("market-update", {type: 'new-sale', update: doc})
-                /*
-                let priceData = await models.Prices.findOne({symbol: 'TAU'})
-                if (priceData){
-                    pusher.link(
-                        "",
-                        `#NFT Art Sold! ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
-                        `https://www.pixelwhale.io/frames/${uid}`
-                    );
-                    twitterClient.tweets.statusesUpdate({
-                        status: `#NFT Art Sold!\r\n${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)\r\n\r\nhttps://www.pixelwhale.io/frames/${uid} \r\n\r\n#NFTartist #digitalartist #pixelart`
-                    })
-                }*/
+                if (NETWORK === 'mainnet'){
+                    let priceData = await models.Prices.findOne({symbol: 'TAU'})
+                    if (priceData){
+                        pusher.link(
+                            "",
+                            `#NFT Art Sold! ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
+                            `https://www.pixelwhale.io/frames/${uid}`
+                        );
+                        twitterClient.tweets.statusesUpdate({
+                            status: `#NFT Art Sold!\r\n${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)\r\n\r\nhttps://www.pixelwhale.io/frames/${uid} \r\n\r\n#NFTartist #digitalartist #pixelart`
+                        })
+                    }
+                }
             }
         })
 
@@ -319,7 +321,7 @@ export const infoContractProcessor = (database, socket_server) =>{
         pixel_frame.price_hold = ""
         pixel_frame.price_amount =  "0"
 
-        if (newOwner !== AUCTION_CONTRACT) {
+        if (newOwner !== AUCTION_CONTRACT && seller !== AUCTION_CONTRACT) {
             pixel_frame.owner = newOwner
 
             await new db.models.SalesHistory({
@@ -337,22 +339,23 @@ export const infoContractProcessor = (database, socket_server) =>{
 
         pixel_frame.lastUpdate = new Date(metadata.timestamp * 1000)
 
-        await pixel_frame.save((err, doc) => {
+        await pixel_frame.save(async (err, doc) => {
             if (!loader) {
                 socket_server.to(`market-updates`).emit("market-update", {type: 'new-transfer', update: doc})
-                /*
-                let priceData = await models.Prices.findOne({symbol: 'TAU'})
-                if (priceData){
-                    pusher.link(
-                        "",
-                        `#NFT Art Sold! ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
-                        `https://www.pixelwhale.io/frames/${uid}`
-                    );
-                    twitterClient.tweets.statusesUpdate({
-                        status: `#NFT Art Sold!\r\n${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)\r\n\r\nhttps://www.pixelwhale.io/frames/${uid} \r\n\r\n#NFTartist #digitalartist #pixelart`
-                    })
+
+                if (NETWORK === 'mainnet'){
+                    let priceData = await models.Prices.findOne({symbol: 'TAU'})
+                    if (priceData){
+                        pusher.link(
+                            "",
+                            `#NFT Art Sold! ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
+                            `https://www.pixelwhale.io/frames/${uid}`
+                        );
+                        twitterClient.tweets.statusesUpdate({
+                            status: `#NFT Art Sold!\r\n${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)\r\n\r\nhttps://www.pixelwhale.io/frames/${uid} \r\n\r\n#NFTartist #digitalartist #pixelart`
+                        })
+                    }
                 }
-                */
             }
         })
 
