@@ -3,9 +3,9 @@
     import {goto} from '@sapper/app';
 
     // Misc
-    import {userAccount, autoTx} from '../js/stores.js'
+    import {userAccount, autoTx, auctions} from '../js/stores.js'
     import {createSnack, alreadyLiked, createWatermark, formatAccountAddress} from '../js/utils.js'
-    import { config } from '../js/config.js';
+    import { config, featureLocks } from '../js/config.js';
 
     // Components
     import Frame from './Frame.svelte'
@@ -14,11 +14,8 @@
     import Likes from "./Likes.svelte";
 
     //Pictures
-    import like_filled from '../../static/img/like-filled.svg'
-    import like_unfilled from '../../static/img/like-unfilled.svg'
-    import lamden_logo from '../../static/img/lamden_logo_new.svg'
-    import artist from '../../static/img/artist.svg'
-    import owner from '../../static/img/owner.svg'
+    import ArtistIcon from '../../static/img/artist.svg'
+    import OwnerIcon from '../../static/img/owner.svg'
 
 
     const {sendTransaction} = getContext('app_functions')
@@ -32,7 +29,10 @@
 
     let switcher;
     let liked = null;
+
     $: show = 1
+    $: auctioninfo = $auctions.find(f => f.uid === thingInfo.uid)
+    $: activeAuction = auctioninfo ? true : false
 
     onMount(() => {
         checkAlreadyLiked();
@@ -72,7 +72,7 @@
     }
 
     const handleLikeTx = (txResults) => {
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
             liked = true;
             thingInfo.likes = thingInfo.likes + 1;
             createSnack({
@@ -94,6 +94,7 @@
     .buy-like{
         align-items: center;
         justify-content: space-between;
+
     }
     .display{
         align-items: center;
@@ -119,6 +120,7 @@
 
     .buy-like{
         flex-wrap: wrap;
+        width: 100%;
     }
     a{
         text-decoration: underline;
@@ -126,7 +128,7 @@
     .title{
         justify-content: space-between;
         align-items: center;
-        margin: -0.5rem 0 0.25rem;
+        margin: 0 0 0.25rem;
     }
     .title > a {
         align-self: center;
@@ -150,26 +152,31 @@
 </style>
 <div class="title flex-row">
     <a href="{`./frames/${thingInfo.uid}`}" class="name">{thingInfo.name}</a>
-    <div>
-        <Likes {thingInfo} />
-    </div>
+
 </div>
-<div class="icons text-color-gray-5 flex-row">
-    <a href="{`./creator/${thingInfo.creator}`}" class="icon">{@html artist}</a>
-    <a href="{`./owned/${thingInfo.owner}`}" class="icon">{@html owner}</a>
+<div class="icons text-color-gray-5 flex-row flex-align-center">
+    <a href="{`./creator/${thingInfo.creator}`}" class="icon">
+        <ArtistIcon width="20"/>
+    </a>
+    <a href="{`./owned/${thingInfo.owner}`}" class="icon flex-grow">
+        <OwnerIcon width="20"/>
+    </a>
+    <Likes {thingInfo} />
+
 </div>
 
 <a href="{`./frames/${thingInfo.uid}`}">
     {#if frames.length >= show}
-        <FrameCanvas {pixelSize} pixels={frames[show - 1]} {thingInfo} watermark={createWatermark(thingInfo, $userAccount)} }/>
+        <FrameCanvas {pixelSize} pixels={frames[show - 1]} watermark={createWatermark(thingInfo, $userAccount)}/>
     {/if}
 </a>
-<div class="flex-row buy-like">
-
-    <div>
+{#if activeAuction}
+    <a href="{`./frames/${thingInfo.uid}#auction`}" class="auction">view active auction</a>
+{:else}
+    <div class="flex-row buy-like">
         <Price {thingInfo} updateInfo={updateThingInfo}/>
     </div>
-</div>
+{/if}
 <div class="description">
     <p>{thingInfo.description}</p>
 </div>

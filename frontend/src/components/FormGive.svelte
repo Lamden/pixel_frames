@@ -20,8 +20,8 @@
 	let sendTime
 
 	const checkRecipient = (e) => {
-		console.log(e.target)
-		console.log(!isLamdenKey(recipient.trim()))
+		//console.log(e.target)
+		//console.log(!isLamdenKey(recipient.trim()))
 		if (!isLamdenKey(recipient.trim())) inputElm.setCustomValidity("Not a proper Lamden Address")
 		else {
 			inputElm.setCustomValidity("")
@@ -51,7 +51,7 @@
     		let tries = 0
 			let maxTries = 30
     		const get_thing_info = async () => {
-    			let new_thing_info = await fetch(`./frames/${txResults.data.txInfo.kwargs.uid}.json`)
+    			let new_thing_info = await fetch(`./frames/${txResults.txInfo.kwargs.uid}.json`)
 					.then(res => res.json())
 					.catch(() => resolve(false))
 				if (new_thing_info.lastUpdate > sendTime) resolve(new_thing_info)
@@ -64,7 +64,7 @@
 			get_thing_info()
 		})
 
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	updateInfo({
 				"price_amount": "0",
 				"price_hold": "",
@@ -82,7 +82,6 @@
 		}
     }
     const clearValidity = () => {
-		console.log("clear")
 		inputElm.setCustomValidity("")
 		inputElm.reportValidity("")
 	}

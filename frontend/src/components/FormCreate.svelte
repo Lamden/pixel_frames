@@ -51,7 +51,7 @@
 
 	const handleCreateTx = (txResults) => {
 
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	created()
 			createSnack({
 				title: `Created!`,
@@ -68,7 +68,7 @@
                 currentValue.splice(oldIndex, 1)
                 return currentValue
             })
-			let stateChange = txResults.data.txBlockResult.state.find(f => f.key.includes(':names:'))
+			let stateChange = txResults.txBlockResult.state.find(f => f.key.includes(':names:'))
 			if (stateChange && stateChange.value) redirect(stateChange.value, window.location.href)
 		}
     }
@@ -80,8 +80,8 @@
     		if (window.location.href !== location) return
     		checks = checks + 1
     		let res = await fetch(`./frames/${uid}.json`).then(res => res.json())
-			if (res === null) {
-				if (checks < maxChecks)setTimeout(checkForThing, 500)
+			if (res.thingInfo === null) {
+				if (checks < maxChecks)setTimeout(checkForThing, 1000)
 			}else {
 				if (window.location.href === location) goto(`/frames/${uid}`)
 			}

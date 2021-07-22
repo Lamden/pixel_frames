@@ -4,7 +4,7 @@
     import { drawFrame, formatAccountAddress } from '../js/utils.js'
     import { config } from '../js/config.js'
 
-    export let id;
+    export let id = parseInt(Math.random() * 10000);
     export let watermark = undefined;
     export let pixels;
     export let pixelSize = 3;

@@ -30,8 +30,6 @@ export const update_tau_price = (models) => {
                 checkAgain()
             })
             .catch(() => checkAgain());
-
-
     }
 
     const checkAgain = () => setTimeout(updatePrice, 120000)

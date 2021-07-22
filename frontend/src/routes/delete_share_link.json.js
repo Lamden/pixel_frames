@@ -6,7 +6,7 @@ export async function get(req, res, next) {
     //console.log({query_deleteLink: req.query})
 	const { uid, challenge } = req.query;
 
-    let authCodeInfo = await global.models.AuthCodes.findOne({uid})
+    let authCodeInfo = await global.db.models.AuthCodes.findOne({uid})
     //console.log({authCodeInfo_deleteLink: authCodeInfo, uid, challenge, date: new Date()})
     if (!authCodeInfo || !authCodeInfo.validated) {
         res.end(JSON.stringify({error: "Auth Code not valid."}));
@@ -14,7 +14,7 @@ export async function get(req, res, next) {
     }
 
     if (authCodeInfo.challenge === challenge){
-        let shareLinkInfo = await global.models.ShareLinks.findOne({uid})
+        let shareLinkInfo = await global.db.models.ShareLinks.findOne({uid})
         const shareLink = shareLinkInfo.link
 
         if (!shareLinkInfo) res.end(JSON.stringify({deleted: true, shareLink: null}));
@@ -22,7 +22,7 @@ export async function get(req, res, next) {
         await shareLinkInfo.remove()
         await authCodeInfo.remove()
 
-        shareLinkInfo = await global.models.ShareLinks.findOne({uid})
+        shareLinkInfo = await global.db.models.ShareLinks.findOne({uid})
 
         if (shareLinkInfo) {
             res.end(JSON.stringify({error: "Code was not deleted!"}));

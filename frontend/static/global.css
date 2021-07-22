@@ -21,6 +21,12 @@ body{
 	/* ffe5f1 */
 	--color-white-primary-tint: #f0fffb;
 	--box-shadow-primary-dark: #00523e3b;
+	--button-shading-dark: #00523e85;
+}
+
+.datepicker{
+	--highlight-color: var(--primary);
+    --passive-highlight-color: var(--primary-highlight);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -31,6 +37,10 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
 	font-size: 2em;
+}
+
+h2{
+	font-weight: 500;
 }
 
 a {
@@ -79,6 +89,19 @@ a:hover {
 	flex-direction: row;
 }
 
+.flex-wrap{
+	flex-wrap: wrap;
+}
+
+.flex-grow{
+	flex-grow: 1;
+}
+
+.flex-center-center{
+	align-items: center;
+	justify-content: center;
+}
+
 .flex-align-center{
 	align-items: center;
 }
@@ -89,6 +112,18 @@ a:hover {
 
 .flex-justify-center{
 	justify-content: center;
+}
+
+.flex-justify-spacebetween{
+	justify-content: space-between;
+}
+
+.flex-justify-spacearound{
+	justify-content: space-around;
+}
+
+.flex-justify-spaceevenly{
+	justify-content: space-evenly;
 }
 
 .text-center{
@@ -145,7 +180,7 @@ a:hover {
 
 .button {
 	box-shadow:inset 0px 1px 0px 0px var(--primary);
-	background:linear-gradient(to bottom, var(--primary) 5%, var(--primary-dark) 100%);
+	background:linear-gradient(to bottom, var(--primary) 5%, var(--button-shading-dark) 100%);
 	background-color: var(--primary);
 	border-radius:6px;
 	border:1px solid var(--primary-dark);
@@ -284,6 +319,7 @@ form > label{
 	display: flex;
 	flex-direction: column;
 	border-radius: 5px;
+	border: 2px solid transparent;
 }
 
 input[type="range"] {

@@ -19,7 +19,7 @@ export async function get(req, res, next) {
 	let facet = { $facet: {data: dataPipeline, "count": countPipeline}}
 	let collation = { locale : "en_US", numericOrdering : true }
 
-	let things = await global.models.SalesHistory
+	let things = await global.db.models.SalesHistory
 		.aggregate([facet])
 		.collation(collation)
 

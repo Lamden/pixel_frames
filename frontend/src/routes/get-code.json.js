@@ -1,9 +1,9 @@
 export async function get(req, res, next) {
 	const { uid } = req.query;
 
-    let authCodeInfo = await global.models.AuthCodes.findOne({uid})
+    let authCodeInfo = await global.db.models.AuthCodes.findOne({uid})
     if (!authCodeInfo) {
-        authCodeInfo = await new global.models.AuthCodes({
+        authCodeInfo = await new global.db.models.AuthCodes({
             uid,
             code: global.randomHash(),
             challenge: global.randomHash(),

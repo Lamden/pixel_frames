@@ -30,6 +30,7 @@
     .data{
         flex-grow: 1;
         padding: 1rem;
+        position: relative;
     }
     .buttons{
         padding: 1rem 0;
@@ -49,6 +50,6 @@
         {/if}
     </div>
     <div class="flex-col buttons">
-        <button class="button" on:click={() => showModal.set({modalData: {}, show: false})}>cancel</button>
+        <button class="button" on:click={() => showModal.set({modalData: {}, show: false})}>close</button>
     </div>
 </div>

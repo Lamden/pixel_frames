@@ -1,5 +1,5 @@
 <script>
-    import {getContext, onMount} from 'svelte';
+    import {getContext, onMount, tick} from 'svelte';
     import {goto} from '@sapper/app';
 
     // Misc
@@ -14,6 +14,7 @@
     import Price from './Price.svelte';
     import Likes from './Likes.svelte'
     import OwnerControls from './OwnerControls.svelte'
+    import Auction from './Auction.svelte';
 
     // Pictures
     import SocialButtons from "./SocialButtons.svelte";
@@ -21,6 +22,9 @@
     const {sendTransaction} = getContext('app_functions')
 
     export let thingInfo;
+    export let auctionInfo;
+
+    //console.log({thingInfo, auctionInfo})
     export let salesHistory;
     export let pixelSize = 17;
     export let updateInfo
@@ -31,10 +35,20 @@
     $: show = 1
 
     onMount(() => {
+        if (window.location.hash){
+            scrollToHash(window.location.hash.replace("#", "").toUpperCase())
+        }
+        console.log(window.location)
         checkAlreadyLiked()
         switcher = setInterval(switchFrames, thingInfo.speed)
         return (() => clearInterval((switcher)))
     })
+
+    async function scrollToHash(hash){
+        await tick()
+        let elm = document.getElementById(hash)
+        if (elm) setTimeout(() => elm.scrollIntoView(), 1);
+    }
 
     const openModal = (modal) => {
         showModal.set({modalData:{thingInfo, modal: modal, updateInfo}, show:true})
@@ -44,6 +58,7 @@
         if (liked === null && $userAccount) {
 
             alreadyLiked(thingInfo.uid, localStorage).then(res => {
+                console.log(res)
                 liked = res
 
             })
@@ -137,6 +152,12 @@
         padding-top: 3rem;
         width: 100%;
     }
+    .auction-info{
+        margin-top: 3rem;
+    }
+    .auction{
+        margin-top: 2rem;
+    }
 </style>
 
 <h1>{thingInfo.name}</h1>
@@ -178,6 +199,17 @@
         <SocialButtons {thingInfo}/>
     </div>
 </div>
+
+<div class="auction-info" id="AUCTION" on:ready={() => console.log("READY")}>
+    {#if auctionInfo}
+        <h2 >There is an active Auction!</h2>
+        <hr>
+        <div class="flex flex-center-center auction">
+            <Auction {auctionInfo} {thingInfo} showInfo={false}/>
+        </div>
+    {/if}
+</div>
+
 <div class="sales-history">
     <SalesHistory {salesHistory}/>
 </div>

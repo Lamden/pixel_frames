@@ -2,7 +2,7 @@ export async function get(req, res, next) {
 	let { limit } = req.query;
 	limit = parseInt(limit) || 25
 
-	let things = await global.models.PixelFrame.find({blacklist: false})
+	let things = await global.db.models.PixelFrame.find({blacklist: false})
 		.sort({likes: -1})
 		.limit(limit)
 

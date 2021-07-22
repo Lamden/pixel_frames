@@ -6,7 +6,6 @@
 			this.fetch(`./recent_things.json?limit=10`).then(res => res.json()),
 			this.fetch(`./forsale.json?limit=10`).then(res => res.json())
 		])
-
 		return {
 			mostLiked: data[0],
 			recent: data[1],

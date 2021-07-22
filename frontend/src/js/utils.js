@@ -151,6 +151,20 @@ export const letter_to_color = {
     'z' :'#831843'
 }
 
+export const getCurrentKeyValue = async (contractName, variableName, key) => {
+    let value = null
+    const result = await fetch(`./getkey-${contractName}.${variableName}:${key}.json`)
+    try {
+        let json = await result.json();
+        value = json.value
+    }catch(e){
+        return null
+    }
+    if (value === null || typeof value === 'undefined') return value
+    if (typeof value.__fixed__ !== 'undefined') return toBigNumber(value.__fixed__)
+    return value
+}
+
 export const replaceAll = (string, char, replace) => {
   return string.split(char).join(replace);
 }
@@ -237,9 +251,9 @@ export const framesEmpty = (frames) => {
 }
 
 export const createSnack = (snackInfo) => {
-    const { type, title, body, delay } = snackInfo;
+    const { type, title, body, delay, thingInfo } = snackInfo;
     snackbars.update(curr => {
-        let snack = { type, time: new Date().getTime(), title, body, delay: delay || 5000 }
+        let snack = { type, time: new Date().getTime(), title, body, delay: delay || 5000, thingInfo }
         return [...curr, snack]
     })
 }
@@ -274,13 +288,13 @@ export const refreshTAUBalance = async () => {
     if (balance) currency.set(balance)
 }
 
-export const checkForApproval = async () => {
+export const checkForApproval = async (contract) => {
     if (!get(userAccount)) return
     let keyList = [
         {
             "contractName": "currency",
             "variableName": "balances",
-            "key": `${get(userAccount)}:${config.masterContract}`
+            "key": `${get(userAccount)}:${contract}`
         }
     ]
     const res = await blockexplorer_api.getKeys(keyList)
@@ -288,13 +302,31 @@ export const checkForApproval = async () => {
 
     if (approval === null ) approval = toBigNumber(0)
     else approval = toBigNumber(approval)
-    approvalAmount.set(approval)
+
+    approvalAmount.update(curr => {
+        curr[contract] = approval
+        return curr
+    })
 
     return approval
 }
 
+export const checkForAuctionApproval = async (uid) => {
+    if (!get(userAccount)) return
+
+    let contractName = config.masterContract
+    let variableName = "balances"
+    let key = `${get(userAccount)}:${uid}:${config.auctionContract}`
+
+    let hasApproval =  await getCurrentKeyValue(contractName, variableName, key)
+        console.log({checkForAuctionApproval: {
+        contractName, variableName, key, hasApproval
+        }})
+    return hasApproval
+}
+
 export const needsApproval = async () => {
-    let approval = await checkForApproval()
+    let approval = await checkForApproval(config.masterContract)
 }
 
 export const sha256 = async (message) => {
@@ -325,14 +357,12 @@ export const alreadyLiked = async (uid) => {
     if (account === '' || typeof window === 'undefined') return false;
 
     let lsValue = localStorage.getItem(`${uid}:${account}:liked`)
+    //console.log({account, lsValue})
     //console.log({lsValue})
     if (lsValue !== null) return true;
 
     const liked = await fetch(`./${uid}.json?account=${account}`).then(res => res.json())
-    //console.log(liked)
-
     if (liked === true) localStorage.setItem(`${uid}:${account}:liked`, true)
-
     return liked
 }
 
@@ -395,7 +425,11 @@ export const stringToFixed = (value, precision) => {
 	}
 }
 
-export const toBigNumber = (value) => {
+export function toDateTime(date){
+    return Lamden.Encoder('datetime.datetime', date)
+}
+
+export function toBigNumber(value) {
   if (Lamden.Encoder.BigNumber.isBigNumber(value)) return value
   return Lamden.Encoder.BigNumber(value)
 }
@@ -503,3 +537,63 @@ export const hasNulls = (array) => {
     })
     return hasNulls
 }
+
+export const getTimeDelta = (timePresent, timeFuture) => {
+     // get total seconds between the times
+    var delta = Math.abs(timePresent - timeFuture) / 1000;
+
+    // calculate (and subtract) whole days
+    var days = Math.floor(delta / 86400);
+    delta -= days * 86400;
+
+    // calculate (and subtract) whole hours
+    var hours = Math.floor(delta / 3600) % 24;
+    delta -= hours * 3600;
+
+    // calculate (and subtract) whole minutes
+    var minutes = Math.floor(delta / 60) % 60;
+    delta -= minutes * 60;
+
+    // what's left is seconds
+    var seconds = Math.floor(delta % 60);
+
+    return {
+        days, hours, minutes, seconds
+    }
+}
+
+export const getTimeAgo = (date, hasEnded) => {
+    if (!date) return ''
+    try{
+        let delta = hasEnded ? getTimeDelta(date, new Date()) : getTimeDelta(new Date(), date)
+
+        if (isNaN(delta.days)) return ''
+        if (delta.days > 0) return `${delta.days} days ago `
+        if (delta.hours > 0 && delta.days === 0) return `${delta.hours} hours ago `
+        if (delta.minutes > 0 && delta.hours === 0 && delta.days === 0) return `${delta.minutes} minutes ago `
+        if (delta.seconds > 0 && delta.minutes === 0 && delta.hours === 0 && delta.days === 0) return `${delta.seconds} seconds ago `
+        return `just now `
+    }catch (e) {
+        return ""
+    }
+}
+
+export const getTimeTo = (date) => {
+    if (!date) return ''
+    try{
+        let delta = getTimeDelta(new Date(), date)
+        if (isNaN(delta.days)) return ''
+        if (delta.days > 0) return `in ${delta.days} days`
+        if (delta.hours > 0 && delta.days === 0) return `in ${delta.hours} hours`
+        if (delta.minutes > 0 && delta.hours === 0 && delta.days ===0) return `in ${delta.minutes} minutes`
+        if (delta.seconds > 0 && delta.minutes === 0 && delta.hours === 0 && delta.days === 0) return `in ${delta.seconds} seconds`
+        return `now`
+    }catch (e) {
+        return ""
+    }
+}
+
+
+export const formatLocaleString = (date) => date.toLocaleDateString(undefined, {
+    weekday: undefined, year: 'numeric', month: 'long', day: 'numeric'
+})

@@ -3,18 +3,23 @@
     import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 
+    // Misc
     import { snackbars } from '../js/stores.js';
 
-    import check_icon from '../../static/img/check-filled.svg'
-    import warning_icon from '../../static/img/warning-filled.svg'
-    import error_icon from '../../static/img/error-filled.svg'
-    import info_icon from '../../static/img/info-filled.svg'
+    // Icons
+    import CheckIcon from '../../static/img/check-filled.svg'
+    import WarningIcon from '../../static/img/warning-filled.svg'
+    import ErrorIcon from '../../static/img/error-filled.svg'
+    import InfoIcon from '../../static/img/info-filled.svg'
+
+    // Components
+    import Preview from './Preview.svelte';
 
     const icons = {
-        "warning": warning_icon,
-        "success": check_icon,
-        "error": error_icon,
-        "info": info_icon
+        "warning": WarningIcon,
+        "success": CheckIcon,
+        "error": ErrorIcon,
+        "info": InfoIcon
     }
 
     let remover;
@@ -49,19 +54,19 @@
         overflow: hidden;
     }
     .snackbar{
-        justify-content: space-evenly;
         padding: 8px;
         margin-bottom: 1rem;
         box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
 	    -webkit-box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
 	    -moz-box-shadow: 2px 6px 19px 0px rgba(0,0,0,0.29);
+        z-index: 1;
     }
     .top-bar{
         align-items: end;
     }
     .icon{
-        width: 19px;
-        margin-right: 5px;
+        width: 26px;
+        padding: 0 21px 0 13px;
     }
     .title{
         margin: 0 0 0.5rem;
@@ -93,24 +98,46 @@
         border: 1px solid #dec157;
         color: #4b4b4b;
     }
+    .snackbar > a {
+        margin-right: 8px;
+    }
 
 </style>
 <div class="snack-container" style={`height: ${screenHeight}px`}>
      {#each $snackbars as snack, index}
-        <div class="flex-col snackbar"
-             class:success={snack.type === "success"}
-             class:error={snack.type === "error"}
-             class:warning={snack.type === "warning"}
-             class:info={snack.type === "info"}
-             in:fly="{{delay: 0, duration: 400, x: 200, y: 0, opacity: 0.5, easing: quintOut}}"
-             out:fly="{{delay: 0, duration: 200, x: 400, y: 0, opacity: 0.5, easing: quintOut}}">
+         <div class="flex-row snackbar flex-align-center"
+              class:success={snack.type === "success"}
+              class:error={snack.type === "error"}
+              class:warning={snack.type === "warning"}
+              class:info={snack.type === "info"}
+              in:fly="{{delay: 0, duration: 400, x: 200, y: 0, opacity: 0.5, easing: quintOut}}"
+              out:fly="{{delay: 0, duration: 200, x: 400, y: 0, opacity: 0.5, easing: quintOut}}">
 
-            <div class="top-bar flex-row">
-                <div class="icon">{@html icons[snack.type]}</div>
-                <p class="title">{snack.title}</p>
+             {#if snack.thingInfo}
+                <a href="{`./frames/${snack.thingInfo.uid}`}">
+                    <Preview
+                            {index}
+                            solidBorder={true}
+                            solidBorderColor="#00d6a22b"
+                            frames={snack.thingInfo.frames}
+                            pixelSize={2}
+                            thingInfo={snack.thingInfo}
+                            showWatermark={false} border={false}
+                    />
+                </a>
+             {:else}
+
+                 <div class="icon flex flex-center-center">
+                     <svelte:component this={icons[snack.type]} width="26" />
+                 </div>
+             {/if}
+             <div class="flex-col">
+                <div class="top-bar flex-row">
+                    <p class="title">{snack.title}</p>
+                </div>
+                <p class="body">{snack.body}</p>
             </div>
-            <p class="body">{snack.body}</p>
-        </div>
+         </div>
     {/each}
 </div>
 <svelte:window bind:innerHeight={screenHeight} />

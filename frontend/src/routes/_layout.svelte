@@ -7,26 +7,31 @@
 	// TODO - disclaimer when buying NFT
 	// TODO - disclaimer when selling NFT
 
-
-	import Nav from '../components/Nav.svelte';
 	import {onMount, beforeUpdate, setContext} from 'svelte';
+
+	// Components
+	import Nav from '../components/Nav.svelte';
 	import WalletController from 'lamden_wallet_controller';
-
-
-	import {approvalRequest} from '../js/wallet_approval';
 	import Snackbar from "../components/Snackbar.svelte";
 	import Modal from "../components/Modal.svelte";
 	import CreatedWithLove from "../components/CreatedWithLove.svelte";
+	import AuctionUpdates from "../components/AuctionUpdates.svelte";
 
 	// Misc
+	import {approvalRequest} from '../js/wallet_approval';
 	import { config, stampLimits } from '../js/config.js';
 	import { walletInstalled, walletInfo, showModal, userAccount, stampRatio, currency, autoTx, tabHidden, tauPrice, approvalAmount } from '../js/stores.js';
 	import {processTxResults, createSnack, refreshTAUBalance, checkForApproval, stringToFixed, toBigNumber} from '../js/utils.js';
+	import { TransactionResultHandler } from '../js/transaction_result_handler'
+	import * as socketservice from '../js/socketservice'
 
 
 	export let segment;
+
 	let lwc;
 	let lastCurrencyCheck = new Date()
+	let txResultsHandler = TransactionResultHandler(createSnack)
+	let socket = socketservice.start()
 
 	onMount(() => {
 		lwc = new WalletController(approvalRequest)
@@ -42,7 +47,9 @@
 		document.addEventListener("visibilitychange", setTabActive);
 		refreshCurrencyBalance()
 		refreshTauPrice()
-		checkForApproval()
+		checkForApproval(config.masterContract)
+
+		socket.on('')
 
 		return () => {
 			lwc.events.removeListener(handleWalletInfo)
@@ -68,7 +75,8 @@
 		sendTransaction: (transaction, callback) => sendTransaction(transaction, callback),
 		lwc: () => {
 			return lwc
-		}
+		},
+		socket
 	})
 
 	const sendTransaction = (transaction, callback) => {
@@ -76,7 +84,7 @@
 		let contractName = transaction.contractName || config.masterContract
 		let stampsToSendTx = transaction.stampLimit;
 		if (!stampsToSendTx) stampsToSendTx = stampLimits[contractName][transaction.methodName]
-		console.log({transaction, contractName, usersStamps, stampsToSendTx})
+
 		if (usersStamps < stampsToSendTx){
 			createSnack({
                 title: `Insufficient ${config.currencySymbol}`,
@@ -89,7 +97,7 @@
             })
 		}else{
 			transaction.stampLimit = stampsToSendTx
-			lwc.sendTransaction(transaction, callback)
+			lwc.sendTransaction(transaction, (txResult) => txResultsHandler.parseTxResult(txResult.data, callback))
 		}
 	}
 
@@ -138,7 +146,7 @@
 <style>
 	main {
 		position: relative;
-		max-width: 95em;
+		max-width: 1600px;
 		padding: 0 28px 10rem;
 		margin: 1rem auto 0;
 		box-sizing: border-box;
@@ -154,6 +162,7 @@
 		}
 	}
 </style>
+
 {#if $showModal.show}
 	<Modal/>
 {/if}
@@ -163,3 +172,4 @@
 	<slot></slot>
 </main>
 <CreatedWithLove />
+<AuctionUpdates />

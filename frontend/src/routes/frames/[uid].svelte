@@ -2,13 +2,14 @@
 	import { decodeFrames } from '../../js/utils.js'
 
 	export async function preload({ params, query }) {
-		let thingInfo = null
 		let data = await Promise.all([
 				this.fetch(`./frames/${params.uid}.json`).then(res => res.json()),
 				this.fetch(`./history/${params.uid}.json`).then(res => res.json())
 		])
+
+		let { thingInfo, auctionInfo } = data[0]
+
 		try{
-			thingInfo = data[0]
 			thingInfo.frames = decodeFrames(thingInfo.thing)
 		}catch(e){
 			thingInfo = {
@@ -22,6 +23,7 @@
 
 	    return {
 			thingInfo,
+			auctionInfo,
 			salesHistory: data[1]
 		}
 	}
@@ -36,13 +38,14 @@
 	import { config } from '../../js/config.js'
 
 	export let thingInfo
+	export let auctionInfo
 	export let salesHistory
 
+	console.log({thingInfo, auctionInfo})
+
 	let gifURL = `${config.domainName}/gif/${thingInfo.uid}.gif`
-	let pageURL = `${config.domainName}/frames/${thingInfo.uid}`
 
 	const updateThingInfo = (updates) => {
-    	//console.log(updates)
     	thingInfo = updateInfo(thingInfo, updates)
     }
 
@@ -82,7 +85,7 @@
 
 {#if typeof thingInfo.notFound === 'undefined'}
 	<div class="display-one">
-		<DisplayFramesOne {thingInfo} {salesHistory} updateInfo={updateThingInfo}/>
+		<DisplayFramesOne {thingInfo} {auctionInfo} {salesHistory} updateInfo={updateThingInfo}/>
 	</div>
 {:else}
 	<p>{`${thingInfo.uid} doesn't exist.`}</p>

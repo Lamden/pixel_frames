@@ -1,5 +1,5 @@
 <script>
-    import heart from '../../static/img/icon_heart.svg'
+    import HeartIcon from '../../static/img/icon_heart.svg'
 </script>
 
 <style>
@@ -9,4 +9,10 @@
 		text-align: center;
 	}
 </style>
-<p>created with {@html heart} by <a href="www.lamden.io" target="_black" rel="noopener noreferrer">Lamden.io</a></p>
+
+<p>
+    created with
+    <HeartIcon  width="25" />
+    by
+    <a href="www.lamden.io" target="_black" rel="noopener noreferrer">Lamden.io</a>
+</p>

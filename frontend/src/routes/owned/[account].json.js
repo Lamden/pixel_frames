@@ -17,7 +17,7 @@ export async function get(req, res, next) {
 	let facet = { $facet: {data: dataPipeline, "count": countPipeline}}
 	let collation = { locale : "en_US", numericOrdering : true }
 
-	let things = await global.models.PixelFrame
+	let things = await global.db.models.PixelFrame
 		.aggregate([facet])
 		.collation(collation)
 

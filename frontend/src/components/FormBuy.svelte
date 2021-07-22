@@ -15,19 +15,11 @@
 
 	const uid = $showModal.modalData.thingInfo.uid
 	const price = toBigNumber($showModal.modalData.thingInfo['price_amount'])
-	const approvalTxStamps_to_tau = price.isGreaterThan(toBigNumber($approvalAmount)) ? toBigNumber(stampLimits.currency.approve).dividedBy($stampRatio) : toBigNumber(0)
+	const approvalTxStamps_to_tau = price.isGreaterThan(toBigNumber($approvalAmount[config.masterContract])) ? toBigNumber(stampLimits.currency.approve).dividedBy($stampRatio) : toBigNumber(0)
 	const buyTxStamps_to_tau = toBigNumber(stampLimits[config.masterContract].buy_thing).dividedBy($stampRatio)
 	const total_tx_fees = approvalTxStamps_to_tau.plus(buyTxStamps_to_tau)
 	const total_tau_to_buy = price.plus(total_tx_fees)
 	const thingName = $showModal.modalData.thingInfo['name']
-
-	console.log({
-		price: price.toString(),
-		approvalTxStamps_to_tau: approvalTxStamps_to_tau.toString(),
-		buyTxStamps_to_tau: buyTxStamps_to_tau.toString(),
-		total_tx_fees: total_tx_fees.toString(),
-		total_tau_to_buy: total_tau_to_buy.toString()
-	})
 
     const buy = () => {
 		const transaction = {
@@ -72,7 +64,7 @@
 	}
 
 	const approveAndSend = async () => {
-		checkForApproval().then((value) => {
+		checkForApproval(config.masterContract).then((value) => {
 			console.log(value)
 			if (value.isLessThan(price)){
 				approveBuy();
@@ -83,13 +75,13 @@
 	}
 
 	const handleApproveTx = (txResults) => {
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	buy()
         }
     }
 
 	const handleBuyTx = (txResults) => {
-        if (txResults.data.txBlockResult.status === 0) {
+        if (txResults.txBlockResult.status === 0) {
         	updateInfo({
 				owner: $userAccount,
 				"price_amount": "0",
@@ -154,7 +146,6 @@
 				<p>Total Cost</p>
 				<strong>{`${stringToFixed(total_tau_to_buy, 4)} ${config.currencySymbol}`}</strong>
 			</div>
-
 		</form>
 	</div>
 {/if}
