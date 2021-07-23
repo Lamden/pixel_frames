@@ -19,6 +19,7 @@ export const infoContractProcessor = (database, socket_server) =>{
         sellThing,
         likeThing,
         transferThing,
+        updateAuthCodes
     }
 
     async function processUpdate(update, loader=false){
@@ -60,6 +61,7 @@ export const infoContractProcessor = (database, socket_server) =>{
 
         if (updateKeys.includes("thing")) return 'createNewThing'
         if (updateKeys.length === 1 && updateKeys.includes("likes")) return 'likeThing'
+        if (updateKeys.length === 1 && updateKeys.includes("proof")) return 'updateAuthCodes'
         if (updateKeys.length === 2 && updateKeys.every(i => ['owner', 'price'].includes(i))) return 'soldThing'
         if (updateKeys.length === 1 && updateKeys.includes("price")) return 'sellThing'
         if (updateKeys.length === 1 && updateKeys.includes("owner")) return 'transferThing'
@@ -360,6 +362,23 @@ export const infoContractProcessor = (database, socket_server) =>{
         })
 
         return true
+    }
+
+    const updateAuthCodes = async (args) => {
+        const { uid, transactionInfo, update } = args
+
+        const { transaction } = transactionInfo
+        const {  metadata } = transaction
+
+        let authCodeInfo = await models.AuthCodes.findOne({uid})
+        //console.log({authCodeInfo_UpdateAuthCodes: authCodeInfo, payload, state})
+        if (!authCodeInfo) return
+
+        if (authCodeInfo.code === update.proof){
+            authCodeInfo.validated = true
+            dateValidated: new Date(metadata.timestamp * 1000)
+        }
+        await authCodeInfo.save()
     }
 
     return {
