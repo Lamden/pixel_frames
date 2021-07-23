@@ -15,10 +15,13 @@ const DBPORT = process.env.DBPORT || '27017'
 const DBNAME = process.env.DBNAME || `${NETWORK}-pixelframes`
 
 let connectionString = `mongodb://${DBURL}:${DBPORT}/${DBNAME}`;
+console.log({connectionString})
 
 if (DBUSER) {
     connectionString = `mongodb://${DBUSER}:${DBPWD}@${DBURL}:${DBPORT}/${DBNAME}?authSource=admin`;
 }
+
+
 
 export const getDatabase = () => new Promise(resolver => {
     let db = mongoose;
