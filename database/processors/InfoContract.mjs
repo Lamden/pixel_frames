@@ -364,7 +364,7 @@ export const infoContractProcessor = (database, socket_server) =>{
         return true
     }
 
-    const updateAuthCodes = async (args) => {
+    async function updateAuthCodes(args){
         const { uid, transactionInfo, update } = args
 
         const { transaction } = transactionInfo
