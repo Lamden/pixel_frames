@@ -283,7 +283,7 @@ export const infoContractProcessor = (database, socket_server) =>{
             if (!loader) {
                 socket_server.to(`market-updates`).emit("market-update", {type: 'new-sale', update: doc})
                 if (NETWORK === 'mainnet'){
-                    let priceData = await models.Prices.findOne({symbol: 'TAU'})
+                    let priceData = await db.models.Prices.findOne({symbol: 'TAU'})
                     if (priceData){
                         pusher.link(
                             "",
@@ -346,7 +346,7 @@ export const infoContractProcessor = (database, socket_server) =>{
                 socket_server.to(`market-updates`).emit("market-update", {type: 'new-transfer', update: doc})
 
                 if (NETWORK === 'mainnet'){
-                    let priceData = await models.Prices.findOne({symbol: 'TAU'})
+                    let priceData = await db.models.Prices.findOne({symbol: 'TAU'})
                     if (priceData){
                         pusher.link(
                             "",
@@ -370,8 +370,8 @@ export const infoContractProcessor = (database, socket_server) =>{
         const { transaction } = transactionInfo
         const {  metadata } = transaction
 
-        let authCodeInfo = await models.AuthCodes.findOne({uid})
-        //console.log({authCodeInfo_UpdateAuthCodes: authCodeInfo, payload, state})
+        let authCodeInfo = await db.models.AuthCodes.findOne({uid})
+
         if (!authCodeInfo) return
 
         if (authCodeInfo.code === update.proof){
