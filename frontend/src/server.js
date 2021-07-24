@@ -20,6 +20,8 @@ const dev = NODE_ENV === 'development';
 
 const initGlobal = async () => {
 	global.db = await getDatabase()
+	let res = await global.db.queries.getAllAuctions()
+	console.log(res)
 	global.blockservice = getBlockService('http://localhost', BLOCKSERVICE_PORT || 3535)
 	global.fetch = require('node-fetch')
 
