@@ -79,7 +79,7 @@ export const auctionContractProcessor = (database, socket_server) =>{
     async function newAuction(args){
         const { tx_uid, update, timestamp, loader } = args
         if (determineUpdateType(update) !== "newAuction") return
-        //console.log(util.inspect({newAuction: update}, false, null, true))
+        console.log(util.inspect({newAuction: update}, false, null, true))
 
         const { end_date, start_date, reserve_price} = update
         const { __fixed__: reserve_price_fixed } = reserve_price
@@ -110,7 +110,7 @@ export const auctionContractProcessor = (database, socket_server) =>{
         })
         //console.log({auction})
         auction.save((err, doc) => {
-            //console.log({err, doc})
+            console.log({err, doc})
             if (!loader) socket_server.to(`auction-updates`).emit("auction-update", {type: 'new-auction', auction: doc})
         })
 
