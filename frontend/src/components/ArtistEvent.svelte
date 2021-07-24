@@ -96,7 +96,7 @@
 	<div class="container">
 		<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
 		<div class="gallery">
-			<PixelWall mostLiked={soldList(eventInfo.artThingList)} />
+			<PixelWall mostLiked={eventInfo.artThingList} />
 		</div>
 
 		{#if !eventHasStarted}
