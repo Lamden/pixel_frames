@@ -4,10 +4,8 @@
 		let data = await Promise.all([
 			this.fetch(`./mostliked.json?limit=54`).then(res => res.json()),
 			this.fetch(`./recent_things.json?limit=10`).then(res => res.json()),
-			this.fetch(`./forsale.json?limit=10`).then(res => res.json()),
-			this.fetch(`./getAllAuctions.json`).then(res => res.json())
+			this.fetch(`./forsale.json?limit=10`).then(res => res.json())
 		])
-		console.log(data[3])
 		return {
 			mostLiked: data[0],
 			recent: data[1],
