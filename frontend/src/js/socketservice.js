@@ -9,6 +9,9 @@ export const start = () => {
     socket.on('connect', () => {
         console.log("connected to pixel whale server")
     })
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
 
     function joinRoom(room){
         if (joinedRooms[room]) return
