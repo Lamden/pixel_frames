@@ -3,7 +3,7 @@ import { socket_config } from './config'
 
 export const start = () => {
     let socket = io(`${socket_config.host}:${socket_config.port}`,
-        { secure: true, reconnection: true, rejectUnauthorized: false })
+        { secure: true, reconnection: true, rejectUnauthorized: false, transports: ['websocket']  })
 
     let joinedRooms = {}
 
