@@ -34,7 +34,7 @@ export const getAuctionQueries = (db) => {
     }
 
     async function getAllAuctions() {
-        return db.models.AuctionHistory.find({})
+        return await db.models.AuctionHistory.find({})
     }
 
     return{

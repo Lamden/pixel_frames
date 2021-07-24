@@ -8,6 +8,7 @@ export async function get(req, res, next) {
 	else {
 		if (thingInfo.blacklist) thingInfo = null
 		auctionInfo = await global.db.queries.getActiveAuction(uid)
+		console.log({auctionInfo, uid})
 	}
 
 	res.setHeader('Content-Type', 'application/json');
