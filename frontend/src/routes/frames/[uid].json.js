@@ -7,7 +7,8 @@ export async function get(req, res, next) {
 	if (!thingInfo) thingInfo = null
 	else {
 		if (thingInfo.blacklist) thingInfo = null
-		auctionInfo = await global.db.queries.getActiveAuction(uid)
+		//auctionInfo = await global.db.queries.getActiveAuction(uid)
+		auctionInfo = await global.db.models.AuctionHistory.findOne({uid})
 		console.log({auctionInfo, uid})
 	}
 

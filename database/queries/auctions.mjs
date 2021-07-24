@@ -31,10 +31,10 @@ export const getAuctionQueries = (db) => {
     async function getAuctions(uidList = []) {
         console.log({uidList})
         return db.models.AuctionHistory.find({uid: {$in: uidList}, ended: false})
-    }
+    }ß
 
     async function getAllAuctions() {
-        return await db.models.AuctionHistory.find({})
+        return db.models.AuctionHistory.find({})
     }
 
     return{
