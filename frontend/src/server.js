@@ -29,14 +29,15 @@ const initGlobal = async () => {
 			.update(Lamden.utils.randomString(16))
 			.digest("hex");
 	}
-
+	console.log(db.models)
 	let auctions = await global.db.models.AuctionHistory.find({})
 	console.log({auctions})
-
+/*
 	let things = await global.db.models.PixelFrame.find({})
 		.sort({likes: -1})
 		.limit(5)
 	console.log({things})
+ */
 
 }
 

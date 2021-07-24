@@ -75,10 +75,12 @@
             });
             return current
         })
+        console.log({found})
         return found
 	}
 
     const announceNewBid = (auctionInfo) => {
+        if (!auctionInfo) return
 		let [currentBidInfo, previousBidInfo] = auctionInfo.bid_history
 		if (!currentBidInfo) return
 
@@ -124,6 +126,7 @@
     }
 
     function announceNewAuction(auctionInfo){
+        if (!auctionInfo) return
         //console.log({announceNewAuction: auctionInfo})
         auctions.set([auctionInfo, ...$auctions])
 /*
@@ -141,7 +144,8 @@
     }
 
     function announceAuctionEnded(auctionInfo){
-        //console.log({announceNewAuction: auctionInfo})
+        if (!auctionInfo) return
+        console.log({announceNewAuction: auctionInfo})
 
         if ($userAccount){
             if ($userAccount === auctionInfo.old_owner){
