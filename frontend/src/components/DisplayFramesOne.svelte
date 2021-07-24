@@ -38,7 +38,7 @@
         if (window.location.hash){
             scrollToHash(window.location.hash.replace("#", "").toUpperCase())
         }
-        console.log(window.location)
+        //console.log(window.location)
         checkAlreadyLiked()
         switcher = setInterval(switchFrames, thingInfo.speed)
         return (() => clearInterval((switcher)))

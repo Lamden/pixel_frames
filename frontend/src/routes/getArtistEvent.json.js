@@ -5,9 +5,7 @@ export async function get(req, res) {
 
     try {
         eventData = JSON.parse(fs.readFileSync(`./events/${event}.json`, 'utf8'));
-
         eventData.artThingList = await Promise.all(eventData.artList.map(uid => global.db.models.PixelFrame.findOne({uid})))
-        console.log({eventData})
     } catch (err) {
         console.log(err)
     }

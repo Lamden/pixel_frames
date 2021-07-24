@@ -22,7 +22,7 @@
     export let showInfo = true
     export let id
 
-    console.log({auctionInfo, thingInfo})
+    //console.log({auctionInfo, thingInfo})
 
     let pixelSize = 2
 

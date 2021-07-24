@@ -124,7 +124,7 @@
     }
 
     function announceNewAuction(auctionInfo){
-        console.log({announceNewAuction: auctionInfo})
+        //console.log({announceNewAuction: auctionInfo})
         auctions.set([auctionInfo, ...$auctions])
 /*
         if ($userAccount){
@@ -141,7 +141,7 @@
     }
 
     function announceAuctionEnded(auctionInfo){
-        console.log({announceNewAuction: auctionInfo})
+        //console.log({announceNewAuction: auctionInfo})
 
         if ($userAccount){
             if ($userAccount === auctionInfo.old_owner){

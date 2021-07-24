@@ -13,7 +13,7 @@
 	import {getTimeAgo, getTimeTo} from "../js/utils";
 	import { auctions } from "../js/stores";
 
-	auctions.subscribe(curr => console.log(curr))
+	//auctions.subscribe(curr => console.log(curr))
 
 	$: eventInfo = null
 	$: eventInfoType = eventInfo ? eventInfo.eventType : null

@@ -319,9 +319,9 @@ export const checkForAuctionApproval = async (uid) => {
     let key = `${get(userAccount)}:${uid}:${config.auctionContract}`
 
     let hasApproval =  await getCurrentKeyValue(contractName, variableName, key)
-        console.log({checkForAuctionApproval: {
+       /* console.log({checkForAuctionApproval: {
         contractName, variableName, key, hasApproval
-        }})
+        }})*/
     return hasApproval
 }
 
