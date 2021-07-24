@@ -33,9 +33,14 @@ export const getAuctionQueries = (db) => {
         return db.models.AuctionHistory.find({uid: {$in: uidList}, ended: false})
     }
 
+    async function getAllAuctions() {
+        return db.models.AuctionHistory.find({})
+    }
+
     return{
         getAllActiveAuctions,
         getAuctions,
-        getActiveAuction
+        getActiveAuction,
+        getAllAuctions
     }
 }
