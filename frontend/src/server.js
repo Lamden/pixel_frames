@@ -20,8 +20,7 @@ const dev = NODE_ENV === 'development';
 
 const initGlobal = async () => {
 	global.db = await getDatabase()
-	let res = await global.db.queries.getAllAuctions()
-	console.log(res)
+
 	global.blockservice = getBlockService('http://localhost', BLOCKSERVICE_PORT || 3535)
 	global.fetch = require('node-fetch')
 
@@ -30,6 +29,15 @@ const initGlobal = async () => {
 			.update(Lamden.utils.randomString(16))
 			.digest("hex");
 	}
+
+	let auctions = await global.db.models.AuctionHistory.find({})
+	console.log({auctions})
+
+	let things = await global.db.models.PixelFrame.find({})
+		.sort({likes: -1})
+		.limit(5)
+	console.log({things})
+
 }
 
 initGlobal().then(() => {
