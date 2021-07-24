@@ -2,12 +2,7 @@ import io from 'socket.io-client'
 import { socket_config } from './config'
 
 export const start = () => {
-    console.log(socket_config)
-    /*
-    let socket = io(`${socket_config.host}:${socket_config.port}`,
-        { secure: true, reconnection: true, rejectUnauthorized: false, transports: ['websocket']  })
-`   */
-    let socket = io(`${socket_config.host}`)
+    let socket = io(`${socket_config.host}${socket_config.port}`)
 
     let joinedRooms = {}
 
