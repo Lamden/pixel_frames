@@ -170,7 +170,7 @@
 <div class="auction-container" {id}>
     <div class="top-content flex-grow">
         {#if !reserveMet}
-            <p class="reserve-not-met">Resereve Not Met</p>
+            <p class="reserve-not-met">Reserve Not Met</p>
         {/if}
         {#if showInfo}
             <div class="title flex-row">
