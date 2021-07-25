@@ -213,6 +213,9 @@
     </div>
     <div class="buttons flex-row flex-justify-spaceevenly">
         {#if $userAccount}
+            {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
+                <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
+            {/if}
             {#if hasStarted}
                 {#if !hasEnded}
                     {#if $userAccount === winning_bidder}
@@ -221,9 +224,7 @@
                             <CheckIcon class="auction-check-icon" width="17" />
                         </div>
                     {:else}
-                        {#if $userAccount !== auctionInfo.old_owner}
-                            <button class="button" on:click={handleBid} > BID </button>
-                        {/if}
+                        <button class="button" on:click={handleBid} > BID </button>
                     {/if}
                 {/if}
                 {#if notClaimed && hasEnded}
@@ -234,9 +235,6 @@
                             <button class="button" on:click={() => {handleEnd(FormAuctionClaim)}}>RESOLVE AUCTION</button>
                         {/if}
                     {/if}
-                {/if}
-                {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
-                        <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
                 {/if}
             {/if}
         {:else}
