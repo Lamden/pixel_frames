@@ -22,8 +22,6 @@
     export let showInfo = true
     export let id
 
-    console.log({auctionInfo, thingInfo})
-
     let pixelSize = 2
 
     $: hasEnded = auctionHasEnded(auctionInfo)

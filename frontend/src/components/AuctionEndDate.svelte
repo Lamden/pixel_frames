@@ -16,7 +16,7 @@
     $: currentTime = new Date()
     $: started = currentTime >= new Date(auctionInfo.start_date)
     $: hasEnded = ended ? true : currentTime > endTime
-    $: deltaTime = determineTimeDelta(started, hasEnded, endTime, startTime, ended_early, ended_earlyTime)
+    $: deltaTime = determineTimeDelta(started, hasEnded, endTime, startTime, ended_early, ended_earlyTime, currentTime)
 
 
     onMount(() => {
@@ -34,10 +34,10 @@
     const updateTime = () => currentTime = new Date();
 
     function determineTimeDelta(started, hasEnded, endTime, startTime, ended_early, ended_earlyTime){
-        console.log({started, hasEnded, endTime, startTime, ended_early, ended_earlyTime})
+        // console.log({started, hasEnded, endTime, startTime, ended_early, ended_earlyTime})
         if (!started){
             return getTimeDelta(currentTime, startTime)
-        }else{ß
+        }else{
             if (ended_early){
                 return getTimeDelta(ended_earlyTime, currentTime)
             }

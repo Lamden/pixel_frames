@@ -70,6 +70,6 @@
 	<strong>buying, selling and creating custom NFT pixel animations!</strong>
 </div>
 <ArtistEvent />
-<PixelWall {mostLiked}/>
+<!--<PixelWall {mostLiked}/>-->
 <Recent {recent} preview={true}/>
 <ForSale {forsale} preview={true}/>
