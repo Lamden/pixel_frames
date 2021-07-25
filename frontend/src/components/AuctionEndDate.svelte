@@ -19,6 +19,10 @@
 
     onMount(() => {
         timer = setInterval(updateTime, 1000)
+
+        console.log({
+            endTime, ended, ended_early, ended_earlyTime, currentTime, deltaTime, hasEnded
+        })
         return () => {
             clearInterval(updateTime)
             timer = null

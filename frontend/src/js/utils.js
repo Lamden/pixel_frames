@@ -539,6 +539,7 @@ export const hasNulls = (array) => {
 }
 
 export const getTimeDelta = (timePresent, timeFuture) => {
+    console.log({timePresent, timeFuture})
      // get total seconds between the times
     var delta = Math.abs(timePresent - timeFuture) / 1000;
 
