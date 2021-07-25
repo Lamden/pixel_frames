@@ -104,7 +104,7 @@ function createAndSendGIF2(res, thingInfo, shareLink = false) {
 
 
 function sendGifFromDisk(res, thingInfo, shareLink){
-    console.log("SENDING FROM FILE SYSTEM")
+    //console.log("SENDING FROM FILE SYSTEM")
     const stat = fs.statSync(`./GIFS/${shareLink}.gif`);
     res.writeHead(200, {
         'Content-Type': 'image/gif',

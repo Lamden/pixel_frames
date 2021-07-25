@@ -58,7 +58,7 @@
         if (liked === null && $userAccount) {
 
             alreadyLiked(thingInfo.uid, localStorage).then(res => {
-                console.log(res)
+                //console.log(res)
                 liked = res
 
             })
