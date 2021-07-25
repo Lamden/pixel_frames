@@ -238,8 +238,7 @@
                 {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
                         <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
                 {/if}
-            {if}
-
+            {/if}
         {:else}
             <div class="flex-row flex-center-center current-winner">
                 <span>sign in to bid</span>
