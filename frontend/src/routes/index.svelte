@@ -4,12 +4,24 @@
 		let data = await Promise.all([
 			this.fetch(`./mostliked.json?limit=54`).then(res => res.json()),
 			this.fetch(`./recent_things.json?limit=10`).then(res => res.json()),
-			this.fetch(`./forsale.json?limit=10`).then(res => res.json())
+			this.fetch(`./forsale.json?limit=10`).then(res => res.json()),
+			this.fetch(`./getArtistEvent.json?event=artist`).then(res => res.json())
 		])
+		let eventInfo = data[3]
+		try{
+			console.log("WE DOIN IT")
+			let endDate = new Date(eventInfo.endDate)
+			let shouldShowEvent = new Date() <= endDate.setDate(endDate.getDate() + 3) && new Date() >= new Date(eventInfo.announceDate)
+			if (!shouldShowEvent) eventInfo = null
+		}catch (e) {
+			eventInfo = null
+		}
+
 		return {
 			mostLiked: data[0],
 			recent: data[1],
-			forsale: data[2]
+			forsale: data[2],
+			eventInfo: data[3]
 		}
 	}
 </script>
@@ -28,8 +40,7 @@
 	export let mostLiked;
 	export let recent;
 	export let forsale;
-
-
+	export let eventInfo;
 </script>
 
 <style>
@@ -69,7 +80,9 @@
 	Please visit us on a desktop for the full experience including integration with the Lamden Wallet to enable
 	<strong>buying, selling and creating custom NFT pixel animations!</strong>
 </div>
-<ArtistEvent />
+{#if eventInfo}
+	<ArtistEvent {eventInfo}/>
+{/if}
 <!--<PixelWall {mostLiked}/>-->
 <Recent {recent} preview={true}/>
 <ForSale {forsale} preview={true}/>

@@ -22,7 +22,7 @@
     export let showInfo = true
     export let id
 
-    console.log({auctionInfo, thingInfo})
+    //console.log({auctionInfo, thingInfo})
 
     let pixelSize = 2
 
@@ -137,7 +137,7 @@
         letter-spacing: 1px;
     }
     .buttons{
-        padding: 1rem 0;
+        padding: 1rem 0 0.5rem;
     }
     .current-winner{
         background: var(--primary);
@@ -158,6 +158,9 @@
         border-radius: 10px;
         font-size: 12px;
         transform: translate(50%, 0);
+    }
+    .bid-history-link{
+        margin: 0 auto 0.5rem;
     }
     .no-bid{
         font-size: 14px;
@@ -241,5 +244,8 @@
             </div>
         {/if}
     </div>
+    <a href="{`./frames/${thingInfo.uid}#auction`}" class="text-color-gray-5 bid-history-link">
+        bid history
+    </a>
     <AuctionEndDate {auctionInfo}/>
 </div>

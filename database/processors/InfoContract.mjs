@@ -245,6 +245,10 @@ export const infoContractProcessor = (database, socket_server) =>{
         if (determineUpdateType(update) !== 'soldThing') return
 
         let pixel_frame = await db.models.PixelFrame.findOne({uid})
+        if (!pixel_frame) {
+            console.log({uid_not_found: update})
+            return
+        }
 
         let newOwner = update.owner
         let seller = pixel_frame.owner

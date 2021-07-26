@@ -13,19 +13,19 @@
 
         socket.joinRoom('auction-updates')
 		socket.on('new-auction', (auctionUpdate) => {
-		    console.log({newAuction: auctionUpdate})
+		    //console.log({newAuction: auctionUpdate})
 		    getThingInfo(auctionUpdate.uid).then(thingInfo => {
 		        auctionUpdate.thingInfo = thingInfo
                 announceNewAuction(decodeAuction(auctionUpdate))
             })
 		})
         socket.on('new-bid', (auctionUpdate) => {
-            console.log({newBid: auctionUpdate})
+            //console.log({newBid: auctionUpdate})
 			if (!$auctions) return
 			announceNewBid(replaceAuctionInfo(auctionUpdate))
         })
 		socket.on('auction-ended', (auctionUpdate) => {
-		    console.log({auctionEnded: auctionUpdate})
+		    //console.log({auctionEnded: auctionUpdate})
 			announceAuctionEnded(replaceAuctionInfo(auctionUpdate))
         })
         return () => socket.leaveRoom('auction-updates')
@@ -75,7 +75,7 @@
             });
             return current
         })
-        console.log({found})
+        //console.log({found})
         return found
 	}
 
@@ -145,7 +145,7 @@
 
     function announceAuctionEnded(auctionInfo){
         if (!auctionInfo) return
-        console.log({announceNewAuction: auctionInfo})
+        //console.log({announceNewAuction: auctionInfo})
 
         if ($userAccount){
             if ($userAccount === auctionInfo.old_owner){

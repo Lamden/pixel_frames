@@ -15,6 +15,7 @@
     import Likes from './Likes.svelte'
     import OwnerControls from './OwnerControls.svelte'
     import Auction from './Auction.svelte';
+    import AuctionBidHistory from './AuctionBidHistory.svelte';
 
     // Pictures
     import SocialButtons from "./SocialButtons.svelte";
@@ -200,12 +201,13 @@
     </div>
 </div>
 
-<div class="auction-info" id="AUCTION" on:ready={() => console.log("READY")}>
+<div class="auction-info" id="AUCTION">
     {#if auctionInfo}
         <h2 >There is an active Auction!</h2>
         <hr>
-        <div class="flex flex-center-center auction">
+        <div class="flex flex-justify-center flex-wrap auction">
             <Auction {auctionInfo} {thingInfo} showInfo={false}/>
+            <AuctionBidHistory bidHistory={auctionInfo.bid_history || []} />
         </div>
     {/if}
 </div>
