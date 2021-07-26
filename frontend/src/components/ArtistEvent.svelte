@@ -47,6 +47,10 @@
 		})
 	}
 
+	const sortLastUpdated = (auctionList) => {
+		return auctionList.sort((a, b) => a.last_tx_uid < b.last_tx_uid ? 1 : -1)
+	}
+
 	const removeSold = (artList) => {
 		return artList.filter(f => f.owner === eventInfo.artistVk)
 	}
@@ -117,7 +121,7 @@
 		<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
 
 		{#if eventAuctions}
-			<Auctions auctions={eventAuctions} title={false} showMore={false} />
+			<Auctions auctions={sortLastUpdated(eventAuctions)} title={false} showMore={false} />
 		{/if}
 	</div>
 {/if}

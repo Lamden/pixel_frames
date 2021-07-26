@@ -191,11 +191,9 @@
                     <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
                 {#if winning_bidder}
                     <p class="text-color-gray-5">{hasEnded ? `Won ${getTimeAgo(winning_timestamp)}by` : `${getTimeAgo(winning_timestamp)}by` }</p>
-                    {#if $userAccount === winning_bidder}
-                        <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">
-                            {$userAccount === winning_bidder ? "YOU!" : formatAccountAddress(winning_bidder, 8, 4)}
-                        </a>
-                    {/if}
+                    <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">
+                        {$userAccount === winning_bidder ? "YOU!" : formatAccountAddress(winning_bidder, 8, 4)}
+                    </a>
                 {:else}
                     {#if hasEnded}
                         <p><strong class="no-bid">Auction Expired</strong></p>

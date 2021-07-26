@@ -9,8 +9,6 @@
 
 	$: auctionList = preview ? [...auctions.slice(0, 10)] : auctions
 
-	console.log(auctions)
-
 </script>
 
 <style>
