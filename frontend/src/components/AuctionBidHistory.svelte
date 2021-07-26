@@ -40,7 +40,6 @@
                 {config.currencySymbol}
             </strong>
             {getTimeAgo(new Date(bidInfo.timestamp))}
-            .
         </span>
     {/each}
 </div>
