@@ -31,7 +31,7 @@
     <p>Bid History ({amountOfBids} {amountOfBids === 1 ? "bid" : "bids"})</p>
     {#each bidHistory as bidInfo}
         <span>
-            <a href={`./owners/${bidInfo.bidder}`}>
+            <a href={`./owned/${bidInfo.bidder}`}>
                 {$userAccount === bidInfo.bidder ? "YOU" : `${formatAccountAddress(bidInfo.bidder)}`}
             </a>
             bid
