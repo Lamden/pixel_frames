@@ -290,18 +290,10 @@ export const refreshTAUBalance = async () => {
 
 export const checkForApproval = async (contract) => {
     if (!get(userAccount)) return
-    let keyList = [
-        {
-            "contractName": "currency",
-            "variableName": "balances",
-            "key": `${get(userAccount)}:${contract}`
-        }
-    ]
-    const res = await blockexplorer_api.getKeys(keyList)
-    let approval = res[`currency.balances:${keyList[0].key}`]
-
-    if (approval === null ) approval = toBigNumber(0)
-    else approval = toBigNumber(approval)
+    let approval = await getCurrentKeyValue( "currency", "balances", `${get(userAccount)}:${contract}`)
+    if (approval === null || typeof approval === 'undefined') approval = toBigNumber(0)
+    if (!Lamden.Encoder.BigNumber.isBigNumber(approval)) toBigNumber(approval)
+    if (approval.isNaN()) toBigNumber(0)
 
     approvalAmount.update(curr => {
         curr[contract] = approval
@@ -319,9 +311,7 @@ export const checkForAuctionApproval = async (uid) => {
     let key = `${get(userAccount)}:${uid}:${config.auctionContract}`
 
     let hasApproval =  await getCurrentKeyValue(contractName, variableName, key)
-       /* console.log({checkForAuctionApproval: {
-        contractName, variableName, key, hasApproval
-        }})*/
+    if (hasApproval === null || typeof hasApproval === 'undefined') hasApproval = false
     return hasApproval
 }
 
