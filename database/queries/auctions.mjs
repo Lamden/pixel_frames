@@ -1,12 +1,7 @@
 export const getAuctionQueries = (db) => {
     async function getAllActiveAuctions(limit, offset) {
         let match = {
-            $match: {
-                $and: [
-                    {ended: false},
-                    {scheduled_end_date: {$gt: new Date()}}
-                ]
-            }
+            $match: {ended: false}
         }
         let sort = {$sort: {"start_date": -1.0}}
         let skip = {$skip: parseInt(offset)}
