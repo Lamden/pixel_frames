@@ -1,6 +1,7 @@
 
 
 <script>
+	import { onMount } from 'svelte'
 	import Preview from './Preview.svelte';
 	import { formatThings  } from "../js/utils";
 	import { config } from '../js/config.js'
@@ -11,6 +12,8 @@
 	$: outerWidth = 0
 
     let formatted = formatThings (mostLiked);
+
+	onMount(() => console.log({mostLiked}))
 
 </script>
 
