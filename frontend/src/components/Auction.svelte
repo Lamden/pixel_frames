@@ -22,7 +22,7 @@
     export let showInfo = true
     export let id
 
-    console.log({auctionInfo, thingInfo})
+    //console.log({auctionInfo, thingInfo})
 
     let pixelSize = 2
 
@@ -137,7 +137,7 @@
         letter-spacing: 1px;
     }
     .buttons{
-        padding: 1rem 0;
+        padding: 1rem 0 0.5rem;
     }
     .current-winner{
         background: var(--primary);
@@ -159,6 +159,9 @@
         font-size: 12px;
         transform: translate(50%, 0);
     }
+    .bid-history-link{
+        margin: 0 auto 0.5rem;
+    }
     .no-bid{
         font-size: 14px;
         color: var(--gray-5);
@@ -170,7 +173,7 @@
 <div class="auction-container" {id}>
     <div class="top-content flex-grow">
         {#if !reserveMet}
-            <p class="reserve-not-met">Resereve Not Met</p>
+            <p class="reserve-not-met">Reserve Not Met</p>
         {/if}
         {#if showInfo}
             <div class="title flex-row">
@@ -193,11 +196,9 @@
                     <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
                 {#if winning_bidder}
                     <p class="text-color-gray-5">{hasEnded ? `Won ${getTimeAgo(winning_timestamp)}by` : `${getTimeAgo(winning_timestamp)}by` }</p>
-                    {#if $userAccount === winning_bidder}
-                        <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">
-                            {$userAccount === winning_bidder ? "YOU!" : formatAccountAddress(winning_bidder, 8, 4)}
-                        </a>
-                    {/if}
+                    <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">
+                        {$userAccount === winning_bidder ? "YOU!" : formatAccountAddress(winning_bidder, 8, 4)}
+                    </a>
                 {:else}
                     {#if hasEnded}
                         <p><strong class="no-bid">Auction Expired</strong></p>
@@ -212,30 +213,39 @@
         {/if}
     </div>
     <div class="buttons flex-row flex-justify-spaceevenly">
-        {#if !hasEnded}
-            {#if $userAccount === winning_bidder}
-                <div class="flex-row flex-center-center current-winner">
-                    <span>You are winning this auction!</span>
-                    <CheckIcon class="auction-check-icon" width="17" />
-                </div>
-            {:else}
-                {#if $userAccount !== auctionInfo.old_owner}
-                    <button class="button" on:click={handleBid} > BID </button>
-                {/if}
-            {/if}
-        {/if}
-        {#if notClaimed && hasEnded}
-            {#if winning_bidder !== "" && $userAccount === winning_bidder}
-                <button class="button" on:click={() => {handleEnd(FormAuctionClaim, true)}}>CLAIM</button>
-            {:else}
-                {#if $userAccount === auctionInfo.old_owner}
-                    <button class="button" on:click={() => {handleEnd(FormAuctionClaim)}}>RESOLVE AUCTION</button>
-                {/if}
-            {/if}
-        {/if}
-        {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
+        {#if $userAccount}
+            {#if $userAccount === auctionInfo.old_owner && canBeCancelled && !hasEnded}
                 <button class="button" on:click={() => {handleEnd(FormAuctionCancel)}}>{hasEnded ? "" : "CANCEL"}</button>
+            {/if}
+            {#if hasStarted}
+                {#if !hasEnded}
+                    {#if $userAccount === winning_bidder}
+                        <div class="flex-row flex-center-center current-winner">
+                            <span>You are winning this auction!</span>
+                            <CheckIcon class="auction-check-icon" width="17" />
+                        </div>
+                    {:else}
+                        <button class="button" on:click={handleBid} > BID </button>
+                    {/if}
+                {/if}
+                {#if notClaimed && hasEnded}
+                    {#if winning_bidder !== "" && $userAccount === winning_bidder}
+                        <button class="button" on:click={() => {handleEnd(FormAuctionClaim, true)}}>CLAIM</button>
+                    {:else}
+                        {#if $userAccount === auctionInfo.old_owner}
+                            <button class="button" on:click={() => {handleEnd(FormAuctionClaim)}}>RESOLVE AUCTION</button>
+                        {/if}
+                    {/if}
+                {/if}
+            {/if}
+        {:else}
+            <div class="flex-row flex-center-center current-winner">
+                <span>sign in to bid</span>
+            </div>
         {/if}
     </div>
+    <a href="{`./frames/${thingInfo.uid}#auction`}" class="text-color-gray-5 bid-history-link">
+        bid history
+    </a>
     <AuctionEndDate {auctionInfo}/>
 </div>

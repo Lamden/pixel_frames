@@ -8,7 +8,7 @@
     import AuctionIcon from '../../static/img/auction.svg'
 
     export let salesHistory
-    console.log(salesHistory)
+    //console.log(salesHistory)
 
 </script>
 

@@ -3,8 +3,6 @@
 </script>
 
 <script>
-	import {onMount} from 'svelte'
-
 	// Components
 	import PixelWall from './PixelWall.svelte'
 	import Auctions from './Auctions.svelte'
@@ -13,38 +11,25 @@
 	import {getTimeAgo, getTimeTo} from "../js/utils";
 	import { auctions } from "../js/stores";
 
-	auctions.subscribe(curr => console.log(curr))
+	//auctions.subscribe(curr => console.log(curr))
 
-	$: eventInfo = null
-	$: eventInfoType = eventInfo ? eventInfo.eventType : null
-	$: eventAuctions = eventInfoType ? eventInfoType === "auction" ? getAuctions(eventInfo.artList, $auctions) : null : null
-	$: eventHasEnded = true;
-	$: shouldShowEvent = false;
-	$: eventHasStarted = false;
-	$: announceStarted = false;
+	export let eventInfo
 
-	onMount(async () => {
-		let res = await fetch(`./getArtistEvent.json?event=artist`).then(res => res.json())
-		try{
-			let endDate = new Date(res.endDate)
-			eventHasEnded = endDate < new Date()
-			shouldShowEvent = new Date() <= endDate.setDate(endDate.getDate() + 3)
-
-			if (shouldShowEvent){
-				announceStarted = new Date() > new Date(res.announceDate)
-				eventHasStarted = new Date() > new Date(res.startDate)
-				eventInfo = res
-			}
-		}catch (e){
-			console.log(e)
-		}
-	})
+	$: endDate = new Date(eventInfo.endDate)
+	$: eventInfoType = eventInfo.eventType
+	$: eventAuctions = eventInfoType === "auction" ? getAuctions(eventInfo.artList, $auctions) : null
+	$: eventHasEnded = endDate < new Date()
+	$: eventHasStarted = new Date() > new Date(eventInfo.startDate)
 
 	function getAuctions(eventInfoAuctions, storeAuctions){
 		return storeAuctions.filter(f => {
 			let found = eventInfoAuctions.find(auction => auction === f.uid)
 			return found ? true : false
 		})
+	}
+
+	const sortLastUpdated = (auctionList) => {
+		return auctionList.sort((a, b) => a.last_tx_uid < b.last_tx_uid ? 1 : -1)
 	}
 
 	const removeSold = (artList) => {
@@ -92,32 +77,30 @@
 	}
 </style>
 
-{#if eventInfo && announceStarted}
-	<div class="container">
-		<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
-		<div class="gallery">
-			<PixelWall mostLiked={soldList(eventInfo.artThingList)} />
-		</div>
+<div class="container">
+	<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
+	<div class="gallery">
+		<PixelWall mostLiked={eventInfo.artThingList} />
+	</div>
 
-		{#if !eventHasStarted}
+	{#if !eventHasStarted}
+		<h3 class="text-color-primary time">
+			{`Event Starts ${new Date(eventInfo.startDate).toLocaleString()} (${getTimeTo(new Date(eventInfo.startDate))})`}
+		</h3>
+	{:else}
+		{#if !eventHasEnded}
 			<h3 class="text-color-primary time">
-				{`Event Starts ${new Date(eventInfo.startDate).toLocaleString()} (${getTimeTo(new Date(eventInfo.startDate))})`}
+				{`Event Ends ${new Date(eventInfo.endDate).toLocaleString()} (${getTimeTo(new Date(eventInfo.endDate))})`}
 			</h3>
 		{:else}
-			{#if !eventHasEnded}
-				<h3 class="text-color-primary time">
-					{`Event Ends ${new Date(eventInfo.endDate).toLocaleString()} (${getTimeTo(new Date(eventInfo.endDate))})`}
-				</h3>
-			{:else}
-				<h3 class="text-color-primary time">
-					{`Event Ended ${new Date(eventInfo.endDate).toLocaleString()} ( ${getTimeAgo(new Date(eventInfo.endDate), true)})`}
-				</h3>
-			{/if}
+			<h3 class="text-color-primary time">
+				{`Event Ended ${new Date(eventInfo.endDate).toLocaleString()} ( ${getTimeAgo(new Date(eventInfo.endDate), true)})`}
+			</h3>
 		{/if}
-		<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
+	{/if}
+	<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
 
-		{#if eventAuctions}
-			<Auctions auctions={eventAuctions} title={false} showMore={false} />
-		{/if}
-	</div>
-{/if}
+	{#if eventAuctions}
+		<Auctions auctions={sortLastUpdated(eventAuctions)} title={false} showMore={false} />
+	{/if}
+</div>

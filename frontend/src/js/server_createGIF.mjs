@@ -17,14 +17,14 @@ export const createGIF = async  (req, res, next) => {
         if (uid.substring(0, 5) === "share"){
             uid = uid.split("_")[1]
             shareLink = pathMatch[1].split(".")[0]
-            let shareLinkRes = await global.models.ShareLinks.findOne({link: shareLink})
+            let shareLinkRes = await global.db.models.ShareLinks.findOne({link: shareLink})
 
             if (shareLink && !shareLinkRes) {
                 next()
                 return
             }
         }
-		const thingInfo = await global.models.PixelFrame.findOne({uid})
+		const thingInfo = await global.db.models.PixelFrame.findOne({uid})
 		if (thingInfo){
 		    try{
                 let fileName = shareLink || uid
@@ -104,7 +104,7 @@ function createAndSendGIF2(res, thingInfo, shareLink = false) {
 
 
 function sendGifFromDisk(res, thingInfo, shareLink){
-    console.log("SENDING FROM FILE SYSTEM")
+    //console.log("SENDING FROM FILE SYSTEM")
     const stat = fs.statSync(`./GIFS/${shareLink}.gif`);
     res.writeHead(200, {
         'Content-Type': 'image/gif',

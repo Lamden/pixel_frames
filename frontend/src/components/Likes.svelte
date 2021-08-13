@@ -44,7 +44,7 @@
     }
 
     const handleLikeTx = (txResults) => {
-        console.log(txResults)
+        //console.log(txResults)
         if (txResults.txBlockResult.status === 0) {
             liked = true;
             thingInfo.likes = thingInfo.likes + 1;

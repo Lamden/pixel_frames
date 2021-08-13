@@ -13,7 +13,7 @@
 	let inputElm
 
 	const auctionInfo = $showModal.modalData.auctionInfo
-	const thingInfo = auctionInfo.thingInfo
+	const thingInfo = $showModal.modalData.thingInfo || auctionInfo.thingInfo
 
 	const uid = auctionInfo.uid
 	const thingName = thingInfo.name
