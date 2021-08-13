@@ -1,19 +1,13 @@
 
 
 <script>
-	import { onMount } from 'svelte'
 	import Preview from './Preview.svelte';
 	import { formatThings  } from "../js/utils";
-	import { config } from '../js/config.js'
 
 	export let mostLiked;
 	let sending = false;
 
-	$: outerWidth = 0
-
     let formatted = formatThings (mostLiked);
-
-	onMount(() => console.log({mostLiked}))
 
 </script>
 
@@ -33,10 +27,9 @@
 </style>
 
 <div class="flex-row pixelwall">
-    {#each formatted as thingInfo}
+    {#each formatted as thingInfo (thingInfo.uid)}
 		<a rel=prefetch href="{'frames/' + thingInfo.uid}">
-			<Preview solidBorder={true} solidBorderColor="#00d6a22b" frames={thingInfo.frames} pixelSize={outerWidth > 400 ? 4 : 3} {thingInfo} showWatermark={false} border={false}/>
+			<Preview solidBorder={true} solidBorderColor="#00d6a22b" frames={thingInfo.frames} pixelSize={4} {thingInfo} showWatermark={false} border={false}/>
 		</a>
     {/each}
 </div>
-<svelte:window bind:outerWidth />

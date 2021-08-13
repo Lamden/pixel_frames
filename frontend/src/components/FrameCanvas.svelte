@@ -1,7 +1,6 @@
 <script>
     import { afterUpdate } from 'svelte'
-    import { userAccount } from '../js/stores.js'
-    import { drawFrame, formatAccountAddress } from '../js/utils.js'
+    import { drawFrame } from '../js/utils.js'
     import { config } from '../js/config.js'
 
     export let id = parseInt(Math.random() * 10000);
@@ -11,7 +10,12 @@
 
     let canvasElm;
 
-    afterUpdate(() => drawFrame(canvasElm, pixels, pixelSize, watermark))
+    afterUpdate(() => {
+        drawFrame(canvasElm, pixels, pixelSize, watermark)
+    })
+
+    $: width = pixelSize * config.frameWidth
+    $: height = pixelSize * config.frameWidth
 
 </script>
 
@@ -24,7 +28,6 @@
 <canvas
         id="{id}"
         bind:this={canvasElm}
-        width={pixelSize * config.frameWidth}
-        height={pixelSize * config.frameWidth}
+        {width} {height}
 />
 
