@@ -157,7 +157,7 @@
 	{/if}
 
 	<div class="flex-row flex-align-center artist-info-row">
-		<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> artist <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
+		<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
 		{#if eventInfo.social.twitter}
 			<a class="social twitter" href="{eventInfo.social.twitter}" target="_blank" rel="noopener noreferrer">
 				<IconTwitter />
