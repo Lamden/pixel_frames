@@ -1,11 +1,13 @@
-<script context="module">
-
-</script>
-
 <script>
+	import { Email, HackerNews, Reddit, LinkedIn, Pinterest, Telegram, Tumblr, Vk, WhatsApp, Xing, Facebook, Twitter } from 'svelte-share-buttons-component';
+
 	// Components
 	import PixelWall from './PixelWall.svelte'
 	import Auctions from './Auctions.svelte'
+
+	// Icons
+	import IconTwitter from '../../static/img/twitter.svg'
+	import IconTelegram from '../../static/img/telegram.svg'
 
 	// Misc
 	import {getTimeAgo, getTimeTo} from "../js/utils";
@@ -57,12 +59,40 @@
 		font-size: 1.5em;
 	}
 	h3.artist-info{
-		margin: 0 0 2rem;
+		margin: 0;
+	}
+	.artist-info-row{
+		margin-bottom: 2rem;
+	}
+	.social{
+		width: 1.1em;
+		height: 1.1em;
+		border-radius: 99px;
+		padding: 6px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-left: 8px;
+	}
+	.twitter{
+		background: #2795e9;
+	}
+	.telegram{
+		background-color: #54A9EB
 	}
 	img{
 		display: block;
 		width: 100%;
 		margin: 1rem auto 1rem;
+	}
+	.desktop-image{
+		display: none;
+	}
+	.tablet-image{
+		display: none;
+	}
+	.mobile-image{
+		display: block;
 	}
 	p{
 		text-align: center;
@@ -75,10 +105,37 @@
 		font-size: 25px;
 		font-weight: 500;
 	}
+
+	@media screen and (min-width: 450px) {
+		.desktop-image{
+			display: none;
+		}
+		.tablet-image{
+			display: block;
+		}
+		.mobile-image{
+			display: none;
+		}
+    }
+	@media screen and (min-width: 650px) {
+		.desktop-image{
+			display: block;
+		}
+		.tablet-image{
+			display: none;
+		}
+		.mobile-image{
+			display: none;
+		}
+    }
+
 </style>
 
 <div class="container">
-	<img src="{`/img/events/${eventInfo.image}`}" alt="event announcement" />
+	<img class="desktop-image" src="{`/img/events/${eventInfo.imageDesktop}`}" alt="event announcement" />
+	<img class="tablet-image" src="{`/img/events/${eventInfo.imageTablet}`}" alt="event announcement" />
+	<img class="mobile-image" src="{`/img/events/${eventInfo.imageMobile}`}" alt="event announcement" />
+
 	<div class="gallery">
 		<PixelWall mostLiked={eventInfo.artThingList} />
 	</div>
@@ -98,7 +155,22 @@
 			</h3>
 		{/if}
 	{/if}
-	<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> by <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
+
+	<div class="flex-row flex-align-center artist-info-row">
+		<h3 class="text-color-primary-dark artist-info"><strong>{eventInfo.name}</strong> artist <a href="{`./creator/${eventInfo.artistVk}`}">{eventInfo.artistName}</a></h3>
+		{#if eventInfo.social.twitter}
+			<a class="social twitter" href="{eventInfo.social.twitter}" target="_blank" rel="noopener noreferrer">
+				<IconTwitter />
+			</a>
+		{/if}
+		{#if eventInfo.social.twitter}
+			<a class="social telegram" href="{eventInfo.social.telegram}" target="_blank" rel="noopener noreferrer">
+				<IconTelegram />
+			</a>
+		{/if}
+	</div>
+
+
 
 	{#if eventAuctions}
 		<Auctions auctions={sortLastUpdated(eventAuctions)} title={false} showMore={false} />

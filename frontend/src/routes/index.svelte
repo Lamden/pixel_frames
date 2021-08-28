@@ -80,12 +80,12 @@
 	Please visit us on a desktop for the full experience including integration with the Lamden Wallet to enable
 	<strong>buying, selling and creating custom NFT pixel animations!</strong>
 </div>
-<!--
+
 {#if eventInfo}
 	<ArtistEvent {eventInfo}/>
+{:else}
+	<PixelWall {mostLiked}/>
 {/if}
--->
-<PixelWall {mostLiked}/>
 
 <Recent {recent} preview={true}/>
 <ForSale {forsale} preview={true}/>

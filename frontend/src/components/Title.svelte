@@ -59,8 +59,6 @@
 		width: 13%;
 		height: 13%;
 	}
-
-
 </style>
 
 <div class="flex-row" style={`font-size: ${fontSize}em`} class:top-margin={showFullLogo}>
