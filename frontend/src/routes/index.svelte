@@ -12,7 +12,8 @@
 			console.log("WE DOIN IT")
 			let endDate = new Date(eventInfo.endDate)
 			let shouldShowEvent = new Date() <= endDate.setDate(endDate.getDate() + 3) && new Date() >= new Date(eventInfo.announceDate)
-			if (!shouldShowEvent) eventInfo = null
+			if (!shouldShowEvent) eventInfo = false
+			console.log({shouldShowEvent})
 		}catch (e) {
 			eventInfo = null
 		}
@@ -21,7 +22,7 @@
 			mostLiked: data[0],
 			recent: data[1],
 			forsale: data[2],
-			eventInfo: data[3]
+			eventInfo
 		}
 	}
 </script>

@@ -275,17 +275,10 @@ export const processTxResults = (results) => {
 
 export const refreshTAUBalance = async () => {
     if (!get(userAccount)) return
-    let keyList = [
-		{
-			"contractName": "currency",
-			"variableName": "balances",
-			"key": get(userAccount)
-		}
-	]
-    const res = await blockexplorer_api.getKeys(keyList)
-    let data = valuesToBigNumber(res)
-    let balance = data[`currency.balances:${keyList[0].key}`]
-    if (balance) currency.set(balance)
+
+    await fetch(`/getBalance-${get(userAccount)}.json`)
+        .then(res =>  res.json())
+        .then(json => currency.set(json.value))
 }
 
 export const checkForApproval = async (contract) => {
