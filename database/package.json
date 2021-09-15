@@ -4,7 +4,7 @@
     "load_all": "node db_loader.mjs all drop"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bignumber.js": "^9.0.1",
     "coingecko-api": "^1.0.10",
     "dotenv": "^10.0.0",
