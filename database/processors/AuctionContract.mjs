@@ -7,7 +7,7 @@ if (!AUCTION_CONTRACT ) throw Error("Must pass AUCTION_CONTRACT via .env file")
 const INFO_CONTRACT = process.env.INFO_CONTRACT || null
 if (!INFO_CONTRACT ) throw Error("Must pass INFO_CONTRACT via .env file")
 
-export const auctionContractProcessor = (database, socket_server) =>{
+export const auctionContractProcessor = (database, socket_server, services) =>{
     const processorName = 'Auction Contract'
     let db = database
 /*
