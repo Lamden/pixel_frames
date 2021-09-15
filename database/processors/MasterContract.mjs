@@ -1,6 +1,6 @@
 import util from "util";
 
-export const masterContractProcessor = (database, socket_server) =>{
+export const masterContractProcessor = (database, socket_server, services) =>{
     const processorName = 'Master Contract'
     let db = database
 

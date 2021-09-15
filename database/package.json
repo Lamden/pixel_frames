@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "start": "node db_updater.mjs",
+    "load_all": "node db_loader.mjs all drop"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
@@ -7,6 +11,7 @@
     "mongoose": "^5.13.2",
     "node-fetch": "^2.6.1",
     "socket.io": "^4.1.2",
-    "socket.io-client": "^4.1.2"
+    "socket.io-client": "^4.1.2",
+    "twitter-api-client": "^1.3.8"
   }
 }

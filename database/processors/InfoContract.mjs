@@ -9,7 +9,7 @@ if (!AUCTION_CONTRACT ) throw Error("Must pass INFO_CONTRACT via .env file")
 
 const NETWORK = process.env.NETWORK || 'testnet'
 
-export const infoContractProcessor = (database, socket_server) =>{
+export const infoContractProcessor = (database, socket_server, services) =>{
     const processorName = 'Info Contract'
     let db = database
 
@@ -115,10 +115,10 @@ export const infoContractProcessor = (database, socket_server) =>{
         await thing.save(async (err, doc) => {
             if (!loader) {
                 socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
-                if (NETWORK === 'mainnet'){
+                if (NETWORK === 'mainnet' && services){
                     try{
-                        pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
-                        let res = await twitterClient.tweets.statusesUpdate({
+                        // pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
+                        let res = await services.twitterClient.tweets.statusesUpdate({
                             status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
                         })
                         .catch(err => console.log(err))
@@ -286,17 +286,23 @@ export const infoContractProcessor = (database, socket_server) =>{
         await pixel_frame.save(async (err, doc) => {
             if (!loader) {
                 socket_server.to(`market-updates`).emit("market-update", {type: 'new-sale', update: doc})
-                if (NETWORK === 'mainnet'){
+                if (NETWORK === 'mainnet' && services){
                     let priceData = await db.models.Prices.findOne({symbol: 'TAU'})
                     if (priceData){
+
+                        /*
                         pusher.link(
                             "",
                             `#NFT Art Sold! ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
                             `https://www.pixelwhale.io/frames/${uid}`
                         );
-                        twitterClient.tweets.statusesUpdate({
+                        */
+
+                        let res = await services.twitterClient.tweets.statusesUpdate({
                             status: `#NFT Art Sold!\r\n${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)\r\n\r\nhttps://www.pixelwhale.io/frames/${uid} \r\n\r\n#NFTartist #digitalartist #pixelart`
                         })
+                        .catch(err => console.log(err))
+                        console.log(res)
                     }
                 }
             }
@@ -349,17 +355,23 @@ export const infoContractProcessor = (database, socket_server) =>{
             if (!loader) {
                 socket_server.to(`market-updates`).emit("market-update", {type: 'new-transfer', update: doc})
 
-                if (NETWORK === 'mainnet'){
+                if (NETWORK === 'mainnet' && services){
                     let priceData = await db.models.Prices.findOne({symbol: 'TAU'})
                     if (priceData){
+
+                        /*
                         pusher.link(
                             "",
                             `#NFT Art Sold! ${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)`,
                             `https://www.pixelwhale.io/frames/${uid}`
                         );
-                        twitterClient.tweets.statusesUpdate({
+                        */
+
+                        let res = await services.twitterClient.tweets.statusesUpdate({
                             status: `#NFT Art Sold!\r\n${priceBN.toFixed(3)} TAU ($${priceBN.multipliedBy(priceData.currentPrice).toFixed(2)} USD)\r\n\r\nhttps://www.pixelwhale.io/frames/${uid} \r\n\r\n#NFTartist #digitalartist #pixelart`
                         })
+                        .catch(err => console.log(err))
+                        console.log(res)
                     }
                 }
             }
