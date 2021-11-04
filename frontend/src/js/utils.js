@@ -151,6 +151,8 @@ export const letter_to_color = {
     'z' :'#831843'
 }
 
+export const isValidPixel = (pixelValue) => Object.keys(letter_to_color).includes(pixelValue)
+
 export const getCurrentKeyValue = async (contractName, variableName, key) => {
     let value = null
     const result = await fetch(`./getkey-${contractName}.${variableName}:${key}.json`)

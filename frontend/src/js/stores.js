@@ -1,7 +1,7 @@
 import { writable, get, derived } from 'svelte/store';
 import { config } from './config.js'
 import { newPixelFrame } from './defaults'
-import {toBigNumber} from "./utils";
+import {toBigNumber, isValidPixel} from "./utils";
 
 export const released = writable(false);
 export const timeToRelease = writable(Date.UTC(2021, 3, 19, 22) - new Date());
@@ -85,11 +85,38 @@ export const frameStore = (() => {
 
     const setStore = (value) => store.set(value)
 
+    function isFrameData(framedata){
+        const { frames, speed, created } = framedata
+        if (!frames || !speed || !created) return false
+        if (!Array.isArray(frames)) return false
+        for (let frame of frames){
+            if (frame.length !== 625){
+                return false
+                break
+            }
+            for (let pixel of frame){
+                if (!isValidPixel(pixel)){
+                    return false
+                    break
+                }
+            }
+        }
+        return true
+    }
+
     return {
         subscribe: store.subscribe,
         get: () => get(store),
         update: store.update,
         set: setStore,
+        add: (framedata) => {
+            if (!isFrameData(framedata)) return
+
+            store.update(currstore => {
+                currstore.push(framedata)
+                return currstore
+            })
+        }
     }
 })()
 

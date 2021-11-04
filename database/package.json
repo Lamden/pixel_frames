@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "start": "node db_updater.mjs",
+    "load_all": "node db_loader.mjs all drop"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",

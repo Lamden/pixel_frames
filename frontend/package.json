@@ -1,7 +1,7 @@
 {
   "name": "pixel_frames",
   "description": "A website to create and own unique pixel animations.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "scripts": {
     "dev": "PORT=3001 sapper dev",
     "build": "sapper build --legacy",
