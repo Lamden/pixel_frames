@@ -29,19 +29,26 @@ export const auctionContractProcessor = (database, socket_server, services) =>{
         
         let last_tx_uid = update.tx_uid
 
-        const { transaction } = update.txInfo
+        let { transaction, state_changes_obj } = update.txInfo
         const { metadata, payload } = transaction
 
+        if (typeof state_changes_obj === 'string'){
+            state_changes_obj = JSON.parse(update.state_changes_obj)
+        }
+
         if (await db.queries.shouldProcess('AuctionHistoryContract', last_tx_uid)){
-            let contractUpdate = update.state_changes_obj[AUCTION_CONTRACT]["S"]
+            let contractUpdate = {}
+            try{
+                contractUpdate = state_changes_obj[AUCTION_CONTRACT]["S"]
+            }catch (e){}
+
             let infoContractUpdate
             try{
-                infoContractUpdate = update.state_changes_obj[INFO_CONTRACT]["S"]
+                infoContractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
             }catch (e){}
 
             for (const uid of Object.keys(contractUpdate || {})){
                 if (uid.length === 64) {
-                    //console.log(util.inspect({state_changes_obj: update.state_changes_obj}, false, null, true))
                     let updateType = determineUpdateType(contractUpdate[uid])
                     //console.log({updateType})
                     if (Object.keys(updateProcessors).includes(updateType)) {

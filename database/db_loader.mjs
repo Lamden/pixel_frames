@@ -46,7 +46,7 @@ const runLoader = async (loaderList, drop, starting_tx_uid) => {
         console.log(`Finished Running ${loaderName}...`)
     }
 
-    process.exit(1)
+    process.exit(0)
 }
 
 let [loaderList, drop, starting_tx_uid] = process.argv.slice(2)

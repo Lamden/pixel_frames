@@ -25,13 +25,23 @@ export const infoContractProcessor = (database, socket_server, services) =>{
     async function processUpdate(update, loader=false){
         if (!loader) console.log(util.inspect({processorName, update}, false, null, true))
         let last_tx_uid = update.tx_uid
+
+        let { state_changes_obj } = update.txInfo
+
+        if (typeof state_changes_obj === 'string'){
+            state_changes_obj = JSON.parse(update.state_changes_obj)
+        }
+
         let auctionContractUpdates = {}
         try{
-            auctionContractUpdates = update.state_changes_obj[AUCTION_CONTRACT]["S"]
+            auctionContractUpdates = state_changes_obj[AUCTION_CONTRACT]["S"]
         }catch (e){}
 
         if (await db.queries.shouldProcess('InfoContractUpdates', last_tx_uid)){
-            let contractUpdate = update.state_changes_obj[INFO_CONTRACT]["S"]
+            let contractUpdate = {}
+            try{
+                contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
+            }catch (e){}
 
             const { names } = contractUpdate
 
