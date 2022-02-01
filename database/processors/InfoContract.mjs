@@ -26,10 +26,10 @@ export const infoContractProcessor = (database, socket_server, services) =>{
         if (!loader) console.log(util.inspect({processorName, update}, false, null, true))
         let last_tx_uid = update.tx_uid
 
-        let { state_changes_obj } = update.txInfo
+        let { state_changes_obj } = update
 
         if (typeof state_changes_obj === 'string'){
-            state_changes_obj = JSON.parse(update.state_changes_obj)
+            state_changes_obj = JSON.parse(state_changes_obj)
         }
 
         let auctionContractUpdates = {}

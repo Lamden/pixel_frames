@@ -29,11 +29,12 @@ export const auctionContractProcessor = (database, socket_server, services) =>{
         
         let last_tx_uid = update.tx_uid
 
-        let { transaction, state_changes_obj } = update.txInfo
+        let { state_changes_obj, txInfo } = update
+        const { transaction } = txInfo
         const { metadata, payload } = transaction
 
         if (typeof state_changes_obj === 'string'){
-            state_changes_obj = JSON.parse(update.state_changes_obj)
+            state_changes_obj = JSON.parse(state_changes_obj)
         }
 
         if (await db.queries.shouldProcess('AuctionHistoryContract', last_tx_uid)){
