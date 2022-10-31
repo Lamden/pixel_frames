@@ -25,7 +25,7 @@
 </script>
 
 <div class="flex-col">
-    <label>Amimation Speed <strong>{speed}ms</strong></label>
+    <label>Animation Speed <strong>{speed}ms</strong></label>
     <input
         bind:value={speed}
         on:input={handleInput}
