@@ -127,24 +127,26 @@ export const infoContractProcessor = (database, socket_server, services) =>{
         console.log(util.inspect({thing}, false, null, true))
 
 
-        await thing.save(async (err, doc) => {
-            console.log("AFTER SAVE!")
-            console.log({err})
-            console.log(util.inspect({doc}, false, null, true))
-            if (!loader) {
-                socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
-                if (NETWORK === 'mainnet' && services){
-                    try{
-                        // pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
-                        let res = await services.twitterClient.tweets.statusesUpdate({
-                            status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
-                        })
-                        .catch(err => console.log(err))
-                        console.log(res)
-                    }catch (e) {}
+        await thing.save()
+            .then(async (err, doc) => {
+                console.log("AFTER SAVE!")
+                console.log({err})
+                console.log(util.inspect({doc}, false, null, true))
+                if (!loader) {
+                    socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
+                    if (NETWORK === 'mainnet' && services){
+                        try{
+                            // pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
+                            let res = await services.twitterClient.tweets.statusesUpdate({
+                                status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
+                            })
+                            .catch(err => console.log(err))
+                            console.log(res)
+                        }catch (e) {}
+                    }
                 }
-            }
-        })
+            })
+            .catch(err => console.log(err))
     }
 
     async function sellThing(args){
