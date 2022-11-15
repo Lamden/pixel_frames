@@ -1,5 +1,6 @@
 import * as InfoContractLoader from './loaders/InfoContractLoader.mjs'
 import * as AuctionContractLoader from './loaders/AuctionContractLoader.mjs'
+import * as LoadOne from './loaders/LoadOne.mjs'
 
 const runLoader = async (loaderList, drop, starting_tx_uid) => {
     console.log({loaderList, drop, starting_tx_uid})
