@@ -37,9 +37,7 @@ export const loadCollection = (tx_hash) => {
         const uid_name_key = Object.keys(contractUpdate['names'])[0]
         const uid =  contractUpdate['names'][uid_name_key]
 
-        console.log({uid})
-
-        let updateType = processor.determineUpdateType(contractUpdate)
+        let updateType = processor.determineUpdateType(contractUpdate[uid])
 
         if (updateType === "createNewThing") {
             console.log(`NEW THING DETECTED! UID: ${uid}`)
