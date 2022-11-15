@@ -50,7 +50,7 @@ export const loadCollection = (tx_hash) => {
                 blockNum: transactionInfo['blockNum'],
                 loader: true
             }
-            await processor.createNewThing(args)
+            await processor.createNewThing(args).catch(err => console.log(err))
         }
     }
 
