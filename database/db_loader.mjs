@@ -1,11 +1,23 @@
 import * as InfoContractLoader from './loaders/InfoContractLoader.mjs'
 import * as AuctionContractLoader from './loaders/AuctionContractLoader.mjs'
+import * as LoadOne from './loaders/LoadOne.mjs'
+
+process.on('SIGTERM', signal => {
+    console.log(`Process ${process.pid} received a SIGTERM signal`)
+    process.exit(0)
+})
+
+process.on('SIGINT', signal => {
+    console.log(`Process ${process.pid} has been interrupted`)
+    process.kill( process.pid, 'SIGTERM' );
+})
 
 const runLoader = async (loaderList, drop, starting_tx_uid) => {
     console.log({loaderList, drop, starting_tx_uid})
     const loaders = {
         InfoContractLoader,
-        AuctionContractLoader
+        AuctionContractLoader,
+        LoadOne
     }
 
     // Validate Args

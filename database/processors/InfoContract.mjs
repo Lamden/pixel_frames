@@ -82,6 +82,7 @@ export const infoContractProcessor = (database, socket_server, services) =>{
 
     async function createNewThing(args){
         const { uid, update, names, transactionInfo, blockNum, loader } = args
+        console.log({update: determineUpdateType(update)})
         if (determineUpdateType(update) !== "createNewThing") return
 
         const { hash, transaction, stamps_used } = transactionInfo
@@ -93,6 +94,8 @@ export const infoContractProcessor = (database, socket_server, services) =>{
         if (exists) {
             console.log("Already exists in DB, ignoring update")
             return
+        }else{
+            console.log("Creating New Thing")
         }
 
         let thing = await new db.models.PixelFrame({
@@ -121,22 +124,28 @@ export const infoContractProcessor = (database, socket_server, services) =>{
             tx_uid: update.tx_uid,
             blacklist: blacklist.art.includes(uid) || blacklist.creators.includes(update.creator)
         })
+        console.log(util.inspect({thing}, false, null, true))
 
-        await thing.save(async (err, doc) => {
-            if (!loader) {
-                socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
-                if (NETWORK === 'mainnet' && services){
-                    try{
-                        // pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
-                        let res = await services.twitterClient.tweets.statusesUpdate({
-                            status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
-                        })
-                        .catch(err => console.log(err))
-                        console.log(res)
-                    }catch (e) {}
+
+        await thing.save()
+            .then(async (doc) => {
+                console.log("SAVED!")
+                console.log(util.inspect({doc}, false, null, true))
+                if (!loader) {
+                    socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
+                    if (NETWORK === 'mainnet' && services){
+                        try{
+                            // pusher.link("", "New #NFT Art!", `https://www.pixelwhale.io/frames/${uid}`);
+                            let res = await services.twitterClient.tweets.statusesUpdate({
+                                status: `New #NFT Art!\r\nhttps://www.pixelwhale.io/frames/${uid}\r\n\r\n#NFTartist #digitalartist #pixelart`
+                            })
+                            .catch(err => console.log(err))
+                            console.log(res)
+                        }catch (e) {}
+                    }
                 }
-            }
-        })
+            })
+            .catch(err => console.log(err))
     }
 
     async function sellThing(args){
@@ -409,6 +418,8 @@ export const infoContractProcessor = (database, socket_server, services) =>{
 
     return {
         setDb: (database) => db = database,
-        processUpdate
+        processUpdate,
+        determineUpdateType,
+        createNewThing
     }
 }
