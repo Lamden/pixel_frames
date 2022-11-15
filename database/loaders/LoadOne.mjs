@@ -32,16 +32,14 @@ export const loadCollection = (tx_hash) => {
     async function processUpdate(update){
         const { state_changes_obj } = update
         console.log(util.inspect({state_changes_obj}, false, null, true))
-        let contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
-        let uid_name_key = Object.keys(contractUpdate['names'])[0]
 
-        console.log({uid:contractUpdate['names'][uid_name_key] })
-        process.exit()
-        const uid =  contractUpdate['names'][Object.keys(contractUpdate['names'][0])]
+        const contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
+        const uid_name_key = Object.keys(contractUpdate['names'])[0]
+        const uid =  contractUpdate['names'][uid_name_key]
 
         console.log({uid})
 
-        let updateType = processor.determineUpdateType(uid)
+        let updateType = processor.determineUpdateType(contractUpdate)
 
         if (updateType === "createNewThing") {
             console.log(`NEW THING DETECTED! UID: ${uid}`)
@@ -51,7 +49,7 @@ export const loadCollection = (tx_hash) => {
 
     async function load(tx_hash){
         let update = await getUpdate(tx_hash)
-        console.log(util.inspect({update}, false, null, true))
+        // console.log(util.inspect({update}, false, null, true))
         await processUpdate(update)
         done()
     }
