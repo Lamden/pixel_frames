@@ -82,6 +82,7 @@ export const infoContractProcessor = (database, socket_server, services) =>{
 
     async function createNewThing(args){
         const { uid, update, names, transactionInfo, blockNum, loader } = args
+        console.log({update: determineUpdateType(update)})
         if (determineUpdateType(update) !== "createNewThing") return
 
         const { hash, transaction, stamps_used } = transactionInfo
@@ -93,6 +94,8 @@ export const infoContractProcessor = (database, socket_server, services) =>{
         if (exists) {
             console.log("Already exists in DB, ignoring update")
             return
+        }else{
+            console.log("Creating New Thing")
         }
 
         let thing = await new db.models.PixelFrame({
