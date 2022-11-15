@@ -21,8 +21,6 @@ if (DBUSER) {
     connectionString = `mongodb://${DBUSER}:${DBPWD}@${DBURL}:${DBPORT}/${DBNAME}?authSource=admin`;
 }
 
-
-
 export const getDatabase = () => new Promise(resolver => {
     let db = mongoose;
 
