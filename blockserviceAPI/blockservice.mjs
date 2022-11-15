@@ -6,8 +6,8 @@ export const getBlockService = (url, port) => {
 
     async function getCurrentKeyValue(contractName, variableName, key){
         try{
-            let endpont = 'current/one'
-            let res = await axios(`${fullURL}/${endpont}/${contractName}/${variableName}/${key}`)
+            let endpoint = 'current/one'
+            let res = await axios(`${fullURL}/${endpoint}/${contractName}/${variableName}/${key}`)
             return res.data
         }catch(e){
             return e
@@ -15,32 +15,32 @@ export const getBlockService = (url, port) => {
     }
 
     async function getContractChanges(contractName, last_tx_uid, limit=10){
-        let endpont = 'contract_history'
+        let endpoint = 'contract_history'
         let query = [
             `contract=${contractName}`,
             `last_tx_uid=${last_tx_uid}`,
             `limit=${limit}`
         ].join("&")
-        let res = await axios(`${fullURL}/${endpont}?${query}`).then(res => res.data())
+        let res = await axios(`${fullURL}/${endpoint}?${query}`).then(res => res.data())
         //console.log(util.inspect(res.data, false, null, true))
         return res.data
     }
 
     async function getVariableChanges(contractName, variableName, last_tx_uid, limit=10){
-        let endpont = 'variable_history'
+        let endpoint = 'variable_history'
         let query = [
             `contract=${contractName}`,
             `variable=${variableName}`,
             `last_tx_uid=${last_tx_uid}`,
             `limit=${limit}`
         ].join("&")
-        let res = await axios(`${fullURL}/${endpont}?${query}`)
+        let res = await axios(`${fullURL}/${endpoint}?${query}`)
         //console.log(util.inspect(res.data, false, null, true))
         return res.data
     }
 
     async function getRootKeyChanges(contractName, variableName, root_key, last_tx_uid, limit=10){
-        let endpont = 'rootkey_history'
+        let endpoint = 'rootkey_history'
         let query = [
             `contract=${contractName}`,
             `variable=${variableName}`,
@@ -48,7 +48,15 @@ export const getBlockService = (url, port) => {
             `last_tx_uid=${last_tx_uid}`,
             `limit=${limit}`
         ].join("&")
-        let res = await axios(`${fullURL}/${endpont}?${query}`)
+        let res = await axios(`${fullURL}/${endpoint}?${query}`)
+        //console.log(util.inspect(res.data, false, null, true))
+        return res.data
+    }
+
+    async function getTx(tx_hash){
+        let endpoint = `tx`
+
+        let res = await axios(`${fullURL}/${endpoint}?hash=${tx_hash}`)
         //console.log(util.inspect(res.data, false, null, true))
         return res.data
     }
@@ -57,6 +65,7 @@ export const getBlockService = (url, port) => {
         getContractChanges,
         getVariableChanges,
         getRootKeyChanges,
-        getCurrentKeyValue
+        getCurrentKeyValue,
+        getTx
     }
 }
