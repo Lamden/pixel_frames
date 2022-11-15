@@ -33,8 +33,10 @@ export const loadCollection = (tx_hash) => {
         const { state_changes_obj } = update
         console.log(util.inspect({state_changes_obj}, false, null, true))
         let contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
-        console.log({keys: Object.keys(contractUpdate['names'])})
+        let uid_name_key = Object.keys(contractUpdate['names'])[0]
 
+        console.log({uid:contractUpdate['names'][uid_name_key] })
+        process.exit()
         const uid =  contractUpdate['names'][Object.keys(contractUpdate['names'][0])]
 
         console.log({uid})
