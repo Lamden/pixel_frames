@@ -33,8 +33,11 @@ export const loadCollection = (tx_hash) => {
         const { state_changes_obj } = update
         console.log(util.inspect({state_changes_obj}, false, null, true))
         let contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
+        console.log({keys: Object.keys(contractUpdate['names'])})
 
-        const uid =  Object.keys(contractUpdate['names'][0])
+        const uid =  contractUpdate['names'][Object.keys(contractUpdate['names'][0])]
+
+        console.log({uid})
 
         let updateType = processor.determineUpdateType(uid)
 
