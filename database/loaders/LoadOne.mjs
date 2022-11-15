@@ -34,9 +34,7 @@ export const loadCollection = (tx_hash) => {
         console.log(util.inspect({state_changes_obj}, false, null, true))
         let contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
 
-        let names_uid_state_change = contractUpdate.find(s => s.key.includes(`${INFO_CONTRACT}.S:names:`)).key
-        console.log(util.inspect({names_uid_state_change}, false, null, true))
-        const uid =  names_uid_state_change.split(":")[2]
+        const uid =  Object.keys(contractUpdate['names'][0])
 
         let updateType = processor.determineUpdateType(uid)
 
