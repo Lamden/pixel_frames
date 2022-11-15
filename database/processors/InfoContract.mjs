@@ -410,6 +410,7 @@ export const infoContractProcessor = (database, socket_server, services) =>{
     return {
         setDb: (database) => db = database,
         processUpdate,
-        determineUpdateType
+        determineUpdateType,
+        createNewThing
     }
 }
