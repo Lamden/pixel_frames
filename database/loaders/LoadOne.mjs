@@ -29,19 +29,28 @@ export const loadCollection = (tx_hash) => {
         return await blockService.getTx(tx_hash)
     }
 
-    async function processUpdate(update){
-        const { state_changes_obj } = update
+    async function processUpdate(transactionInfo){
+        const { state_changes_obj } = transactionInfo
         console.log(util.inspect({state_changes_obj}, false, null, true))
 
         const contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
-        const uid_name_key = Object.keys(contractUpdate['names'])[0]
-        const uid =  contractUpdate['names'][uid_name_key]
+        const name_key = Object.keys(contractUpdate['names'])[0]
+        const uid =  contractUpdate['names'][name_key]
+        const update = contractUpdate[uid]
+        const names = contractUpdate['names']
 
-        let updateType = processor.determineUpdateType(contractUpdate[uid])
+        let updateType = processor.determineUpdateType(update)
 
         if (updateType === "createNewThing") {
-            console.log(`NEW THING DETECTED! UID: ${uid}`)
-
+            const args =  {
+                uid,
+                update,
+                names,
+                transactionInfo,
+                blockNum: transactionInfo['blockNum'],
+                loader: true
+            }
+            await processor.createNewThing(args)
         }
     }
 
