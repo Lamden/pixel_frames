@@ -5,7 +5,8 @@ const runLoader = async (loaderList, drop, starting_tx_uid) => {
     console.log({loaderList, drop, starting_tx_uid})
     const loaders = {
         InfoContractLoader,
-        AuctionContractLoader
+        AuctionContractLoader,
+        LoadOne
     }
 
     // Validate Args
