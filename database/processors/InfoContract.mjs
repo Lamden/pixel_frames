@@ -128,9 +128,8 @@ export const infoContractProcessor = (database, socket_server, services) =>{
 
 
         await thing.save()
-            .then(async (err, doc) => {
-                console.log("AFTER SAVE!")
-                console.log({err})
+            .then(async (doc) => {
+                console.log("SAVED!")
                 console.log(util.inspect({doc}, false, null, true))
                 if (!loader) {
                     socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
