@@ -30,8 +30,8 @@ export const loadCollection = (tx_hash) => {
     }
 
     async function processUpdate(transactionInfo){
-        const { state_changes_obj } = transactionInfo
-        console.log(util.inspect({state_changes_obj}, false, null, true))
+        const { state_changes_obj, txInfo } = transactionInfo
+        //console.log(util.inspect({state_changes_obj}, false, null, true))
 
         const contractUpdate = state_changes_obj[INFO_CONTRACT]["S"]
         const name_key = Object.keys(contractUpdate['names'])[0]
@@ -46,7 +46,7 @@ export const loadCollection = (tx_hash) => {
                 uid,
                 update,
                 names,
-                transactionInfo,
+                transactionInfo: txInfo,
                 blockNum: transactionInfo['blockNum'],
                 loader: true
             }
@@ -55,9 +55,9 @@ export const loadCollection = (tx_hash) => {
     }
 
     async function load(tx_hash){
-        let update = await getUpdate(tx_hash)
-        // console.log(util.inspect({update}, false, null, true))
-        await processUpdate(update)
+        let transactionInfo = await getUpdate(tx_hash)
+        console.log(util.inspect({transactionInfo}, false, null, true))
+        await processUpdate(transactionInfo)
         done()
     }
 
