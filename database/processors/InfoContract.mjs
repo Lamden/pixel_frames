@@ -124,8 +124,13 @@ export const infoContractProcessor = (database, socket_server, services) =>{
             tx_uid: update.tx_uid,
             blacklist: blacklist.art.includes(uid) || blacklist.creators.includes(update.creator)
         })
+        console.log(util.inspect({thing}, false, null, true))
+
 
         await thing.save(async (err, doc) => {
+            console.log("AFTER SAVE!")
+            console.log({err})
+            console.log(util.inspect({doc}, false, null, true))
             if (!loader) {
                 socket_server.to(`main-events`).emit("thing-update", {type: 'new-thing', update: doc})
                 if (NETWORK === 'mainnet' && services){
