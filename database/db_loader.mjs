@@ -3,13 +3,13 @@ import * as AuctionContractLoader from './loaders/AuctionContractLoader.mjs'
 import * as LoadOne from './loaders/LoadOne.mjs'
 
 process.on('SIGTERM', signal => {
-  console.log(`Process ${process.pid} received a SIGTERM signal`)
-  process.exit(0)
+    console.log(`Process ${process.pid} received a SIGTERM signal`)
+    process.exit(0)
 })
 
 process.on('SIGINT', signal => {
-  console.log(`Process ${process.pid} has been interrupted`)
-  process.exit(0)
+    console.log(`Process ${process.pid} has been interrupted`)
+    process.kill( process.pid, 'SIGTERM' );
 })
 
 const runLoader = async (loaderList, drop, starting_tx_uid) => {
