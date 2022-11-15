@@ -56,7 +56,7 @@ export const loadCollection = (tx_hash) => {
 
     async function load(tx_hash){
         let transactionInfo = await getUpdate(tx_hash)
-        console.log(util.inspect({transactionInfo}, false, null, true))
+        // console.log(util.inspect({transactionInfo}, false, null, true))
         await processUpdate(transactionInfo)
         done()
     }
