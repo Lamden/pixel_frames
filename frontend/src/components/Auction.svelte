@@ -197,7 +197,7 @@
                     <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
                 {:else}
                     <p class="text-color-gray-6">{"Starting Bid"}</p>
-                    <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
+                    <p><strong>{`${stringToFixed(auctionInfo.reserve_price, 8)} ${config.currencySymbol}`} </strong></p>
                 {/if}
 
                 {#if winning_bidder}
