@@ -192,8 +192,14 @@
                 <Preview solidBorder={true} solidBorderColor="#00d6a22b" frames={thingInfo.frames} pixelSize={4} {thingInfo} showWatermark={true} border={false}/>
             </a>
             <div class="bid-details">
-                    <p class="text-color-gray-6">{hasEnded ? auctionInfo.reserve_met ? "Winning Bid" : "Last Bid" : "Current Bid" }</p>
+                {#if auctionInfo.reserve_met}
+                    <p class="text-color-gray-6">{hasEnded ? "Winning Bid" : "Last Bid" }</p>
                     <p><strong>{`${stringToFixed(winning_bid, 8)} ${config.currencySymbol}`} </strong></p>
+                {:else}
+                    <p class="text-color-gray-6">{"Starting Bid"}</p>
+                    <p><strong>{`${stringToFixed(auctionInfo.reserve_price, 8)} ${config.currencySymbol}`} </strong></p>
+                {/if}
+
                 {#if winning_bidder}
                     <p class="text-color-gray-5">{hasEnded ? `Won ${getTimeAgo(winning_timestamp)}by` : `${getTimeAgo(winning_timestamp)}by` }</p>
                     <a href="{`./owned/${winning_bidder}`}" class="text-color-gray-5">
