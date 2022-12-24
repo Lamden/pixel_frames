@@ -18,7 +18,9 @@
 	const uid = auctionInfo.uid
 	const thingName = thingInfo.name
 
-	$: bidAmount = $showModal.modalData.winning_bid ? $showModal.modalData.winning_bid.plus(1) : toBigNumber(1)
+	$: reservePrice = toBigNumber($showModal.modalData.auctionInfo.reserve_price || 1)
+	$: bidAmount = $showModal.modalData.winning_bid ? $showModal.modalData.winning_bid.plus(1) : reservePrice
+	$: below_reserve = $showModal.modalData.winning_bid ? false : bidAmount.isLessThan(reservePrice)
 	$: approvalTxStamps_to_tau = bidAmount.isGreaterThan(toBigNumber($approvalAmount[config.masterContract])) ? toBigNumber(stampLimits.currency.approve).dividedBy($stampRatio) : toBigNumber(0)
 	$: bidTxStamps_to_tau = toBigNumber(stampLimits[config.auctionContract].bid).dividedBy($stampRatio)
 	$: total_tx_fees = approvalTxStamps_to_tau.plus(bidTxStamps_to_tau)
@@ -64,16 +66,25 @@
 	}
 
 	const checkPrice = () => {
-    	if (total_tau_to_bid.isGreaterThan($currency)){
+		if (below_reserve){
 			createSnack({
-                title: `Insufficient ${config.currencySymbol}`,
-                body: `
-                	You need ${stringToFixed(total_tau_to_bid, 4)} ${config.currencySymbol} to bid for this.
-                	 ${stringToFixed(bidAmount, 4)} ${config.currencySymbol} plus ${stringToFixed(total_tau_to_bid, 4)} ${config.currencySymbol} for tx fees.`,
-                type: "error"
+                title: `Bid Higher!`,
+                body: `Your bid is below the auction reserve price of ${stringToFixed(reservePrice, 4)} ${config.currencySymbol}.`,
+                type: "warning"
             })
+			return
 		}else{
-    		approveAndSend();
+			if (total_tau_to_bid.isGreaterThan($currency)){
+				createSnack({
+					title: `Insufficient ${config.currencySymbol}`,
+					body: `
+						You need ${stringToFixed(total_tau_to_bid, 4)} ${config.currencySymbol} to bid for this.
+						 ${stringToFixed(bidAmount, 4)} ${config.currencySymbol} plus ${stringToFixed(total_tau_to_bid, 4)} ${config.currencySymbol} for tx fees.`,
+					type: "error"
+				})
+			}else{
+				approveAndSend();
+			}
 		}
 	}
 
