@@ -1,5 +1,6 @@
 <!-- /frontend/src/routes/index.svelte -->
 <script context="module">
+	/*
 	export async function preload() {
 		let data = await Promise.all([
 			this.fetch(`./mostliked.json?limit=54`).then(res => res.json()),
@@ -25,6 +26,7 @@
 			eventInfo
 		}
 	}
+	 */
 </script>
 
 <script>
@@ -37,11 +39,12 @@
 	import ForSale from '../components/ForSale.svelte';
 	import ArtistEvent from "../components/ArtistEvent.svelte";
 
-
+	/*
 	export let mostLiked;
 	export let recent;
 	export let forsale;
 	export let eventInfo;
+	 */
 </script>
 
 <style>
@@ -74,6 +77,7 @@
 
 <div class="hide-mobile">
 	<Title fontSize={8} showFullLogo={true}/>
+	<p>Pixel Whale is down for the Lamden Arko Maintenance but will be back shortly!</p>
 </div>
 
 <div class="mobile-message">
@@ -81,7 +85,7 @@
 	Please visit us on a desktop for the full experience including integration with the Lamden Wallet to enable
 	<strong>buying, selling and creating custom NFT pixel animations!</strong>
 </div>
-
+<!--
 {#if eventInfo}
 	<ArtistEvent {eventInfo}/>
 {:else}
@@ -90,3 +94,4 @@
 
 <Recent {recent} preview={true}/>
 <ForSale {forsale} preview={true}/>
+-->
